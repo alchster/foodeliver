@@ -3,6 +3,7 @@ package main
 import (
 	api_v1 "github.com/alchster/foodeliver/api/v1"
 	"github.com/alchster/foodeliver/db"
+	"github.com/alchster/foodeliver/i18n"
 	"github.com/gin-gonic/gin"
 	"log"
 	"os"
@@ -32,11 +33,18 @@ func main() {
 		os.Exit(0)
 	}
 
+	i18n.LoadLanguage("en")
+	i18n.LoadLanguage("ru")
+
 	router := gin.Default()
-	router.Use(gin.Logger())
+	//router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	api_v1.Setup(router, config.Prefix)
+	err = api_v1.Setup(router, config.Prefix, config.TrainID)
+	if err != nil {
+		log.Print(err)
+		return
+	}
 
 	router.Run(config.ListenOn)
 }

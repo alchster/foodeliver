@@ -7,9 +7,10 @@ import (
 	"github.com/heetch/confita/backend/file"
 	"github.com/heetch/confita/backend/flags"
 	"strings"
+	"time"
 )
 
-type database struct {
+type Database struct {
 	Host     string   `config:"database-host"`
 	Port     uint16   `config:"database-port"`
 	DBName   string   `config:"database-dbname"`
@@ -18,20 +19,21 @@ type database struct {
 	Options  []string `config:"database-options"`
 }
 
-type config struct {
-	ListenOn string `config:"listen"`
-	Debug    bool   `config:"debug"`
-	Prefix   string `config:"prefix"`
-	Migrate  bool   `config:"migrate,backend=flags"`
-	Database database
+type Config struct {
+	ListenOn string   `config:"listen"`
+	Debug    bool     `config:"debug"`
+	Prefix   string   `config:"prefix"`
+	Migrate  bool     `config:"migrate,backend=flags"`
+	TrainID  string   `config:"train-id"`
+	Database Database `config:"required,backend=file"`
 }
 
-func loadConfig() (*config, error) {
-	cfg := config{
+func loadConfig() (*Config, error) {
+	cfg := Config{
 		ListenOn: DEFAULT_LISTENON,
 		Debug:    DEBUG,
 		Prefix:   "/api",
-		Database: database{
+		Database: Database{
 			Host:   "127.0.0.1",
 			Port:   5432,
 			DBName: "food",
@@ -43,16 +45,23 @@ func loadConfig() (*config, error) {
 		file.NewBackend(CONFIG_FILE_JSON),
 		flags.NewBackend(),
 	)
-	err := loader.Load(context.Background(), &cfg)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	err := loader.Load(ctx, &cfg)
 	return &cfg, err
 }
 
-func (c config) String() string {
-	return fmt.Sprintf("Config:\n  ListenOn:\t%s\n  Debug:\t%v\n  Database:\t%s",
-		c.ListenOn, c.Debug, c.Database)
+func (c *Config) String() string {
+	return fmt.Sprintf(
+		"Config:\n"+
+			"  ListenOn:\t%s\n"+
+			"  Debug:\t%v\n"+
+			"  Database:\t%s\n"+
+			"  TrainID:\t%s\n",
+		c.ListenOn, c.Debug, c.Database, c.TrainID)
 }
 
-func (d database) String() string {
+func (d Database) String() string {
 	s := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
 		d.User, d.Password, d.Host, d.Port, d.DBName)
 	if len(d.Options) > 0 {

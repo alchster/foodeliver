@@ -37,6 +37,11 @@ func unprocessable(err error, c *gin.Context) {
 		errorJSON(http.StatusUnprocessableEntity, err))
 }
 
+func forbidden(err error, c *gin.Context) {
+	c.AbortWithStatusJSON(http.StatusForbidden,
+		errorJSON(http.StatusForbidden, err))
+}
+
 func notAllowed(c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusMethodNotAllowed,
 		errorJSON(http.StatusMethodNotAllowed,

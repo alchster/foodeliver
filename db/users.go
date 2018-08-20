@@ -2,63 +2,52 @@ package db
 
 import (
 	"errors"
+	"github.com/chr4/pwgen"
+	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
-	"time"
+	"log"
 )
 
 type User struct {
-	ID          UUID   `json:"id" gorm:"primary_key" sql:"type:uuid;default:uuid_generate_v4()"`
-	Login       string `json:"login" sql:"not null;unique_index;type:varchar(50)"`
-	Password    string `json:"password" sql:"type:text;not null"`
-	Description string `json:"description" sql:"type:text"`
-	Admin       bool   `json:"admin" sql:"type:bool;not null;default:false"`
-	Timestamps
-	Deletable
+	LoginUser
+	Admin            bool       `json:"admin" sql:"type:bool;not null;default:false"`
+	Enabled          bool       `json:"enabled" sql:"type:bool;not null;default:true"`
+	AllowedSuppliers []Supplier `json:"allowed_suppliers" gorm:"many2many:user_suppliers"`
 }
 
 func (u *User) BeforeSave() error {
-	if err := u.Timestamps.BeforeSave(); err != nil {
-		return err
-	}
-	if u.Password == "" {
-		return errors.New("password must not be empty")
+	if u.Login == "" || u.Password == "" {
+		return errors.New("Neither login nor password can be empty")
 	}
 	if cost, err := bcrypt.Cost([]byte(u.Password)); err != nil || cost == 0 {
-		u.Password = cryptPassword(u.Password)
+		u.Password = PasswordStr(cryptPassword(string(u.Password)))
 	}
 	return nil
 }
 
 func (u *User) BeforeCreate() error {
-	obj := User{}
-	if db.Where("login = ? and deleted", u.Login).First(&obj).Error == nil {
-		obj.Password = u.Password
-		obj.Description = u.Description
-		obj.Deleted = false
-		obj.Created = time.Now()
-		if err := db.Save(&obj).Error; err != nil {
-			return err
-		}
-		return errors.New("User with '" + u.Login + "' already found as deleted. Undeleted")
-	}
+	u.ID = NewID()
 	return nil
 }
 
-func CheckLogin(login, password string) (*User, error) {
-	u := new(User)
-	if err := db.Where(
-		"login = ? and not deleted and password = crypt(?, password)", login, password,
-	).First(u).Error; err != nil {
-		return nil, err
+func (u *User) BeforeDelete(tx *gorm.DB) error {
+	login := "deleted__" + u.Login + "__" + u.ID.String()
+	return tx.Model(&User{}).Where("id = ?", u.ID).UpdateColumn("login", login).Error
+}
+
+func createAdmin() error {
+	pass := pwgen.AlphaNum(16)
+	admin := User{
+		LoginUser: LoginUser{
+			Login:       "admin",
+			Password:    PasswordStr(pass),
+			Description: "Built-in service administrator",
+		},
+		Admin: true,
 	}
-	return u, nil
-}
-
-func cryptPassword(password string) string {
-	hash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	return string(hash)
-}
-
-func checkPassword(hash, password string) bool {
-	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
+	if err := db.Create(&admin).Error; err != nil {
+		return err
+	}
+	log.Printf("Created admin user\n\tID:\t\t%v\n\tPassword:\t%v", admin.ID, pass)
+	return nil
 }

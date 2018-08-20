@@ -3,11 +3,6 @@
 ## Requirements
 
 - PostgreSQL
- + extension 'uuid-ossp' for UUID generation
-```PLpgSQL
-CREATE EXTENSION "uuid-ossp";
-```
- + extension 'pgcrypto' for passwords checking (CREATE EXTENSION "pgcrypto";)
 
 ## Installation
 (_This is sample configuration. Default names and paths are used. Please don't use commands as they are given here_)

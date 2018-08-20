@@ -1,10 +1,5 @@
 package db
 
-type TextReference struct {
-	Status *Text `json:"status" gorm:"foreignkey:TextsID;association_foreignkey:ID"`
-	TextID UUID  `json:"-" sql:"type:uuid REFERENCES texts(id)"`
-}
-
 type SupplierStatus struct {
 	Code SupplierStatusCode `json:"code" gorm:"type:smallint;primary_key;default:0"`
 	TextReference

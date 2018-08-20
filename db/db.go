@@ -39,6 +39,7 @@ func Migrate() error {
 		return err
 	}
 	createStatuses()
+	createAdmin()
 	return nil
 }
 
@@ -47,4 +48,8 @@ func Close() {
 	if debugMode {
 		log.Print("Closing connection to database")
 	}
+}
+
+func Ping() error {
+	return db.DB().Ping()
 }
