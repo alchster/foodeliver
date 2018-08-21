@@ -9,11 +9,7 @@ $(function () {
 		var parent = $(this).closest('.js-moderators-item');
 		var id = $(parent).find('.moderators__user-id').html();
 		var url = '/' + $(parent).find('.moderators__user-type').html();
-		if (url == "/supplier") {
-			data = {status_code: this.checked ? 1 : 0};
-		} else {
-			data = {enabled: this.checked};
-		}
+		var data = url === '/supplier' ? {status_code: this.checked ? 1 : 0} : {enabled: this.checked};
 		apiCall('PUT', url + '/' + id, data);
 	});
 
@@ -54,7 +50,7 @@ $(function () {
 		var parent = $(this).closest('.js-moderators-item');
 		var id = $(parent).find('.moderators__user-id').html();
 		var url = '/' + $(parent).find('.moderators__user-type').html();
-		document.api.call('DELETE', url + '/' + id);
+		apiCall('DELETE', url + '/' + id);
 	});
 });
 
