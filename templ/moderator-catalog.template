@@ -1,0 +1,641 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Каталог товаров</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+<header class="header">
+	<a href="#" class="header__logo">
+		<svg class="icon-logo">
+			<use xlink:href="#logo"></use>
+		</svg>
+	</a>
+	<div class="header__ctrl">
+		<div class="header__ctrl-item header__user">
+			<div class="header__user-text">
+				
+					<span class="header__user-name">Елизавета</span>
+					<span class="header__user-surname">Кармишевская</span>
+				
+				
+			</div>
+			<div class="header__user-image">
+				<img src="pic/user.jpg" alt="user">
+			</div>
+		</div>
+		<div class="header__ctrl-item header__menu">
+			<ul class="header__menu-list">
+				<li class="header__menu-item">
+					<a href="#" class="header__menu-link header__message">
+						
+							<span class="header__message-num" data-num="3"></span>
+						
+						<svg class="icon-mail">
+							<use xlink:href="#mail"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="header__menu-item">
+					<div class="header__menu-link header__search js-search-btn">
+						<svg class="icon-search">
+							<use xlink:href="#search"></use>
+						</svg>
+					</div>
+					<div class="header__search-more js-header-search">
+						<input type="text" class="header__search-input" placeholder="Искать">
+						<span class="header__search-close js-search-close"></span>
+					</div>
+
+				</li>
+			</ul>
+		</div>
+		<div class="header__ctrl-item header__logout">
+			<div class="header__menu-link">
+				<span class="header__logout-txt">Выход</span>
+				<div class="header__logout-icon">
+					<svg class="icon-turn-off">
+						<use xlink:href="#turn-off"></use>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+
+	<div class="wrapper">
+
+			<aside class="custom-scroll">
+				<ul class="sidebar">
+	<li class="sidebar__item active">
+		<a href="#" class="sidebar__link">
+			<span class="sidebar__icon">
+				<svg class="icon-administrirov">
+					<use xlink:href="#administrirov"></use>
+				</svg>
+			</span>
+			<span class="sidebar__text">
+				Мои поставщики
+			</span>
+		</a>
+	</li>
+	
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-nastroika">
+						<use xlink:href="#nastroika"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Настройки
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-hamburger-2">
+						<use xlink:href="#hamburger-2"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Каталог товаров
+				</span>
+			</a>
+		</li>
+	
+	
+</ul>
+			</aside>
+
+			<div class="content">
+				<div class="head-search ">
+	<div class="head-search__holder">
+		<span class="head-search__title">Каталог товаров </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Поиск по каталогу">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+				<div class="moderator-catalog">
+	<div class="moderator-catalog__filter">
+		<span class="moderator-catalog__filter-text">Фильтры:</span>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По поставщику</option>
+					<option value="">Поставщик 1</option>
+					<option value="">Поставщик 2</option>
+					<option value="">Поставщик 3</option>
+					<option value="">Поставщик 4</option>
+				</select>
+			</div>
+		</div>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По категории</option>
+					<option value="">Категория 1</option>
+					<option value="">Категория 2</option>
+					<option value="">Категория 3</option>
+					<option value="">Категория 4</option>
+				</select>
+			</div>
+		</div>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По станции</option>
+					<option value="">Станция 1</option>
+					<option value="">Станция 2</option>
+					<option value="">Станция 3</option>
+					<option value="">Станция 4</option>
+				</select>
+			</div>
+		</div>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По статусу</option>
+					<option value="">Статус 1</option>
+					<option value="">Статус 2</option>
+					<option value="">Статус 3</option>
+					<option value="">Статус 4</option>
+				</select>
+			</div>
+		</div>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По дате добавления</option>
+					<option value="">Старые</option>
+					<option value="">Новые</option>
+					<option value="">Текущие</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	<div class="moderator-catalog__item">
+		<div class="moderator-catalog__item-head">
+			<span class="moderator-catalog__head-title">На одобрение</span>
+			<span class="moderator-catalog__number-approval">+3</span>
+		</div>
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="pic/products/product-01.jpg" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">Стейк Хаус</span>
+					<span class="moderator-catalog__category">гамбургеры</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">Сочетание нашей фирменной, приготовленной на огне 100% говядины с ломтиками бекона и соусом «Барбекю», майонезом, листьями свежего салата, помидором и хрустящим луком на воздушной булочке, посыпанной кукурузной крошкой.</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+					<span class="moderator-catalog__name-provider">Burger King</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">340 <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" id="" class="custom-select-center">
+								<option value="" data-color="#f5a623" data-status="new">Новый</option>
+								<option value="" data-color="#9b9b9b" data-status="not-available">Недоступен для заказа</option>
+								<option value="" data-color="#7ed321" data-status="approved">Доступен для заказа</option>
+								<option value="" data-color="#ff0033" data-status="not-approved">Неодобрен для публикации</option>
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+									<textarea placeholder="Укажите причину"></textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">11 мая 2018, 10:00 — 25 июля 2018, 00:00</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">21 апреля 2018 года, 15:32</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="pic/products/product-04.jpg" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">Домино Пицца</span>
+					<span class="moderator-catalog__category">пицца</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">Тесто, грибы, ветчина, охотничьи колбаски, помидоры, лук, сыр, супер-острый соус</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+					<span class="moderator-catalog__name-provider">Domino’s Pizza</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">610 <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" id="" class="custom-select-center">
+								<option value="" data-color="#f5a623" data-status="new">Новый</option>
+								<option value="" data-color="#9b9b9b" data-status="not-available">Недоступен для заказа</option>
+								<option value="" data-color="#7ed321" data-status="approved">Доступен для заказа</option>
+								<option value="" data-color="#ff0033" data-status="not-approved">Неодобрен для публикации</option>
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+									<textarea placeholder="Укажите причину"></textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">11 мая 2018, 10:00 — 25 июля 2018, 00:00</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">21 апреля 2018 года, 15:32</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="pic/products/product-06.jpg" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">Шоколадный фондан</span>
+					<span class="moderator-catalog__category">десерты</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">Шоколад, яйца, сахарная пудра, пекарский порошок</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+					<span class="moderator-catalog__name-provider">Burger King</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">340 <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" id="" class="custom-select-center">
+								<option value="" data-color="#f5a623" data-status="new">Новый</option>
+								<option value="" data-color="#9b9b9b" data-status="not-available">Недоступен для заказа</option>
+								<option value="" data-color="#7ed321" data-status="approved">Доступен для заказа</option>
+								<option value="" data-color="#ff0033" data-status="not-approved">Неодобрен для публикации</option>
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+									<textarea placeholder="Укажите причину"></textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">11 мая 2018, 10:00 — 25 июля 2018, 00:00</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">21 апреля 2018 года, 15:32</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="moderator-catalog__item">
+		<div class="moderator-catalog__item-head">
+			<span class="moderator-catalog__head-title">Одобрено</span>
+		</div>
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="pic/products/product-03.jpg" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">Стейк Хаус</span>
+					<span class="moderator-catalog__category">гамбургеры</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">Сочетание нашей фирменной, приготовленной на огне 100% говядины с ломтиками бекона и соусом «Барбекю», майонезом, листьями свежего салата, помидором и хрустящим луком на воздушной булочке, посыпанной кукурузной крошкой.</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+					<span class="moderator-catalog__name-provider">Burger King</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">340 <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" id="" class="custom-select-center">
+								<option value="" data-color="#f5a623" data-status="new">Новый</option>
+								<option value="" data-color="#9b9b9b" data-status="not-available">Недоступен для заказа</option>
+								<option value="" data-color="#7ed321" data-status="approved">Доступен для заказа</option>
+								<option value="" data-color="#ff0033" data-status="not-approved">Неодобрен для публикации</option>
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+									<textarea placeholder="Укажите причину"></textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">11 мая 2018, 10:00 — 25 июля 2018, 00:00</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">21 апреля 2018 года, 15:32</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="pic/products/product-04.jpg" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">Домино Пицца</span>
+					<span class="moderator-catalog__category">пицца</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">Тесто, грибы, ветчина, охотничьи колбаски, помидоры, лук, сыр, супер-острый соус</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+					<span class="moderator-catalog__name-provider">Domino’s Pizza</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">610 <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" id="" class="custom-select-center">
+								<option value="" data-color="#f5a623" data-status="new">Новый</option>
+								<option value="" data-color="#9b9b9b" data-status="not-available">Недоступен для заказа</option>
+								<option value="" data-color="#7ed321" data-status="approved">Доступен для заказа</option>
+								<option value="" data-color="#ff0033" data-status="not-approved" >Неодобрен для публикации</option>
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+									<textarea placeholder="Укажите причину"></textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">11 мая 2018, 10:00 — 25 июля 2018, 00:00</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">21 апреля 2018 года, 15:32</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="pic/products/product-06.jpg" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">Шоколадный фондан</span>
+					<span class="moderator-catalog__category">десерты</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">Шоколад, яйца, сахарная пудра, пекарский порошок</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+					<span class="moderator-catalog__name-provider">Burger King</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">340 <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" id="" class="custom-select-center">
+								<option value="" data-color="#f5a623" data-status="new">Новый</option>
+								<option value="" data-color="#9b9b9b" data-status="not-available">Недоступен для заказа</option>
+								<option value="" data-color="#7ed321" data-status="approved">Доступен для заказа</option>
+								<option value="" data-color="#ff0033" data-status="not-approved">Неодобрен для публикации</option>
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+									<textarea placeholder="Укажите причину"></textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">11 мая 2018, 10:00 — 25 июля 2018, 00:00</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">21 апреля 2018 года, 15:32</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
+

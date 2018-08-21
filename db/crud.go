@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
-	"log"
 	"reflect"
 	"time"
 )
@@ -74,10 +73,10 @@ func ReadAll(entityName, reader string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	if err = db.Find(objPtr).Error; err != nil {
+	if err = db.Order("created_at desc").Find(objPtr).Error; err != nil {
 		return nil, err
 	}
-	return objPtr, nil
+	return reflect.ValueOf(objPtr).Elem().Interface(), nil
 }
 
 func Update(entityName, id string, data map[string]interface{}, userId string) error {
@@ -115,7 +114,7 @@ func Delete(entity_name, id_text, deleter string) error {
 }
 
 func CheckLogin(login, password string) (interface{}, error) {
-	var u interface{}
+	var u PasswordChecker
 	u = new(User)
 	if err := db.Where("login = ? and enabled", login).First(u).Error; err != nil {
 		u = new(Supplier)
@@ -124,9 +123,7 @@ func CheckLogin(login, password string) (interface{}, error) {
 			return nil, errors.New("incorrect username")
 		}
 	}
-	v := reflect.ValueOf(u).Elem()
-	log.Print(v.FieldByName("Login").Interface().(string))
-	if !CheckPassword(v.FieldByName("Password").Interface().(string), password) {
+	if !CheckPassword(u.GetPassword(), password) {
 		return nil, errors.New("incorrect password")
 	}
 	return u, nil

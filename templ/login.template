@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Вход</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+	<div class="wrapper">
+    <div class="login" style="background-image: url(pic/bg/bg-admin.jpg);">
+  <div class="login__outer">
+    <div class="container">
+      <div class="login__wrap js-login-wrap">
+
+        <div class="login__logo">
+          <svg class="icon-logo-white">
+            <use xlink:href="#logo-white"></use>
+          </svg>
+        </div>
+
+        <div class="login__holder js-login-entry">
+          <form action="/login" method="post" class="login__form">
+            <div class="login__form-body">
+
+              <div class="login__form-row">
+                <label for="login" class="login__form-label">
+                  <input type="text" id="login" name="username" class="input input--light login__form-input" placeholder="Логин">
+                  <span class="login__form-inner">
+                    <svg class="icon-user">
+                      <use xlink:href="#user"></use>
+                    </svg>
+                  </span>
+                </label>
+              </div>
+
+              <div class="login__form-row">
+                <label for="pass" class="login__form-label">
+                  <input type="password" id="pass" name="password" class="input input--light login__form-input" placeholder="Пароль">
+                  <span class="login__form-inner">
+                    <svg class="icon-pass-dark">
+                      <use xlink:href="#pass-dark"></use>
+                    </svg>
+                  </span>
+                </label>
+              </div>
+
+              <div class="login__form-row login__form-row--bottom">
+                <div class="login__form-btn">
+                  <button type="submit" class="btn">Войти</button>
+                </div>
+                <span class="login__form-desc">Если у вас нет аккаунта, обратитесь <a href="#" class="login__form-link js-login-open">к администратору</a></span>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div class="login__message js-login-message">
+          <form action="/message" class="login__message-form">
+            <div class="login__message-header">
+              <span class="login__message-closed js-login-closed"></span>
+              <span class="login__message-title">Сообщение администратору ресурса</span>
+            </div>
+            <div class="login__message-body">
+              <div class="login__message-row">
+                <input type="email" name="email" class="input input--light" placeholder="Эл. почта">
+              </div>
+              <div class="login__message-row">
+                <textarea name="message" class="textarea textarea--light" placeholder="Текст сообщения"></textarea>
+              </div>
+            </div>
+            <div class="login__message-footer">
+              <button type="submit" class="btn">Отправить</button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+	</div>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
+

@@ -15,6 +15,7 @@ func newAuthMiddlware(secret string) *jwt.GinJWTMiddleware {
 	return &jwt.GinJWTMiddleware{
 		Realm:      "Food delivering service API",
 		Key:        []byte(secret),
+		SendCookie: true,
 		Timeout:    TOKEN_EXPIRE_MINUTES * time.Minute,
 		MaxRefresh: TOKEN_EXPIRE_MINUTES * time.Minute, // user can refresh token after its expiration
 		Authenticator: func(login, password string, c *gin.Context) (interface{}, bool) {
@@ -28,10 +29,7 @@ func newAuthMiddlware(secret string) *jwt.GinJWTMiddleware {
 			return true
 		},
 		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, h{
-				"code":    code,
-				"message": message,
-			})
+			login(c)
 		},
 		PayloadFunc: func(user interface{}) jwt.MapClaims {
 			res := make(jwt.MapClaims)
@@ -49,7 +47,7 @@ func newAuthMiddlware(secret string) *jwt.GinJWTMiddleware {
 			}
 			return res
 		},
-		TokenLookup:   "header:Authorization",
+		TokenLookup:   "cookie:JWTToken,header:Authorization",
 		TokenHeadName: "Bearer",
 		TimeFunc:      time.Now,
 	}

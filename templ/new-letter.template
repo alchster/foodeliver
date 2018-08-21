@@ -1,0 +1,350 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Почта</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+<header class="header">
+	<a href="#" class="header__logo">
+		<svg class="icon-logo">
+			<use xlink:href="#logo"></use>
+		</svg>
+	</a>
+	<div class="header__ctrl">
+		<div class="header__ctrl-item header__user">
+			<div class="header__user-text">
+				
+					<span class="header__user-name">Елизавета</span>
+					<span class="header__user-surname">Кармишевская</span>
+				
+				
+			</div>
+			<div class="header__user-image">
+				<img src="pic/moderator.jpg" alt="user">
+			</div>
+		</div>
+		<div class="header__ctrl-item header__menu">
+			<ul class="header__menu-list">
+				<li class="header__menu-item">
+					<a href="#" class="header__menu-link header__message">
+						
+							<span class="header__message-num" data-num="3"></span>
+						
+						<svg class="icon-mail">
+							<use xlink:href="#mail"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="header__menu-item">
+					<div class="header__menu-link header__search js-search-btn">
+						<svg class="icon-search">
+							<use xlink:href="#search"></use>
+						</svg>
+					</div>
+					<div class="header__search-more js-header-search">
+						<input type="text" class="header__search-input" placeholder="Искать">
+						<span class="header__search-close js-search-close"></span>
+					</div>
+
+				</li>
+			</ul>
+		</div>
+		<div class="header__ctrl-item header__logout">
+			<div class="header__menu-link">
+				<span class="header__logout-txt">Выход</span>
+				<div class="header__logout-icon">
+					<svg class="icon-turn-off">
+						<use xlink:href="#turn-off"></use>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+
+	<div class="wrapper">
+
+			<aside class="custom-scroll">
+				<ul class="sidebar">
+	<li class="sidebar__item active">
+		<a href="#" class="sidebar__link">
+			<span class="sidebar__icon">
+				<svg class="icon-administrirov">
+					<use xlink:href="#administrirov"></use>
+				</svg>
+			</span>
+			<span class="sidebar__text">
+				Учетные записи
+			</span>
+		</a>
+	</li>
+	
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-nastroika">
+						<use xlink:href="#nastroika"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Настройки
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-hamburger-2">
+						<use xlink:href="#hamburger-2"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Каталог товаров
+				</span>
+			</a>
+		</li>
+	
+	
+</ul>
+			</aside>
+
+			<div class="content">
+
+        <div class="head-search ">
+	<div class="head-search__holder">
+		<span class="head-search__title">Почта <span class="head-search__mail">+1 новое сообщение</span></span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти письмо">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+
+        <div class="mail">
+
+          <div class="mail__holder mail__holder--small">
+
+            <div class="mail__write">
+              <a href="#" class="btn">написать письмо</a>
+            </div>
+
+            <div class="mail__nav box-item">
+              <ul class="mail__nav-list">
+                <li class="mail__nav-item mail__nav-item--incoming active" data-new="1">
+                  <a href="#" class="mail__nav-link">Входящие</a>
+                </li>
+                <li class="mail__nav-item">
+                  <a href="#" class="mail__nav-link">Отправленые</a>
+                </li>
+                <li class="mail__nav-item">
+                  <a href="#" class="mail__nav-link">Важные</a>
+                </li>
+                <li class="mail__nav-item">
+                  <a href="#" class="mail__nav-link">Черновики</a>
+                </li>
+                <li class="mail__nav-item">
+                  <a href="#" class="mail__nav-link">Корзина</a>
+                  <span class="mail__nav-clearing">Очистить корзину</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mail__holder mail__holder--large">
+            <div class="mail__header">
+  <div class="mail__header-left">
+    <h2 class="mail__header-title">Новое письмо</h2>
+  </div>
+  <div class="mail__header-right">
+
+    <div class="mail__tools">
+      <ul class="mail__tools-list">
+        <li class="mail__tools-item">
+          <span class="mail__btn mail__btn--tools">
+            <svg class="mail__icon-edit icon-edit">
+              <use xlink:href="#edit"></use>
+            </svg>
+          </span>
+        </li>
+        <li class="mail__tools-item">
+          <span class="mail__btn mail__btn--tools">
+            <svg class="mail__icon-print icon-print">
+              <use xlink:href="#print"></use>
+            </svg>
+          </span>
+        </li>
+        <li class="mail__tools-item">
+          <span class="mail__btn mail__btn--tools">
+            <svg class="mail__icon-delete icon-delete">
+              <use xlink:href="#delete"></use>
+            </svg>
+          </span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="mail__pagination">
+      <span class="mail__pagination-btn mail__pagination-btn--prev"></span>
+      <span class="mail__pagination-btn mail__pagination-btn--next"></span>
+    </div>
+
+  </div>
+</div>
+
+<div class="mail__letter">
+
+  <div class="mail__letter-row box-item">
+    <span class="mail__letter-txt mail__letter-txt--data">15 2018, 11:13</span>
+    <span class="mail__letter-txt mail__letter-txt--name">Администратор</span>
+    <span class="mail__letter-txt">Важное обновление!</span>
+  </div>
+
+  <div class="mail__letter-row box-item">
+    <div class="static-content">
+      <h2>Ангелы и демоны</h2>
+      <p>Роберт Лэнгдон босиком бродил по своему пустому викторианскому дому в Массачусетсе, бережно сжимая в ладонях дымящуюся кружку с неизменным снадобьем от бессонницы – волшебным напитком «Нестле». Апрельская луна лила через окна призрачный свет, который
+        затейливыми пятнами играл на восточных коврах. Коллеги Лэнгдона постоянно подтрунивали над тем, что его жилище больше смахивает на антропологический музей, нежели на домашний очаг. Полки в комнатах заставлены занятными вещицами со всего мира.
+        Жутковатая маска из Ганы, золотой крест из Испании, фигурка облаченного в тунику божества из Эгеи, символ неувядаемой силы юного воина с Борнео.</p>
+      <p>Лэнгдон, присев на окованный медью сундук из Бомбея, наслаждался живительным теплом ароматного шоколада. Боковым зрением он видел в оконном стекле свое отражение. Искореженное, бледное… настоящее привидение. К тому же стареющее привидение, подумал
+        он, – беспощадное напоминание о том, что его по-прежнему молодая душа заключена в бренную оболочку.</p>
+      <p>Хотя сорокапятилетний Лэнгдон и не был красив в классическом понимании этого слова, у него, как выражались его сотрудницы, была внешность «эрудита»: седые пряди в густых каштановых волосах, пытливые проницательные голубые глаза, обворожительно сочный
+        низкий голос, уверенная беззаботная улыбка спортсмена из университетской команды. Занимавшийся прыжками в воду в школе и колледже, Лэнгдон сохранил телосложение пловца – шесть футов тренированных мышц.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="mail__attachments">
+  <ul class="mail__attachments-list">
+
+    <li class="mail__attachments-item">
+
+      <div class="mail__attachments-top" style="background-image: url(pic/download/download-01.jpg);">
+        <div class="mail__attachments-inner">
+          <span class="mail__attachments-txt">Photo-8796.jpg</span>
+          <span class="mail__attachments-txt mail__attachments-txt--size">1,4 м</span>
+        </div>
+      </div>
+
+      <div class="mail__attachments-bottom">
+        <a download class="mail__attachments-downloads">Скачать</a>
+      </div>
+
+    </li>
+
+    <li class="mail__attachments-item">
+
+      <div class="mail__attachments-top" style="background-image: url(pic/download/download-02.jpg);">
+        <div class="mail__attachments-inner">
+          <span class="mail__attachments-txt">Photo-4352.jpg</span>
+          <span class="mail__attachments-txt mail__attachments-txt--size">2,6 м</span>
+        </div>
+      </div>
+
+      <div class="mail__attachments-bottom">
+        <a download class="mail__attachments-downloads">Скачать</a>
+      </div>
+    </li>
+
+    <li class="mail__attachments-item">
+
+      <div class="mail__attachments-top">
+        <div class="mail__attachments-inner">
+          <span class="mail__attachments-txt">Архив.zip</span>
+          <span class="mail__attachments-txt mail__attachments-txt--size">13 кб</span>
+        </div>
+      </div>
+
+      <div class="mail__attachments-bottom">
+        <a download class="mail__attachments-downloads">Скачать</a>
+      </div>
+
+    </li>
+
+  </ul>
+</div>
+
+          </div>
+
+        </div>
+
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
+

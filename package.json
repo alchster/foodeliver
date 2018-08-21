@@ -1,0 +1,19 @@
+{
+  "name": "foodeliver",
+  "version": "1.0.0",
+  "description": "foodeliver API JS module",
+  "main": "api.js",
+  "scripts": {
+    "build": "./node_modules/.bin/gulp",
+    "watch": "./node_modules/.bin/gulp watch"
+  },  
+  "author": "alchster",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-include": "^2.3.1",
+    "gulp-uglify": "^3.0.1",
+    "gulp-watch": "^5.0.1"
+  }
+}

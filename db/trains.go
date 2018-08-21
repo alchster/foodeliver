@@ -88,7 +88,7 @@ func SetStart(start string, tid UUID) error {
 		return errors.New("Service not found")
 	}
 	startTime = tm.Truncate(time.Minute)
-	if stationsList, _, err = Stations(); err != nil {
+	if stationsList, _, err = Stations(""); err != nil {
 		return err
 	}
 	stations = make([]Station, len(stationsList))
@@ -113,8 +113,6 @@ func TrainID(number string) (UUID, error) {
 	return t.ID, nil
 }
 
-type TimeResp time.Time
-
 type StationResp struct {
 	ID      UUID     `json:"id"`
 	Name    Text     `json:"name"`
@@ -127,9 +125,17 @@ type StationsResponseItem struct {
 	Station StationResp `json:"station"`
 }
 
-func Stations() ([]StationsListItem, []StationsResponseItem, error) {
+func Stations(suppId string) ([]StationsListItem, []StationsResponseItem, error) {
 	if startTime.IsZero() {
 		return nil, nil, errors.New("Start time not set")
+	}
+	var supplierId UUID
+	if suppId != "" {
+		if sid, err := GetUUID(suppId); err == nil {
+			supplierId = UUID{sid}
+		} else {
+			return nil, nil, err
+		}
 	}
 	var lst []StationsListItem
 	if err := db.Where("train_id = ?", trainID).Order("relative_arrival").Find(&lst).Error; err != nil {
@@ -141,6 +147,22 @@ func Stations() ([]StationsListItem, []StationsResponseItem, error) {
 	for i, sli := range lst {
 		if !sli.HasDelivery {
 			continue
+		}
+		if suppId != "" {
+			var ss SupplierStation
+			if db.Where("station_id = ? and supplier_id = ?",
+				sli.StationID, supplierId).First(&ss).Error != nil {
+				continue
+			}
+			var period time.Duration
+			if sli.RelativeDeparture-sli.RelativeArrival > 5*time.Minute {
+				period = 5*time.Minute + ss.DeliveryTime +
+					time.Duration(service.MinutesForPayment)*time.Minute
+				sli.FastestDelivery = sli.Departure.Add(-period)
+			} else {
+				period = ss.DeliveryTime + time.Duration(service.MinutesForPayment)*time.Minute
+				sli.FastestDelivery = sli.Arrival.Add(-period)
+			}
 		}
 		if !nearFound && sli.FastestDelivery.Sub(now) > 0 {
 			lst[i].Nearest = true
@@ -157,13 +179,4 @@ func Stations() ([]StationsListItem, []StationsResponseItem, error) {
 		})
 	}
 	return lst, res, nil
-}
-
-func (t TimeResp) MarshalJSON() ([]byte, error) {
-	if time.Time(t).IsZero() {
-		return []byte("null"), nil
-	}
-	loc, _ := time.LoadLocation("Europe/Moscow")
-	str := time.Time(t).In(loc).Format("2006/01/02 15:04")
-	return []byte("\"" + str + "\""), nil
 }

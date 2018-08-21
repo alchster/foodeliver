@@ -1,0 +1,52 @@
+
+<li class="moderators__item moderators__item--add box-item js-moderators-item">
+  <div class="moderators__top">
+    <div class="moderators__add js-moderators-btn">
+      <div class="moderators__icon"></div>
+      <span class="moderators__txt">Добавить нового пользователя</span>
+    </div>
+  </div>
+  <div class="moderators__bottom js-moderators-collapse">
+    <div class="moderators__row">
+
+      <div class="moderators__col moderators__col--large">
+        <label class="moderators__label">Имя / Название</label>
+        <input type="text" class="input-bottom" name="description">
+      </div>
+
+      <div class="moderators__col moderators__col--small">
+        <label class="moderators__label">Роль</label>
+        <div class="select-wrapp select-checkbox">
+          <select name="Select" class="custom-select-checkbox">
+          <option value="moderator">Модератор</option>
+          <option value="supplier">Поставщик</option>
+          <option value="administrator">Администратор</option>
+        </select>
+        </div>
+      </div>
+
+      <div class="moderators__col moderators__col--small">
+        <label class="moderators__label">Логин</label>
+        <input type="text" class="input-bottom" name="login">
+      </div>
+      <div class="moderators__col moderators__col--small">
+        <label class="moderators__label">Пароль</label>
+        <input type="password" class="input-bottom" name="password">
+      </div>
+      <div class="moderators__col moderators__col--large">
+        <label class="moderators__label">Эл. почта для приглашения</label>
+        <input type="text" class="input-bottom" name="email">
+      </div>
+    </div>
+
+    <div class="moderators__row">
+      <div class="moderators__col">
+        <span class="btn moderators__btn-create">Создать</span>
+      </div>
+      <div class="moderators__col">
+        <span class="btn btn--orange js-moderators-cancel">Отменить</span>
+      </div>
+    </div>
+
+  </div>
+</li>

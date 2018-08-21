@@ -1,0 +1,84 @@
+			<aside class="custom-scroll">
+				<ul class="sidebar">
+	<li class="sidebar__item">
+		<a href="#" class="sidebar__link">
+			<span class="sidebar__icon">
+				<svg class="icon-administrirov">
+					<use xlink:href="#administrirov"></use>
+				</svg>
+			</span>
+			<span class="sidebar__text">
+				Администри- рование
+			</span>
+		</a>
+	</li>
+	
+	
+		<li class="sidebar__item active">
+			<a href="/accounts" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-users">
+						<use xlink:href="#users"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Учетные записи
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-nastroika">
+						<use xlink:href="#nastroika"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Настройки
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-list">
+						<use xlink:href="#list"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Реестр поставщиков
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-hamburger-2">
+						<use xlink:href="#hamburger-2"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Категории товаров
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-sale-statistics">
+						<use xlink:href="#sale-statistics"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Статистика
+				</span>
+			</a>
+		</li>
+	
+	
+</ul>
+			</aside>

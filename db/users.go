@@ -6,6 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"log"
+	"strings"
 )
 
 type User struct {
@@ -16,11 +17,12 @@ type User struct {
 }
 
 func (u *User) BeforeSave() error {
-	if u.Login == "" || u.Password == "" {
+	pass := u.GetPassword()
+	if strings.TrimSpace(u.Login) == "" || strings.TrimSpace(pass) == "" {
 		return errors.New("Neither login nor password can be empty")
 	}
-	if cost, err := bcrypt.Cost([]byte(u.Password)); err != nil || cost == 0 {
-		u.Password = PasswordStr(cryptPassword(string(u.Password)))
+	if cost, err := bcrypt.Cost([]byte(u.GetPassword())); err != nil || cost == 0 {
+		u.Password = PasswordStr(cryptPassword(u.GetPassword()))
 	}
 	return nil
 }

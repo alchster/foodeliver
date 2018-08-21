@@ -1,0 +1,737 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Реестр поставщиков</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+<header class="header">
+	<a href="#" class="header__logo">
+		<svg class="icon-logo">
+			<use xlink:href="#logo"></use>
+		</svg>
+	</a>
+	<div class="header__ctrl">
+		<div class="header__ctrl-item header__user">
+			<div class="header__user-text">
+				
+					<span class="header__user-name">Константин</span>
+					<span class="header__user-surname">Константинопольский</span>
+				
+				
+			</div>
+			<div class="header__user-image">
+				<img src="pic/user.jpg" alt="user">
+			</div>
+		</div>
+		<div class="header__ctrl-item header__menu">
+			<ul class="header__menu-list">
+				<li class="header__menu-item">
+					<a href="#" class="header__menu-link header__message">
+						
+							<span class="header__message-num" data-num="3"></span>
+						
+						<svg class="icon-mail">
+							<use xlink:href="#mail"></use>
+						</svg>
+					</a>
+				</li>
+				<li class="header__menu-item">
+					<div class="header__menu-link header__search js-search-btn">
+						<svg class="icon-search">
+							<use xlink:href="#search"></use>
+						</svg>
+					</div>
+					<div class="header__search-more js-header-search">
+						<input type="text" class="header__search-input" placeholder="Искать">
+						<span class="header__search-close js-search-close"></span>
+					</div>
+
+				</li>
+			</ul>
+		</div>
+		<div class="header__ctrl-item header__logout">
+			<div class="header__menu-link">
+				<span class="header__logout-txt">Выход</span>
+				<div class="header__logout-icon">
+					<svg class="icon-turn-off">
+						<use xlink:href="#turn-off"></use>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+
+
+	<div class="wrapper">
+
+			<aside class="custom-scroll">
+				<ul class="sidebar">
+	<li class="sidebar__item active">
+		<a href="#" class="sidebar__link">
+			<span class="sidebar__icon">
+				<svg class="icon-administrirov">
+					<use xlink:href="#administrirov"></use>
+				</svg>
+			</span>
+			<span class="sidebar__text">
+				Администри- рование
+			</span>
+		</a>
+	</li>
+	
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-users">
+						<use xlink:href="#users"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Учетные записи
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-nastroika">
+						<use xlink:href="#nastroika"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Настройки
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-list">
+						<use xlink:href="#list"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Реест поставщиков
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-hamburger-2">
+						<use xlink:href="#hamburger-2"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Категории товаров
+				</span>
+			</a>
+		</li>
+	
+		<li class="sidebar__item">
+			<a href="#" class="sidebar__link">
+				<span class="sidebar__icon">
+					<svg class="icon-sale-statistics">
+						<use xlink:href="#sale-statistics"></use>
+					</svg>
+				</span>
+				<span class="sidebar__text">
+					Статистика
+				</span>
+			</a>
+		</li>
+	
+	
+</ul>
+			</aside>
+
+			<div class="content">
+
+        <div class="head-search ">
+	<div class="head-search__holder">
+		<span class="head-search__title">Реестр поставщиков </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти поставщика">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+
+        <div class="suppliers-info">
+  <ul class="suppliers-info__list">
+
+    <li class="suppliers-info__item box-item">
+
+      <div class="suppliers-info__top">
+
+        <div class="suppliers-info__col suppliers-info__col--media">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Наименование</span>
+            <input type="text" class="input-bottom suppliers-info__input suppliers-info__input--name" value="Mackdonalds" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">ИНН</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="104938672301" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата регистрации</span>
+            <span class="suppliers-info__txt">14 апреля 2018 года, 14:09</span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--large">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Контактные данные</span>
+            <span class="suppliers-info__contacts">
+              <span class="suppliers-info__contacts-txt">8 (800) 707–44–99</span>
+              <a href="mailto: info@ru.mcd.com" class="suppliers-info__contacts-txt suppliers-info__contacts-txt--link">info@ru.mcd.com</a>
+              <span class="suppliers-info__contacts-txt">115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--small">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Логин</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="Mackdonald-3452" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Пароль</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <svg class="icon-eye">
+                <use xlink:href="#eye"></use>
+              </svg>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">
+              <input type="password" class="input-bottom suppliers-info__input" value="ERfSJ09&J" disabled>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--x-small">
+          <div class="suppliers-info__row suppliers-info__row--status">
+            <span class="suppliers-info__label">Статус поставщика</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <span class="suppliers-info__status active"></span>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">Активен</span>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата последней смены статуса</span>
+            <span class="suppliers-info__txt">21 апреля 2018 года, 15:32</span>
+          </div>
+        </div>
+
+        <span class="suppliers-info__editing">
+          <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+        </span>
+      </div>
+
+      <div class="suppliers-info__bottom">
+        <span class="btn suppliers-info__btn">Сохранить</span>
+      </div>
+
+    </li>
+
+    <li class="suppliers-info__item box-item editing">
+
+      <div class="suppliers-info__top">
+
+        <div class="suppliers-info__col suppliers-info__col--media">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Наименование</span>
+            <input type="text" class="input-bottom suppliers-info__input suppliers-info__input--name" value="Якитория">
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">ИНН</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="685923576893">
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата регистрации</span>
+            <span class="suppliers-info__txt">5 мая 2018 года, 09:01</span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--large">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Контактные данные</span>
+            <span class="suppliers-info__contacts">
+              <span class="suppliers-info__contacts-txt">+7 495 234-24-24</span>
+              <a href="mailto: info@ru.mcd.com" class="suppliers-info__contacts-txt suppliers-info__contacts-txt--link">info@yakitory.ru</a>
+              <span class="suppliers-info__contacts-txt">115054, Москва, Дежнева проезд, д.13</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--small">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Логин</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="Yakitory-1928">
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Пароль</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="ERfSJ09&J">
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--x-small">
+          <div class="suppliers-info__row suppliers-info__row--status">
+            <span class="suppliers-info__label">Статус поставщика</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <span class="suppliers-info__status not-active"></span>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">
+              <div class="select-wrapp select-center">
+                <select name="status" id="" class="custom-select-center">
+                  <option value="">Не активен</option>
+                  <option value="">Активен</option>
+                  <option value="">Заблокарован</option>
+                  <option value="">Неодобрен для публикации</option>
+                </select>
+              </div>
+            </span>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата последней смены статуса</span>
+            <span class="suppliers-info__txt">10 февраля 2018 года, 10:00</span>
+          </div>
+        </div>
+
+        <span class="suppliers-info__editing">
+          <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+        </span>
+      </div>
+
+      <div class="suppliers-info__bottom">
+        <span class="btn suppliers-info__btn">Сохранить</span>
+      </div>
+
+    </li>
+
+    <li class="suppliers-info__item box-item">
+
+      <div class="suppliers-info__top">
+
+        <div class="suppliers-info__col suppliers-info__col--media">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Наименование</span>
+            <input type="text" class="input-bottom suppliers-info__input suppliers-info__input--name" value="Додо пицца" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">ИНН</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="672098235782" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата регистрации</span>
+            <span class="suppliers-info__txt">1 января 2018 года, 14:00</span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--large">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Контактные данные</span>
+            <span class="suppliers-info__contacts">
+              <span class="suppliers-info__contacts-txt">8 (800) 707–44–99</span>
+              <a href="mailto: info@ru.mcd.com" class="suppliers-info__contacts-txt suppliers-info__contacts-txt--link">info@dodo.ru</a>
+              <span class="suppliers-info__contacts-txt">115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус»</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--small">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Логин</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="Dodo-45892" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Пароль</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <svg class="icon-eye">
+                <use xlink:href="#eye"></use>
+              </svg>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">
+              <input type="password" class="input-bottom suppliers-info__input" value="ERfSJ09&J" disabled>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--x-small">
+          <div class="suppliers-info__row suppliers-info__row--status">
+            <span class="suppliers-info__label">Статус поставщика</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <span class="suppliers-info__status blocked"></span>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">Заблокирован</span>
+            <div class="suppliers-info__tools">
+              <span class="suppliers-info__tools-link">причина блокировки?</span>
+              <span class="suppliers-info__tools-info">текст текст текст текст текст текст текст текст текст текст текст текст текст</span>
+            </div>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата последней смены статуса</span>
+            <span class="suppliers-info__txt">21 апреля 2018 года, 15:32</span>
+          </div>
+        </div>
+
+        <span class="suppliers-info__editing">
+          <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+        </span>
+      </div>
+
+      <div class="suppliers-info__bottom">
+        <span class="btn suppliers-info__btn">Сохранить</span>
+      </div>
+
+    </li>
+
+    <li class="suppliers-info__item box-item">
+
+      <div class="suppliers-info__top">
+
+        <div class="suppliers-info__col suppliers-info__col--media">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Наименование</span>
+            <input type="text" class="input-bottom suppliers-info__input suppliers-info__input--name" value="Mackdonalds" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">ИНН</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="104938672301" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата регистрации</span>
+            <span class="suppliers-info__txt">14 апреля 2018 года, 14:09</span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--large">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Контактные данные</span>
+            <span class="suppliers-info__contacts">
+              <span class="suppliers-info__contacts-txt">8 (800) 707–44–99</span>
+              <a href="mailto: info@ru.mcd.com" class="suppliers-info__contacts-txt suppliers-info__contacts-txt--link">info@ru.mcd.com</a>
+              <span class="suppliers-info__contacts-txt">115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--small">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Логин</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="Mackdonald-3452" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Пароль</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <svg class="icon-eye">
+                <use xlink:href="#eye"></use>
+              </svg>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">
+              <input type="password" class="input-bottom suppliers-info__input" value="ERfSJ09&J" disabled>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--x-small">
+          <div class="suppliers-info__row suppliers-info__row--status">
+            <span class="suppliers-info__label">Статус поставщика</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <span class="suppliers-info__status active"></span>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">Активен</span>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата последней смены статуса</span>
+            <span class="suppliers-info__txt">21 апреля 2018 года, 15:32</span>
+          </div>
+        </div>
+
+        <span class="suppliers-info__editing">
+          <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+        </span>
+      </div>
+
+      <div class="suppliers-info__bottom">
+        <span class="btn suppliers-info__btn">Сохранить</span>
+      </div>
+
+    </li>
+
+    <li class="suppliers-info__item box-item">
+
+      <div class="suppliers-info__top">
+
+        <div class="suppliers-info__col suppliers-info__col--media">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Наименование</span>
+            <input type="text" class="input-bottom suppliers-info__input suppliers-info__input--name" value="Додо пицца" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">ИНН</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="672098235782" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата регистрации</span>
+            <span class="suppliers-info__txt">1 января 2018 года, 14:00</span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--large">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Контактные данные</span>
+            <span class="suppliers-info__contacts">
+              <span class="suppliers-info__contacts-txt">8 (800) 707–44–99</span>
+              <a href="mailto: info@ru.mcd.com" class="suppliers-info__contacts-txt suppliers-info__contacts-txt--link">info@dodo.ru</a>
+              <span class="suppliers-info__contacts-txt">115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус»</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--small">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Логин</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="Dodo-45892" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Пароль</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <svg class="icon-eye">
+                <use xlink:href="#eye"></use>
+              </svg>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">
+              <input type="password" class="input-bottom suppliers-info__input" value="ERfSJ09&J" disabled>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--x-small">
+          <div class="suppliers-info__row suppliers-info__row--status">
+            <span class="suppliers-info__label">Статус поставщика</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <span class="suppliers-info__status blocked"></span>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">Заблокирован</span>
+            <div class="suppliers-info__tools">
+              <span class="suppliers-info__tools-link">причина блокировки?</span>
+              <span class="suppliers-info__tools-info">текст текст текст текст текст текст текст текст текст текст текст текст текст</span>
+            </div>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата последней смены статуса</span>
+            <span class="suppliers-info__txt">21 апреля 2018 года, 15:32</span>
+          </div>
+        </div>
+
+        <span class="suppliers-info__editing">
+          <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+        </span>
+      </div>
+
+      <div class="suppliers-info__bottom">
+        <span class="btn suppliers-info__btn">Сохранить</span>
+      </div>
+
+    </li>
+
+    <li class="suppliers-info__item box-item">
+
+      <div class="suppliers-info__top">
+
+        <div class="suppliers-info__col suppliers-info__col--media">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Наименование</span>
+            <input type="text" class="input-bottom suppliers-info__input suppliers-info__input--name" value="Mackdonalds" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">ИНН</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="104938672301" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата регистрации</span>
+            <span class="suppliers-info__txt">14 апреля 2018 года, 14:09</span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--large">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Контактные данные</span>
+            <span class="suppliers-info__contacts">
+              <span class="suppliers-info__contacts-txt">8 (800) 707–44–99</span>
+              <a href="mailto: info@ru.mcd.com" class="suppliers-info__contacts-txt suppliers-info__contacts-txt--link">info@ru.mcd.com</a>
+              <span class="suppliers-info__contacts-txt">115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--small">
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Логин</span>
+            <input type="text" class="input-bottom suppliers-info__input" value="Mackdonald-3452" disabled>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Пароль</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <svg class="icon-eye">
+                <use xlink:href="#eye"></use>
+              </svg>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">
+              <input type="password" class="input-bottom suppliers-info__input" value="ERfSJ09&J" disabled>
+            </span>
+          </div>
+        </div>
+
+        <div class="suppliers-info__col suppliers-info__col--x-small">
+          <div class="suppliers-info__row suppliers-info__row--status">
+            <span class="suppliers-info__label">Статус поставщика</span>
+            <span class="suppliers-info__inner suppliers-info__inner--small">
+              <span class="suppliers-info__status active"></span>
+            </span>
+            <span class="suppliers-info__inner suppliers-info__inner--large">Активен</span>
+          </div>
+          <div class="suppliers-info__row">
+            <span class="suppliers-info__label">Дата последней смены статуса</span>
+            <span class="suppliers-info__txt">21 апреля 2018 года, 15:32</span>
+          </div>
+        </div>
+
+        <span class="suppliers-info__editing">
+          <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+        </span>
+      </div>
+
+      <div class="suppliers-info__bottom">
+        <span class="btn suppliers-info__btn">Сохранить</span>
+      </div>
+
+    </li>
+
+  </ul>
+</div>
+
+
+        <div class="pagination ">
+	<ul class="pagination__list">
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link active">1</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">2</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">3</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">4</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">5</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">6</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">...</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">16</a>
+		</li>
+	</ul>
+</div>
+
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
+

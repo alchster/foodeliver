@@ -11,7 +11,9 @@ func Setup(router *gin.Engine, baseUrl string, train string) error {
 	v1 := router.Group(baseUrl)
 	if train == "" {
 		authMiddleware = newAuthMiddlware("hello")
-		router.POST("/login", authMiddleware.LoginHandler)
+		if err := setupTemplates(router, "/"); err != nil {
+			return err
+		}
 		v1.Use(authMiddleware.MiddlewareFunc())
 		v1.GET("/me", me)
 		v1.GET("/ping", ping)

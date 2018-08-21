@@ -1,0 +1,373 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Учетные записи</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+
+        <div class="head-search ">
+	<div class="head-search__holder">
+		<span class="head-search__title">Учетные записи </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти пользователя">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+
+        <div class="moderators js-moderators-tab">
+  <div class="moderators__nav">
+    <ul class="moderators__nav-list">
+      <li class="moderators__nav-item js-moderators-nav active">
+        <a href="#" class="moderators__nav-link">Администраторы</a>
+      </li>
+      <li class="moderators__nav-item js-moderators-nav">
+        <a href="#" class="moderators__nav-link">Модераторы</a>
+      </li>
+      <li class="moderators__nav-item js-moderators-nav">
+        <a href="#" class="moderators__nav-link">Поставщики</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="moderators__body">
+
+    <div class="moderators__content js-moderators-content show">
+      <ul class="moderators__list">
+
+{{include "parts/create-user"}}
+
+{{ range $id, $val := .data.administrator }}
+  <li class="moderators__item box-item">
+    <div class="moderators__top">
+      <div class="moderators__row moderators__row--admin">
+        <span class="moderators__user-id" style="display:none !important;">{{$id}}</span>
+        <span class="moderators__user-type" style="display:none !important;">user</span>
+
+        <div class="moderators__col moderators__col--large">
+          <span class="moderators__label">Администратор</span>
+          <span class="moderators__name">{{$val.Description}}</span>
+        </div>
+
+        <div class="moderators__col moderators__col--small">
+          <span class="moderators__label">Дата регистрации</span>
+          <span class="moderators__name">{{$val.Created}}</span>
+        </div>
+
+      </div>
+    </div>
+
+  </li>
+{{ end }}
+</ul>
+
+    </div>
+
+    <div class="moderators__content js-moderators-content">
+
+      <ul class="moderators__list">
+
+{{include "parts/create-user"}}
+
+{{ range $id, $val := .data.moderator }}
+
+  <li class="moderators__item box-item js-moderators-item">
+    <div class="moderators__top">
+      <div class="moderators__row">
+        <span class="moderators__user-id" style="display:none !important;">{{$id}}</span>
+        <span class="moderators__user-type" style="display:none !important;">user</span>
+
+        <div class="moderators__col moderators__col--x-large moderators__col--delete js-moderators-col-del">
+          <span class="moderators__info">Вы точно хотите удалить модератора &laquo;{{$val.Description}}&raquo;?</span>
+          <span class="moderators__info">Действие необратимо!</span>
+        </div>
+
+        <div class="moderators__col moderators__col--media js-moderators-col">
+          <span class="moderators__label">Модератор</span>
+          <span class="moderators__name">{{$val.Description}}</span>
+        </div>
+
+        <div class="moderators__col moderators__col--small js-moderators-col">
+          <span class="moderators__label">Назначенные поставщики</span>
+          <div class="select-wrapp select-checkbox">
+            <select name="provider" class="custom-select-checkbox">
+            <option value="">Макдональдс</option>
+            <option value="">Domino Pizza</option>
+            <option value="">Тануки</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--small js-moderators-col">
+          <span class="moderators__label">Запрещенные поставщики</span>
+          <div class="select-wrapp select-checkbox">
+            <select name="role" class="custom-select-checkbox">
+            <option value="">KFC</option>
+            <option value="">Якитория</option>
+            <option value="">Маки Маки</option>
+          </select>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--small moderators__col--checkbox js-moderators-col">
+          <span class="moderators__label">Работа с поставщиками</span>
+          <label class="switch">
+          <input type="checkbox"{{if $val.Active}} checked{{end}}>
+          <span class="slider round"></span>
+        </label>
+        </div>
+
+        <div class="moderators__col moderators__col--x-small">
+          <div class="moderators__inner moderators__inner--btn js-moderators-btn">
+            <svg class="icon-edit">
+            <use xlink:href="#edit"></use>
+          </svg>
+          </div>
+          <div class="moderators__inner moderators__inner--del">
+            <span class="moderators__delete js-moderators-delete"></span>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--small moderators__col--delete js-moderators-col-del">
+          <span class="btn js-moderators-del">Удалить</span>
+        </div>
+
+        <div class="moderators__col moderators__col--small moderators__col--delete js-moderators-col-del">
+          <span class="btn btn--orange js-moderators-delete-calcel">Отменить</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="moderators__bottom js-moderators-collapse">
+      <form action="" class="moderators__form">
+        <div class="moderators__row">
+          <div class="moderators__col moderators__col--small">
+            <label class="moderators__label">Логин</label>
+            <input type="text" name="login" class="input-bottom" placeholder="Логин" value="{{$val.Login}}">
+          </div>
+          <div class="moderators__col moderators__col--small">
+            <label class="moderators__label">Пароль</label>
+            <input type="password" name="password" class="input-bottom" placeholder="Пароль">
+          </div>
+          <div class="moderators__col moderators__col--small">
+            <button class="btn" type="submit">Изменить</button>
+          </div>
+          <div class="moderators__col moderators__col--small">
+            <span class="btn btn--orange js-moderators-cancel">Отменить</span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </li>
+{{ end }}
+
+</ul>
+
+
+    </div>
+
+    <div class="moderators__content js-moderators-content">
+      <ul class="moderators__list moderators__list--suppliers">
+
+{{include "parts/create-user"}}
+
+{{ range $id, $val := .data.supplier }}
+  <li class="moderators__item js-moderators-item">
+    <div class="moderators__top box-item">
+      <div class="moderators__row moderators__row--suppliers">
+        <span class="moderators__user-id" style="display:none !important;">{{$id}}</span>
+        <span class="moderators__user-type" style="display:none !important;">supplier</span>
+
+        <div class="moderators__col moderators__col--x-large moderators__col--delete js-moderators-col-del">
+          <span class="moderators__info">Вы точно хотите удалить поставщика &laquo;{{$val.Description}}&raquo;?</span>
+          <span class="moderators__info">Действие необратимо!</span>
+        </div>
+
+        <div class="moderators__col moderators__col--large js-moderators-col">
+          <span class="moderators__label">Поставщик</span>
+          <span class="moderators__name">{{$val.Description}}</span>
+        </div>
+
+        <div class="moderators__col moderators__col--small moderators__col--checkbox js-moderators-col">
+          <span class="moderators__label">Работа с ресурсом</span>
+          <label class="switch">
+          <input type="checkbox"{{if $val.Active}} checked{{end}}>
+          <span class="slider round enable"></span>
+        </label>
+        </div>
+
+        <div class="moderators__col moderators__col--x-small">
+          <div class="moderators__inner moderators__inner--btn js-moderators-btn">
+            <svg class="icon-eye">
+              <use xlink:href="#eye"></use>
+            </svg>
+          </div>
+          <div class="moderators__inner moderators__inner--del">
+            <span class="moderators__delete js-moderators-delete"></span>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--small moderators__col--delete js-moderators-col-del">
+          <span class="btn js-moderators-del">Удалить</span>
+        </div>
+
+        <div class="moderators__col moderators__col--small moderators__col--delete js-moderators-col-del">
+          <span class="btn btn--orange js-moderators-delete-calcel">Отменить</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="moderators__bottom box-item js-moderators-collapse">
+      <div class="moderators__row moderators__row--collapse">
+
+        <div class="moderators__col moderators__col--media">
+          <div class="moderators__holder">
+            <span class="moderators__label">Наименование</span>
+            <input type="text" class="input-bottom moderators__input" value="{{$val.Description}}" disabled>
+          </div>
+          <div class="moderators__holder">
+            <span class="moderators__label">ИНН</span>
+            <input type="text" class="input-bottom moderators__input" value="{{$val.Supplier.ITN}}" disabled>
+          </div>
+          <div class="moderators__holder">
+            <span class="moderators__label">Дата регистрации</span>
+            <span class="moderators__txt">{{$val.Created}}</span>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--large">
+          <div class="moderators__holder">
+            <span class="moderators__label">Контактные данные</span>
+            <span class="moderators__contacts">
+              <span class="moderators__contacts-txt">{{$val.Supplier.Address}}</span>
+              <a href="mailto:{{$val.Supplier.Email}}" class="moderators__contacts-txt moderators__contacts-txt--link">{{$val.Supplier.Email}}</a>
+              <span class="moderators__contacts-txt">{{$val.Supplier.Address}}</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--small">
+          <div class="moderators__holder">
+            <span class="moderators__label">Логин</span>
+            <input type="text" class="input-bottom moderators__input" value="{{$val.Login}}" disabled>
+          </div>
+          <div class="moderators__holder">
+            <span class="moderators__label">Пароль</span>
+            <input type="password" class="input-bottom moderators__input" placeholder="********" value="" disabled>
+          </div>
+        </div>
+
+        <div class="moderators__col moderators__col--x-small">
+          <div class="moderators__holder moderators__holder--status">
+            <span class="moderators__label">Статус поставщика</span>
+            <span class="moderators__inner moderators__inner--small">
+              <span class="moderators__status active"></span>
+            </span>
+            <span class="moderators__inner moderators__inner--large">Активен</span>
+          </div>
+          <div class="moderators__holder">
+            <span class="moderators__label">Дата последней смены статуса</span>
+            <span class="moderators__txt">{{$val.Updated}}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </li>
+{{ end }}
+
+</ul>
+
+    </div>
+
+  </div>
+</div>
+
+
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>

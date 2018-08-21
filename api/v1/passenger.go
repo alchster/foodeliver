@@ -86,7 +86,12 @@ func basketRemove(c *gin.Context) {
 }
 
 func stationsList(c *gin.Context) {
-	_, sl, err := db.Stations()
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	_, sl, err := db.Stations(q.SupplierID)
 	if err != nil {
 		badRequest(err, c)
 		return
