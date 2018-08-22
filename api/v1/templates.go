@@ -40,14 +40,27 @@ func setupTemplates(router *gin.Engine, base string) error {
 	router.GET("/login", login)
 	router.GET("/logout", logout)
 	router.POST("/login", loginHandler)
+	router.GET(base+"/admin", authMiddleware.MiddlewareFunc(), admin)
 	router.GET(base+"/accounts", authMiddleware.MiddlewareFunc(), accounts)
+	router.GET(base+"/settings", authMiddleware.MiddlewareFunc(), settings)
+	router.GET(base, authMiddleware.MiddlewareFunc(), settings)
 	return nil
 }
 
-func userInfo(claims map[string]interface{}) (*db.UserInfo, error) {
+func userInfo(c *gin.Context, url string) (*db.UserInfo, bool) {
+	claims := jwt.ExtractClaims(c)
 	userId, _ := claims["user_id"].(string)
 	role, _ := claims["type"].(string)
-	return db.GetUserInfo(userId, role)
+	ui, err := db.GetUserInfo(userId, role)
+	if err != nil {
+		badRequest(err, c)
+		return nil, false
+	}
+	if !hasAccess(ui.Role, url) {
+		c.Redirect(http.StatusFound, indexForRole(ui.Role))
+		return nil, false
+	}
+	return ui, true
 }
 
 func login(c *gin.Context) {
@@ -79,23 +92,52 @@ func loginHandler(c *gin.Context) {
 	if !isJSON {
 		wh.RealWriteHeader(http.StatusFound)
 		c.Writer = wh.ResponseWriter
-		c.Writer.Header().Set("Location", c.Request.Header.Get("Referer"))
+		ref := c.Request.Header.Get("Referer")
+		if ref == "" {
+			ref = "/settings"
+		}
+		c.Writer.Header().Set("Location", ref)
 		wh.FakeData.WriteTo(c.Writer)
 	}
 }
 
 func accounts(c *gin.Context) {
-	ui, err := userInfo(jwt.ExtractClaims(c))
-	if err != nil {
-		badRequest(err, c)
+	ui, ok := userInfo(c, "/accounts")
+	if !ok {
 		return
-	}
-	if ui.Role != "administrator" {
-		forbidden(AccessDenied, c)
 	}
 
 	c.HTML(http.StatusOK, "accounts.template", h{
 		"userInfo": ui,
+		"url":      "/accounts",
+		"menu":     menuItems(ui.Role),
 		"data":     accountsList(ui.ID.String()),
+	})
+}
+
+func settings(c *gin.Context) {
+	ui, ok := userInfo(c, "/settings")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "settings.template", h{
+		"userInfo": ui,
+		"url":      "/settings",
+		"menu":     menuItems(ui.Role),
+	})
+}
+
+func admin(c *gin.Context) {
+	ui, ok := userInfo(c, "/admin")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "index.template", h{
+		"userInfo": ui,
+		"url":      "/admin",
+		"menu":     menuItems(ui.Role),
+		//"data":     accountsList(ui.ID.String()),
 	})
 }

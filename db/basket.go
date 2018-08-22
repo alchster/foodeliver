@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/shopspring/decimal"
+	//"log"
 )
 
 const MAX_ORDER_NUM = 9999
@@ -12,9 +13,9 @@ var nodeId = "001"
 var freeOrderNum = 1
 
 type BasketInfo struct {
-	Orders []Order         `json:"orders"`
-	Total  decimal.Decimal `json:"total"`
-	Charge decimal.Decimal `json:"charge"`
+	Orders []OrderInfo     `json:"orders"`
+	Total  decimal.Decimal `json:"cost_total"`
+	Charge decimal.Decimal `json:"cost_service"`
 	Size   int             `json:"size"`
 }
 
@@ -26,57 +27,146 @@ type BasketProduct struct {
 	Count       int     `json:"count"`
 }
 
+type BasketProductInfo struct {
+	ID          UUID            `json:"id"`
+	Name        Text            `json:"name"`
+	Description Text            `json:"description"`
+	Cost        decimal.Decimal `json:"cost"`
+	Count       int             `json:"count"`
+	Image       string          `json:"image"`
+	StationID   UUID            `json:"-"`
+}
+
+type BasketSupplierInfo struct {
+	ID          UUID                        `json:"id"`
+	Description string                      `json:"description"`
+	Logo        string                      `json:"logo"`
+	Stations    []BasketSupplierStationInfo `json:"stations"`
+}
+
+type BasketSupplierStationInfo struct {
+	ID           UUID     `json:"id"`
+	Name         Text     `json:"name"`
+	OrderEndTime TimeResp `json:"order_end_time"`
+	Selected     bool     `json:selected`
+}
+
+type OrderInfo struct {
+	ID       UUID                `json:"id"`
+	Number   string              `json:"number"`
+	Products []BasketProductInfo `json:"products"`
+	Supplier BasketSupplierInfo  `json:"supplier"`
+	Total    decimal.Decimal     `json:"supplier_cost_total"`
+	Charge   decimal.Decimal     `json:"supplier_cost_service"`
+}
+
 func (bp *BasketProduct) AfterFind() error {
 	db.Where("id = ?", bp.ProductID).First(&bp.Product)
 	return nil
 }
 
 func BasketFull(passId string) (*BasketInfo, error) {
+	if startTime.IsZero() {
+		return nil, errors.New("Start time not set")
+	}
+
 	basket, err := Basket(passId)
 	if err != nil {
 		return nil, err
 	}
-	sp := make(map[UUID][]Product)
+
+	sp := make(map[UUID][]BasketProductInfo)
 	size := 0
 	for _, prod := range basket {
 		sid := prod.Product.SupplierID
-		if ords, ok := sp[sid]; ok {
-			sp[sid] = append(ords, prod.Product)
+		bpi := BasketProductInfo{
+			ID:          prod.ProductID,
+			Name:        prod.Product.Name,
+			Description: prod.Product.Description,
+			Cost:        prod.Product.Cost,
+			Count:       prod.Count,
+			StationID:   prod.StationID,
+			Image:       prod.Product.Image,
+		}
+		if bpis, ok := sp[sid]; ok {
+			sp[sid] = append(bpis, bpi)
 		} else {
-			prods := make([]Product, 0, 1)
-			prods = append(prods, prod.Product)
+			prods := make([]BasketProductInfo, 0, 1)
+			prods = append(prods, bpi)
 			sp[sid] = prods
 		}
 		size += prod.Count
 	}
-	ords := make([]Order, 0, len(sp))
+
+	ords := make([]OrderInfo, 0, len(sp))
 	var allTotal, allCharge decimal.Decimal
+
 	for suppId, prods := range sp {
-		var supp Supplier
-		if err = db.Where("id = ?", suppId).First(&supp).Error; err != nil {
+		var s Supplier
+		if err = db.Where("id = ?", suppId).First(&s).Error; err != nil {
 			return nil, err
 		}
-		var total, charge decimal.Decimal
-		for _, p := range prods {
-			total.Add(p.Cost)
+		supp := BasketSupplierInfo{
+			ID:          s.ID,
+			Description: s.Description,
+			Logo:        s.Photo,
 		}
-		charge = calculateCharge(total)
-		allTotal.Add(total)
-		allCharge.Add(charge)
-		var status OrderStatus
-		db.Where("code = ?", ORDER_STATUS_NEW).First(&status)
-		ords = append(ords, Order{
-			Number:      fmt.Sprintf("%s-%04d", nodeId, freeOrderNum),
-			TrainID:     trainID,
-			TrainNumber: trainNumber,
-			Total:       total,
-			Charge:      charge,
-			Supplier:    supp,
-			Status:      status,
-			StatusCode:  status.Code,
-			Products:    prods,
-		})
-		freeOrderNum += 1
+
+		stationProds := make(map[UUID][]BasketProductInfo)
+		for _, p := range prods {
+			if sp, ok := stationProds[p.StationID]; ok {
+				stationProds[p.StationID] = append(sp, p)
+			} else {
+				pr := make([]BasketProductInfo, 0, 1)
+				pr = append(pr, p)
+				stationProds[p.StationID] = pr
+			}
+		}
+
+		stations := make([]BasketSupplierStationInfo, 0, 1)
+		_, sris, err := Stations(s.ID.String())
+		if err != nil {
+			return nil, err
+		}
+		for _, sri := range sris {
+			stations = append(stations, BasketSupplierStationInfo{
+				ID:           sri.Station.ID,
+				Name:         sri.Station.Name,
+				OrderEndTime: TimeResp(sri.Station.OrderDeadline),
+			})
+		}
+
+		for stationId, bpis := range stationProds {
+			var total, charge decimal.Decimal
+
+			for _, bpi := range bpis {
+				total = total.Add(bpi.Cost)
+			}
+			charge = calculateCharge(total)
+
+			sts := make([]BasketSupplierStationInfo, 0, len(stations))
+			for _, st := range stations {
+				if st.ID == stationId {
+					st.Selected = true
+				}
+				sts = append(sts, st)
+			}
+
+			supp.Stations = sts
+
+			allTotal = allTotal.Add(total)
+			allCharge = allCharge.Add(charge)
+
+			ords = append(ords, OrderInfo{
+				ID:       NewID(),
+				Number:   fmt.Sprintf("%s-%04d", nodeId, freeOrderNum),
+				Total:    total,
+				Charge:   charge,
+				Supplier: supp,
+				Products: bpis,
+			})
+			freeOrderNum += 1
+		}
 	}
 
 	return &BasketInfo{

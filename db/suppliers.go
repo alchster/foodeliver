@@ -2,12 +2,10 @@ package db
 
 import (
 	"errors"
-	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/shopspring/decimal"
 	"golang.org/x/crypto/bcrypt"
 	"log"
-	"math/rand"
 	"time"
 )
 
@@ -45,6 +43,8 @@ func (s *Supplier) AfterSave() error {
 
 func (s *Supplier) AfterFind() error {
 	db.Joins("JOIN texts on text_id = texts.id").Preload("Status").Find(&s.Status, "code = ?", s.StatusCode)
+	//FIXME: remove it after picture storage be ready
+	s.Photo = "/pic/new/n1.jpg"
 	return nil
 }
 
@@ -170,7 +170,7 @@ func SuppliersOnPath() ([]SupplierResponseItem, error) {
 		for i, p := range sli.Products {
 			pr[i] = SupplierProductResp{
 				ID:          p.ID,
-				Image:       fmt.Sprintf("/pic/food/food-%d.png", rand.Int()%32+1),
+				Image:       p.Image,
 				Name:        p.Name,
 				Description: p.Description,
 				Cost:        p.Cost,
@@ -179,7 +179,7 @@ func SuppliersOnPath() ([]SupplierResponseItem, error) {
 		res[idx] = SupplierResponseItem{
 			SupplierResponseBase: SupplierResponseBase{
 				ID:          sli.Supplier.ID,
-				Logo:        "/pic/new/n1.jpg",
+				Logo:        sli.Supplier.Photo,
 				Description: sli.Supplier.Description,
 			},
 			Products: pr,
@@ -224,7 +224,7 @@ func SupplierProducts(suppId string) (*SupplierCategoriesItem, error) {
 		if c, ok := catmap[p.CategoryID]; ok {
 			c.Products = append(c.Products, SupplierProductResp{
 				ID:          p.ID,
-				Image:       fmt.Sprintf("/pic/food/food-%d.png", rand.Int()%32+1),
+				Image:       p.Image,
 				Name:        p.Name,
 				Description: p.Description,
 				Cost:        p.Cost,
@@ -236,7 +236,7 @@ func SupplierProducts(suppId string) (*SupplierCategoriesItem, error) {
 				Products: []SupplierProductResp{
 					{
 						ID:          p.ID,
-						Image:       fmt.Sprintf("/pic/food/food-%d.png", rand.Int()%32+1),
+						Image:       p.Image,
 						Name:        p.Name,
 						Description: p.Description,
 						Cost:        p.Cost,
@@ -278,7 +278,7 @@ func SupplierProducts(suppId string) (*SupplierCategoriesItem, error) {
 	return &SupplierCategoriesItem{
 		SupplierResponseBase: SupplierResponseBase{
 			ID:          s.ID,
-			Logo:        "/pic/new/n1.jpg",
+			Logo:        s.Photo,
 			Description: s.Description,
 		},
 		Categories: cat,

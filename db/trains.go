@@ -114,11 +114,12 @@ func TrainID(number string) (UUID, error) {
 }
 
 type StationResp struct {
-	ID      UUID     `json:"id"`
-	Name    Text     `json:"name"`
-	Arrival TimeResp `json:"arrival"`
-	Stop    int      `json:"stop"`
-	Nearest bool     `json:"nearest"`
+	ID            UUID      `json:"id"`
+	Name          Text      `json:"name"`
+	Arrival       TimeResp  `json:"arrival"`
+	Stop          int       `json:"stop"`
+	Nearest       bool      `json:"nearest"`
+	OrderDeadline time.Time `json:"-"`
 }
 
 type StationsResponseItem struct {
@@ -170,11 +171,12 @@ func Stations(suppId string) ([]StationsListItem, []StationsResponseItem, error)
 		}
 		res = append(res, StationsResponseItem{
 			StationResp{
-				ID:      sli.Station.ID,
-				Name:    sli.Station.Name,
-				Arrival: TimeResp(sli.Arrival),
-				Stop:    int(sli.Departure.Sub(sli.Arrival) / time.Minute),
-				Nearest: lst[i].Nearest,
+				ID:            sli.Station.ID,
+				Name:          sli.Station.Name,
+				Arrival:       TimeResp(sli.Arrival),
+				Stop:          int(sli.Departure.Sub(sli.Arrival) / time.Minute),
+				Nearest:       lst[i].Nearest,
+				OrderDeadline: sli.FastestDelivery,
 			},
 		})
 	}

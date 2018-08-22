@@ -3,7 +3,7 @@ package api_v1
 import "github.com/alchster/foodeliver/db"
 import "log"
 
-type AllowedSupplierInfo struct {
+type SupplierInfo struct {
 	ID          db.UUID
 	Description string
 }
@@ -16,7 +16,8 @@ type AccountInfo struct {
 	Updated          db.TimeResp
 	Deleted          db.TimeResp
 	Active           bool
-	AllowedSuppliers []AllowedSupplierInfo
+	AllowedSuppliers []SupplierInfo
+	DeniedSuppliers  []SupplierInfo
 	Supplier         db.Supplier
 }
 
@@ -54,9 +55,9 @@ func accountsList(userId string) map[string]map[db.UUID]AccountInfo {
 		if u.Admin {
 			data["administrator"][u.ID] = ai
 		} else {
-			ai.AllowedSuppliers = make([]AllowedSupplierInfo, len(u.AllowedSuppliers))
+			ai.AllowedSuppliers = make([]SupplierInfo, len(u.AllowedSuppliers))
 			for _, s := range u.AllowedSuppliers {
-				ai.AllowedSuppliers = append(ai.AllowedSuppliers, AllowedSupplierInfo{
+				ai.AllowedSuppliers = append(ai.AllowedSuppliers, SupplierInfo{
 					ID:          s.ID,
 					Description: s.Description,
 				})

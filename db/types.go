@@ -37,7 +37,7 @@ type LoginUser struct {
 	Password    PasswordStr `json:"password" sql:"type:text;not null"`
 	Description string      `json:"description" sql:"type:text"`
 	Email       string      `json:"email" sql:"type:varchar(100)"`
-	//Photo       []byte `json:"-" sql:"-"`
+	Photo       string      `json:"-" sql:"-"`
 	//PhotoURL    string `json:"photo_url"`
 }
 

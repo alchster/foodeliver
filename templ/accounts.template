@@ -243,6 +243,7 @@
 {{include "parts/create-user"}}
 
 {{ range $id, $val := .data.supplier }}
+{{ $status:=$val.Supplier.Status }}
   <li class="moderators__item js-moderators-item">
     <div class="moderators__top box-item">
       <div class="moderators__row moderators__row--suppliers">
@@ -333,9 +334,9 @@
           <div class="moderators__holder moderators__holder--status">
             <span class="moderators__label">Статус поставщика</span>
             <span class="moderators__inner moderators__inner--small">
-              <span class="moderators__status active"></span>
+              <span class="moderators__status{{if eq $status.Code 1}} active{{end}}{{if eq $status.Code -1}} bloked{{end}}"></span>
             </span>
-            <span class="moderators__inner moderators__inner--large">Активен</span>
+            <span class="moderators__inner moderators__inner--large">{{$status.Status.RU}}</span>
           </div>
           <div class="moderators__holder">
             <span class="moderators__label">Дата последней смены статуса</span>

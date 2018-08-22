@@ -7,8 +7,11 @@ import (
 
 type UserInfo struct {
 	ID        UUID
+	Type      string
 	Role      string
+	RoleRU    string
 	FirstName string
+	Login     string
 	LastName  string
 	Photo     string
 	NewMail   int
@@ -23,12 +26,19 @@ func GetUserInfo(userId, role string) (*UserInfo, error) {
 	uid, err := GetUUID(userId)
 	id := UUID{uid}
 	var lu *LoginUser
-
+	var roleRu string
+	t := "user"
 	switch role {
-	case "administrator", "moderator":
+	case "administrator":
 		lu, err = userInfo(id)
+		roleRu = "Администратор"
+	case "moderator":
+		lu, err = userInfo(id)
+		roleRu = "Модератор"
 	case "supplier":
 		lu, err = supplierInfo(id)
+		t = role
+		roleRu = "Поставщик"
 	default:
 		return nil, InvalidUserRole
 	}
@@ -40,7 +50,10 @@ func GetUserInfo(userId, role string) (*UserInfo, error) {
 	first, last := names(lu.Description)
 	return &UserInfo{
 		ID:        lu.ID,
+		Type:      t,
 		Role:      role,
+		RoleRU:    roleRu,
+		Login:     lu.Login,
 		FirstName: first,
 		LastName:  last,
 		Photo:     "pic/user.jpg",

@@ -3,3 +3,4 @@ foodeliver*
 node_modules/
 package-lock.json
 static/js/api.js
+deploy.sh

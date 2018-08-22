@@ -11,6 +11,10 @@ var (
 	debugMode bool
 )
 
+func Raw(query string) *gorm.DB {
+	return db.Raw(query)
+}
+
 func Open(uri string, debug bool) error {
 	debugMode = debug
 	if debugMode {

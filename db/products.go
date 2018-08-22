@@ -1,7 +1,9 @@
 package db
 
 import (
+	"fmt"
 	"github.com/shopspring/decimal"
+	"math/rand"
 	"time"
 )
 
@@ -18,6 +20,7 @@ type Product struct {
 	Status          ProductStatus     `json:"status" gorm:"foreignkey:StatusCode; association_foreignkey:Code"`
 	StatusCode      ProductStatusCode `json:"status_code" sql:"type:smallint REFERENCES product_statuses(code)"`
 	Cost            decimal.Decimal   `json:"cost" gorm:"type:numeric"`
+	Image           string            `json:"image"`
 	UnavailableFrom *time.Time        `json:"unavailable_from" sql:"type:timestamptz;default:null"`
 	UnavailableTo   *time.Time        `json:"unavailable_to" sql:"type:timestamptz;default:null"`
 }
@@ -26,5 +29,7 @@ func (p *Product) AfterFind() error {
 	db.Where("id = ?", p.NameID).First(&p.Name)
 	db.Where("id = ?", p.CategoryID).First(&p.Category)
 	db.Where("id = ?", p.DescriptionID).First(&p.Description)
+	//FIXME: remove this when storage be ready
+	p.Image = fmt.Sprintf("/pic/food/food-%d.png", rand.Int()%32+1)
 	return nil
 }

@@ -8,9 +8,12 @@
 		<div class="header__ctrl-item header__user">
 			<div class="header__user-text">
 				
+        <span class="header__user-id" style="display: none !important;">{{.userInfo.ID}}</span>
+        <span class="header__user-login" style="display: none !important;">{{.userInfo.Login}}</span>
+        <span class="header__user-type" style="display: none !important;">{{.userInfo.Type}}</span>
+
         <span class="header__user-name">{{.userInfo.FirstName}}</span>
         <span class="header__user-surname">{{.userInfo.LastName}}</span>
-				
 				
 			</div>
 			<div class="header__user-image">
