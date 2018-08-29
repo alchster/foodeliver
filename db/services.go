@@ -28,3 +28,34 @@ func (s *Service) BeforeCreate() error {
 	s.ID = NewID()
 	return nil
 }
+
+var banknotesInfo = []int{100, 200, 500, 1000, 2000, 5000}
+
+type PaymentStatus struct {
+	Status bool `json:"status"`
+}
+
+type CashInfo struct {
+	PaymentStatus
+	Banknotes []int `json:"banknotes"`
+}
+
+type PaymentResp struct {
+	Cash        CashInfo      `json:"cash"`
+	CardOffline PaymentStatus `json:"card_agent"`
+	CardOnline  PaymentStatus `json:"card_online"`
+}
+
+func PaymentMethods() (*PaymentResp, error) {
+	if startTime.IsZero() {
+		return nil, TimeNotSet
+	}
+	return &PaymentResp{
+		Cash: CashInfo{
+			PaymentStatus{service.Cash},
+			banknotesInfo,
+		},
+		CardOffline: PaymentStatus{service.PlasticOffline},
+		CardOnline:  PaymentStatus{service.PlasticOnline},
+	}, nil
+}

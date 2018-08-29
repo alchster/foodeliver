@@ -19,3 +19,5 @@ type Order struct {
 	SupplierID  UUID            `json:"-" sql:"type:uuid REFERENCES suppliers(id)"`
 	Products    []Product       `json:"products" gorm:"many2many"`
 }
+
+var tmpOrders TemporaryOrders

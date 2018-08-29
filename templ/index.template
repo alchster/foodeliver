@@ -70,7 +70,7 @@
 					<h1 class="admin__caption">Администрирование</h1>
 					<div class="admin__holder">
 						<div class="admin__row">
-							<div class="admin__col">
+							<div class="admin__col admin____stations">
 								<div class="head-search head-search--main">
 	<div class="head-search__holder">
 		<span class="head-search__title">Станции </span>		
@@ -88,11 +88,12 @@
 	
 </div>
 
-				
-								<div class="item-station box-item item-station--main">
+{{range .data.stations}}
+<div class="item-station box-item item-station--main">
 	<div class="item-station__inner item-station__inner--left">
 		<span class="item-station__title">станция</span>
-		<span class="item-station__name">Москва Ярославская</span>
+    <span class="item-station__name">{{.Name.RU}}</span>
+    <span class="item-station__id" style="display:none !important;">{{.ID}}</span>
 	</div> 
 	<div class="item-station__inner item-station__inner--right">
 		
@@ -102,87 +103,7 @@
 				<label class="switch">
 					
 					
-						<input type="checkbox" checked>
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--main">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">станция</span>
-		<span class="item-station__name">Владимир</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-						<input type="checkbox">
-					
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--main">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">станция</span>
-		<span class="item-station__name">Шахунья</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-					
-						<input type="checkbox" checked>
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--main">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">станция</span>
-		<span class="item-station__name">Киров Пасс</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-						<input type="checkbox">
-					
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--main">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">станция</span>
-		<span class="item-station__name">Глазов</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-					
-						<input type="checkbox" checked>
+          <input type="checkbox"{{if .Active}} checked{{end}}>
 					
 					<span class="slider round"></span>
 				</label>		
@@ -190,11 +111,13 @@
 		</div>
 	</div>
 </div>
+{{end}}
+
 								<div class="admin__btn-wrap">
 									<a href="#" class="btn admin__btn">Еще станции</a>
 								</div>
 							</div>
-							<div class="admin__col">
+							<div class="admin__col admin____trains">
 								<div class="head-search head-search--main">
 	<div class="head-search__holder">
 		<span class="head-search__title">Поезда </span>		
@@ -212,14 +135,15 @@
 	
 </div>
 
-				
-								<div class="item-station box-item item-station--payment">
+{{ range .data.trains }}
+<div class="item-station box-item item-station--payment">
 	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">026Н, «Сибиряк»</span>
-		<span class="item-station__name">Москва – Новосибирск</span>
+    <span class="item-station__title">{{.Number}}{{if ne .Alias ""}}, {{.Alias}}{{end}}</span>
+    <span class="item-station__name">{{.Name.RU}}</span>
+    <span class="item-station__id" style="display:none !important;">{{.ID}}</span>
 	</div> 
 	<div class="item-station__inner item-station__inner--right">
-		
+    <!--	
 			<div class="item-station__payment ">
 				<span class="item-station__title">Вид оплаты</span>
 				<div class="select-wrapp select-checkbox">
@@ -230,138 +154,14 @@
 					</select>
 				</div>
 			</div>
-		
+    -->
 		<div class="item-station__service">
 			<span class="item-station__title">Работа сервиса</span>
 			<div class="item-station__switch">
 				<label class="switch">
 					
 					
-						<input type="checkbox" checked>
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--payment">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">Фирменный, «Красная стрела»</span>
-		<span class="item-station__name">Москва – Санкт–Петербург</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-			<div class="item-station__payment ">
-				<span class="item-station__title">Вид оплаты</span>
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-					
-						<input type="checkbox" checked>
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--payment">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">015F, «Балтийский экспресс»</span>
-		<span class="item-station__name">Москва – Таллин</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-			<div class="item-station__payment ">
-				<span class="item-station__title">Вид оплаты</span>
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-						<input type="checkbox">
-					
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--payment">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">472С</span>
-		<span class="item-station__name">Адлер – Москва</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-			<div class="item-station__payment ">
-				<span class="item-station__title">Вид оплаты</span>
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-					
-						<input type="checkbox" checked>
-					
-					<span class="slider round"></span>
-				</label>		
-			</div>
-		</div>
-	</div>
-</div><div class="item-station box-item item-station--payment">
-	<div class="item-station__inner item-station__inner--left">
-		<span class="item-station__title">155С</span>
-		<span class="item-station__name">Анапа – Москва</span>
-	</div> 
-	<div class="item-station__inner item-station__inner--right">
-		
-			<div class="item-station__payment ">
-				<span class="item-station__title">Вид оплаты</span>
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		
-		<div class="item-station__service">
-			<span class="item-station__title">Работа сервиса</span>
-			<div class="item-station__switch">
-				<label class="switch">
-					
-						<input type="checkbox">
-					
+            <input type="checkbox"{{if .Active}} checked{{end}}>
 					
 					<span class="slider round"></span>
 				</label>		
@@ -369,13 +169,23 @@
 		</div>
 	</div>
 </div>
-								<div class="admin__btn-wrap">
+{{end}}
+
+<div class="admin__btn-wrap">
 									<a href="#" class="btn admin__btn">Еще поезда</a>
 								</div>
 							</div>
 						</div>
-						<div class="admin__row">
-							<div class="admin__col admin__col--mod">
+
+
+
+						<div class="admin__row admin____service">
+              <span class="admin____service-id" style="display:none !important;">{{.data.service.ID}}</span>
+              <span class="admin____service-cash" style="display:none !important;">{{.data.service.Cash}}</span>
+              <span class="admin____service-plastic-online" style="display:none !important;">{{.data.service.PlasticOffline}}</span>
+              <span class="admin____service-plastic-offline" style="display:none !important;">{{.data.service.PlasticOnline}}</span>
+
+							<div class="admin__col admin__col--mod" style="margin-top: 0 !important;">
 								<span class="admin__title">Оплата</span>
 								<div class="admin__service box-item">
 									<div class="admin__service-inner admin__service-inner--left">
@@ -385,133 +195,25 @@
 										<div class="admin__service-payment">
 											<span class="admin__service-title">Вид оплаты</span>
 											<div class="select-wrapp select-checkbox">
-												<select name="Select" class="custom-select-checkbox">
-													<option value="">Наличные</option>
-													<option value="">Картой посреднику</option>
-													<option value="">Картой на ресурсе попутчик</option>
+												<select name="Select" class="custom-select-checkbox admin____service-type">
+													<option value="cash" selected>Наличные</option>
+													<option value="plastic-offline">Картой посреднику</option>
+													<option value="plastic-online">Картой на ресурсе попутчик</option>
 												</select>
 											</div>
 										</div>
-										<div class="admin__service-item">
+										<div class="admin__service-item admin____service-active">
 											<span class="admin__service-title">Работа сервиса</span>
 											<div class="admin__service-switch">
 												<label class="switch">
-														<input type="checkbox" checked>
+                          <input type="checkbox">
 													<span class="slider round"></span>
-												</label>		
+												</label>
 											</div>
 										</div>
 									</div>
 								</div>
 								<div class="head-search head-search--main">
-	<div class="head-search__holder">
-		<span class="head-search__title">Поезда </span>		
-		<div class="head-search__box">
-			<label class="input-icon-label">
-				<span>
-					<svg class="icon-search">
-						<use xlink:href="#search"></use>
-					</svg>
-				</span>
-				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Номер, маршрут, название поезда">
-			</label>
-		</div>
-	</div>
-	
-</div>
-
-								<div class="admin__trains box-item">
-									<div class="item-train ">
-	<div class="item-train__inner">
-		<div class="item-train__col item-train__col--train">
-			<span class="item-train__title">026Н, «Сибиряк»</span>
-			<div class="item-train__name">Москва – Новосибирск</div>
-		</div>
-		<div class="item-train__col item-train__col--payment">
-			<div class="item-train__payment">
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-</div><div class="item-train ">
-	<div class="item-train__inner">
-		<div class="item-train__col item-train__col--train">
-			<span class="item-train__title">472С</span>
-			<div class="item-train__name">Адлер – Москва</div>
-		</div>
-		<div class="item-train__col item-train__col--payment">
-			<div class="item-train__payment">
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-</div><div class="item-train ">
-	<div class="item-train__inner">
-		<div class="item-train__col item-train__col--train">
-			<span class="item-train__title">015F, «Балтийский экспресс»</span>
-			<div class="item-train__name">Москва – Таллин</div>
-		</div>
-		<div class="item-train__col item-train__col--payment">
-			<div class="item-train__payment">
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-</div><div class="item-train ">
-	<div class="item-train__inner">
-		<div class="item-train__col item-train__col--train">
-			<span class="item-train__title">Фирменный, «Красная стрела»</span>
-			<div class="item-train__name">Москва – Санкт–Петербург</div>
-		</div>
-		<div class="item-train__col item-train__col--payment">
-			<div class="item-train__payment">
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-</div><div class="item-train item-train--last">
-	<div class="item-train__inner">
-		<div class="item-train__col item-train__col--train">
-			<span class="item-train__title">015F, «Балтийский экспресс»</span>
-			<div class="item-train__name">Москва – Таллин</div>
-		</div>
-		<div class="item-train__col item-train__col--payment">
-			<div class="item-train__payment">
-				<div class="select-wrapp select-checkbox">
-					<select name="Select" class="custom-select-checkbox">
-						<option value="">Наличные</option>
-						<option value="">Картой посреднику</option>
-						<option value="">Картой на ресурсе попутчик</option>
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 								</div>
 
 							</div>
@@ -525,8 +227,8 @@
 			<span class="admin-charge__inner-title">
 				процент от суммы заказа
 			</span>
-			<div class="admin-charge__inner-input">
-				<input type="text" class="js-input-empty" value="00%" data-text="%">
+			<div class="admin-charge__inner-input admin____service-percent">
+        <input type="text" class="js-input-empty" value="{{.data.service.ChargePercent}}%" data-text="%">
 			</div>
 		</div>
 		<span class="admin-charge__txt">или</span>
@@ -534,8 +236,8 @@
 			<span class="admin-charge__inner-title">
 				фиксированная ставка в рублях
 			</span>
-			<div class="admin-charge__inner-input">
-				<input type="text" class="js-input-empty" value="0 р" data-text="р">
+			<div class="admin-charge__inner-input admin____service-fixed">
+        <input type="text" class="js-input-empty" value="{{.data.service.ChargeFixed}}р" data-text="р">
 			</div>
 		</div>
 	</div>
@@ -543,10 +245,11 @@
 		<span class="admin-charge__item-txt">
 			Время на оплату заказа пассажиром в минутах
 		</span>
-		<div class="admin-charge__item-setting">
-			<input type="text" class="js-input-empty" value="30 минут" data-text="минут">
+		<div class="admin-charge__item-setting admin____service-timeout">
+      <input type="text" class="js-input-empty" value="{{.data.service.MinutesForPayment}} минут" data-text="минут">
 		</div>
 	</div>
+<!--
 	<div class="admin-charge__item">
 		<span class="admin-charge__item-txt">
 			Время отправки повторных уведомлений для АРМ Проводник
@@ -554,13 +257,14 @@
 		<div class="admin-charge__item-setting">
 			<div class="select-wrapp select-checkbox">
 				<select name="Select" class="custom-select-checkbox">
-					<option value="">5 минут</option>
-					<option value="">10 минут</option>
-					<option value="">15 минут</option>
+					<option value="5">5 минут</option>
+					<option value="10">10 минут</option>
+					<option value="15">15 минут</option>
 				</select>
 			</div>
 		</div>
 	</div>
+-->
 
 </div>
 

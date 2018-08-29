@@ -23,8 +23,10 @@ var (
 )
 
 func GetUserInfo(userId, role string) (*UserInfo, error) {
-	uid, err := GetUUID(userId)
-	id := UUID{uid}
+	id, err := GetUUID(userId)
+	if err != nil {
+		return nil, err
+	}
 	var lu *LoginUser
 	var roleRu string
 	t := "user"

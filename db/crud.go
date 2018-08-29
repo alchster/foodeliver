@@ -41,9 +41,9 @@ func NewSlice(entityName string) (interface{}, error) {
 	return reflect.New(reflect.SliceOf(objType)).Elem().Addr().Interface(), nil
 }
 
-func GetUUID(idText string) (uuid.UUID, error) {
+func GetUUID(idText string) (UUID, error) {
 	id, err := uuid.FromString(idText)
-	return id, err
+	return UUID{id}, err
 }
 
 func Create(entity interface{}, creator string) error {

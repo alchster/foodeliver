@@ -138,6 +138,20 @@ func admin(c *gin.Context) {
 		"userInfo": ui,
 		"url":      "/admin",
 		"menu":     menuItems(ui.Role),
-		//"data":     accountsList(ui.ID.String()),
+		"data":     adminIndexInfo(ui.ID.String()),
+	})
+}
+
+func supplier(c *gin.Context) {
+	ui, ok := userInfo(c, "/supplier")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "provider.template", h{
+		"userInfo": ui,
+		"url":      "/supplier",
+		"menu":     menuItems(ui.Role),
+		//"data":     adminIndexInfo(ui.ID.String()),
 	})
 }

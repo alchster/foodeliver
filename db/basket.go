@@ -4,13 +4,18 @@ import (
 	"errors"
 	"fmt"
 	"github.com/shopspring/decimal"
-	//"log"
+	"log"
+	"time"
 )
 
-const MAX_ORDER_NUM = 9999
+var InvalidID = errors.New("Invalid ID")
+var TimeNotSet = errors.New("Start time not set")
+var InvalidParameter = errors.New("Invalid parameter value")
+var InvalidPassenger = errors.New("Invalid passenger")
+var InvalidStation = errors.New("Invalid station")
 
-var nodeId = "001"
-var freeOrderNum = 1
+//var MinAmountError = errors.New("Total is less than minimal amount for this supplier")
+//var TimeoutError = errors.New("Time is out for this supplier at this station")
 
 type BasketInfo struct {
 	Orders []OrderInfo     `json:"orders"`
@@ -20,11 +25,13 @@ type BasketInfo struct {
 }
 
 type BasketProduct struct {
-	PassengerID UUID    `json:"-" gorm:"primary_key"`
-	ProductID   UUID    `json:"-" gorm:"primary_key"`
-	Product     Product `json:"product" gorm"-"`
-	StationID   UUID    `json:"-" gorm:"primary_key"`
-	Count       int     `json:"count"`
+	PassengerID UUID      `json:"-" gorm:"primary_key"`
+	ProductID   UUID      `json:"-" gorm:"primary_key"`
+	Product     Product   `json:"product" gorm"-"`
+	SupplierID  UUID      `json:"-"`
+	StationID   UUID      `json:"-" gorm:"primary_key"`
+	Count       int       `json:"count"`
+	CreatedAt   time.Time `json:"-" sql:"type:timestamptz;not null;default:now()"`
 }
 
 type BasketProductInfo struct {
@@ -48,16 +55,7 @@ type BasketSupplierStationInfo struct {
 	ID           UUID     `json:"id"`
 	Name         Text     `json:"name"`
 	OrderEndTime TimeResp `json:"order_end_time"`
-	Selected     bool     `json:selected`
-}
-
-type OrderInfo struct {
-	ID       UUID                `json:"id"`
-	Number   string              `json:"number"`
-	Products []BasketProductInfo `json:"products"`
-	Supplier BasketSupplierInfo  `json:"supplier"`
-	Total    decimal.Decimal     `json:"supplier_cost_total"`
-	Charge   decimal.Decimal     `json:"supplier_cost_service"`
+	Selected     bool     `json:"selected"`
 }
 
 func (bp *BasketProduct) AfterFind() error {
@@ -66,65 +64,28 @@ func (bp *BasketProduct) AfterFind() error {
 }
 
 func BasketFull(passId string) (*BasketInfo, error) {
+	if debugMode {
+		log.Printf("BASKET:\n  passengerID: %s\n", passId)
+	}
 	if startTime.IsZero() {
-		return nil, errors.New("Start time not set")
+		return nil, TimeNotSet
 	}
-
-	basket, err := Basket(passId)
+	psid, err := GetUUID(passId)
 	if err != nil {
-		return nil, err
+		return nil, InvalidID
 	}
 
-	sp := make(map[UUID][]BasketProductInfo)
-	size := 0
-	for _, prod := range basket {
-		sid := prod.Product.SupplierID
-		bpi := BasketProductInfo{
-			ID:          prod.ProductID,
-			Name:        prod.Product.Name,
-			Description: prod.Product.Description,
-			Cost:        prod.Product.Cost,
-			Count:       prod.Count,
-			StationID:   prod.StationID,
-			Image:       prod.Product.Image,
-		}
-		if bpis, ok := sp[sid]; ok {
-			sp[sid] = append(bpis, bpi)
-		} else {
-			prods := make([]BasketProductInfo, 0, 1)
-			prods = append(prods, bpi)
-			sp[sid] = prods
-		}
-		size += prod.Count
-	}
-
-	ords := make([]OrderInfo, 0, len(sp))
 	var allTotal, allCharge decimal.Decimal
+	size := 0
 
-	for suppId, prods := range sp {
-		var s Supplier
-		if err = db.Where("id = ?", suppId).First(&s).Error; err != nil {
-			return nil, err
-		}
-		supp := BasketSupplierInfo{
-			ID:          s.ID,
-			Description: s.Description,
-			Logo:        s.Photo,
-		}
-
-		stationProds := make(map[UUID][]BasketProductInfo)
-		for _, p := range prods {
-			if sp, ok := stationProds[p.StationID]; ok {
-				stationProds[p.StationID] = append(sp, p)
-			} else {
-				pr := make([]BasketProductInfo, 0, 1)
-				pr = append(pr, p)
-				stationProds[p.StationID] = pr
-			}
-		}
+	orders := tmpOrders.All(psid)
+	ords := make([]OrderInfo, 0, len(orders))
+	for _, ord := range orders {
+		order := *ord
 
 		stations := make([]BasketSupplierStationInfo, 0, 1)
-		_, sris, err := Stations(s.ID.String())
+
+		_, sris, err := Stations(order.Supplier.ID.String())
 		if err != nil {
 			return nil, err
 		}
@@ -133,40 +94,15 @@ func BasketFull(passId string) (*BasketInfo, error) {
 				ID:           sri.Station.ID,
 				Name:         sri.Station.Name,
 				OrderEndTime: TimeResp(sri.Station.OrderDeadline),
+				Selected:     sri.Station.ID == order.StationID,
 			})
 		}
+		order.Supplier.Stations = stations
 
-		for stationId, bpis := range stationProds {
-			var total, charge decimal.Decimal
-
-			for _, bpi := range bpis {
-				total = total.Add(bpi.Cost)
-			}
-			charge = calculateCharge(total)
-
-			sts := make([]BasketSupplierStationInfo, 0, len(stations))
-			for _, st := range stations {
-				if st.ID == stationId {
-					st.Selected = true
-				}
-				sts = append(sts, st)
-			}
-
-			supp.Stations = sts
-
-			allTotal = allTotal.Add(total)
-			allCharge = allCharge.Add(charge)
-
-			ords = append(ords, OrderInfo{
-				ID:       NewID(),
-				Number:   fmt.Sprintf("%s-%04d", nodeId, freeOrderNum),
-				Total:    total,
-				Charge:   charge,
-				Supplier: supp,
-				Products: bpis,
-			})
-			freeOrderNum += 1
-		}
+		allTotal = allTotal.Add(order.Total)
+		allCharge = allCharge.Add(order.Charge)
+		size += order.size
+		ords = append(ords, order)
 	}
 
 	return &BasketInfo{
@@ -177,64 +113,171 @@ func BasketFull(passId string) (*BasketInfo, error) {
 	}, nil
 }
 
-func Basket(passId string) ([]BasketProduct, error) {
-	id, err := GetUUID(passId)
-	if err != nil {
-		return nil, err
-	}
-	var tmp, basket []BasketProduct
-	db.Where("passenger_id = ?", id).Find(&tmp)
-	for _, prod := range tmp {
-		if _, ok := stationsMap[prod.StationID]; ok {
-			basket = append(basket, prod)
-		}
-	}
-	return basket, nil
-}
-
 func AddToBasket(passId, productId, stationId string) error {
+	if debugMode {
+		log.Printf("ADD TO BASKET:\n  passengerID: %s\n  stationID: %s\n  productID: %s\n\n", passId, stationId, productId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
 	psid, errPass := GetUUID(passId)
 	prid, errProd := GetUUID(productId)
 	stid, errStat := GetUUID(stationId)
 	if errPass != nil || errProd != nil || errStat != nil {
-		return errors.New("Invalid ID")
+		return InvalidID
 	}
-	if err := db.Exec("INSERT INTO basket_products VALUES (?, ?, ?, 1) "+
-		"ON CONFLICT (passenger_id, product_id, station_id) DO "+
-		"UPDATE SET \"count\" = basket_products.\"count\"+1", psid, prid, stid).Error; err != nil {
-		return err
-	}
-	return nil
+	return tmpOrders.AddProduct(psid, prid, stid, 1)
 }
 
 func RemoveFromBasket(passId, productId, stationId string) error {
+	if debugMode {
+		log.Printf("REMOVE FROM BASKET:\n  passengerID: %s\n  stationID: %s\n  productID: %s\n\n",
+			passId, stationId, productId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
 	psid, errPass := GetUUID(passId)
 	prid, errProd := GetUUID(productId)
 	stid, errStat := GetUUID(stationId)
 	if errPass != nil || errProd != nil || errStat != nil {
-		return errors.New("Invalid ID")
+		return InvalidID
 	}
-	var bp BasketProduct
-	var err error
-	if err = db.Where(
-		"passenger_id = ? and product_id = ? and station_id = ?",
-		psid, prid, stid).First(&bp).Error; err != nil {
+	return tmpOrders.RemoveProduct(psid, prid, stid, 1)
+}
+
+func UpdateItemCount(passId, orderId, productId, count string) error {
+	if debugMode {
+		log.Printf("UPDATE ITEM COUNT:\n  passengerID: %s\n  orderID: %s\n  productID: %s\n\n",
+			passId, orderId, productId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
+	psid, errPass := GetUUID(passId)
+	prid, errProd := GetUUID(productId)
+	orid, errOrd := GetUUID(orderId)
+	if errPass != nil || errProd != nil || errOrd != nil {
+		return InvalidID
+	}
+	order, err := tmpOrders.Order(orid)
+	if err != nil {
 		return err
 	}
-	if bp.Count == 1 {
-		err = db.Delete(&bp).Error
-	} else {
-		bp.Count -= 1
-		err = db.Save(&bp).Error
+	if !tmpOrders.IsOwner(orid, psid) {
+		return InvalidPassenger
+	}
+	err = InvalidParameter
+	if count == "up" {
+		err = tmpOrders.AddOrderProduct(order, prid, 1)
+	} else if count == "down" {
+		err = tmpOrders.RemoveOrderProduct(order, prid, 1)
 	}
 	return err
 }
 
-func calculateCharge(cost decimal.Decimal) decimal.Decimal {
-	percent := decimal.NewFromFloat(float64(service.ChargePercent) / 100.0)
-	charge := cost.Mul(percent)
-	if charge.LessThan(service.ChargeFixed) {
-		charge = service.ChargeFixed
+func UpdateOrderStation(passId, orderId, stationId string) error {
+	if debugMode {
+		log.Printf("UPDATE ORDER STATION:\n  passengerID: %s\n  orderID: %s\n  stationID: %s\n\n",
+			passId, orderId, stationId)
 	}
-	return charge
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
+	psid, errPass := GetUUID(passId)
+	stid, errStat := GetUUID(stationId)
+	orid, errOrd := GetUUID(orderId)
+	if errPass != nil || errStat != nil || errOrd != nil {
+		return InvalidID
+	}
+	if !tmpOrders.IsOwner(orid, psid) {
+		return InvalidPassenger
+	}
+	return tmpOrders.UpdateStation(orid, stid)
+}
+
+func DeleteItem(passId, orderId, productId string) error {
+	if debugMode {
+		log.Printf("DELETE ITEM:\n  passengerID: %s\n  orderID: %s\n  productID: %s\n\n",
+			passId, orderId, productId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
+	psid, errPass := GetUUID(passId)
+	prid, errProd := GetUUID(productId)
+	orid, errOrd := GetUUID(orderId)
+	if errPass != nil || errProd != nil || errOrd != nil {
+		return InvalidID
+	}
+	if !tmpOrders.IsOwner(orid, psid) {
+		return InvalidPassenger
+	}
+	return tmpOrders.DeleteProduct(orid, prid)
+}
+
+func DeleteOrder(passId, orderId string) error {
+	if debugMode {
+		log.Printf("DELETE ORDER:\n  passengerID: %s\n  orderID: %s\n\n", passId, orderId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
+	psid, errPass := GetUUID(passId)
+	orid, errOrd := GetUUID(orderId)
+	if errPass != nil || errOrd != nil {
+		return InvalidID
+	}
+	if !tmpOrders.IsOwner(orid, psid) {
+		return InvalidPassenger
+	}
+	return tmpOrders.Delete(orid)
+}
+
+func ClearBasket(passId, fingerprint string) error {
+	if debugMode {
+		log.Printf("CLEAR CART:\n  passengerID: %s\n\n", passId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
+	psid, err := GetUUID(passId)
+	if err != nil {
+		return InvalidID
+	}
+	var fp string
+	if err := db.Raw("SELECT fingerprint FROM passengers WHERE id = ?",
+		psid).Row().Scan(&fp); err != nil || fp != fingerprint {
+		return err
+	}
+	return tmpOrders.DeleteAll(psid)
+}
+
+func ValidateOrders(passId string) error {
+	if debugMode {
+		log.Printf("VALIDATE ORDERS:\n  passengerID: %s\n\n", passId)
+	}
+	if startTime.IsZero() {
+		return TimeNotSet
+	}
+	psid, err := GetUUID(passId)
+	if err != nil {
+		return InvalidID
+	}
+	for _, order := range tmpOrders.PassengerOrders(psid) {
+		if order.Total.LessThan(order.minAmount) {
+			//return MinAmountError
+			return errors.New(fmt.Sprintf(`МИНИМАЛЬНАЯ СУММА ЗАКАЗА У ПОСТАВЩИКА &laquo;%s&raquo; `+
+				`%s РУБЛЕЙ, ДОБАВЬТЕ ТОВАРЫ В КОРЗИНУ ДО МИНИМАЛЬНОЙ СУММЫ `+
+				`ИЛИ <a href="#" class="delete-order" order-id="%s">ОТМЕНИТЕ ЗАКАЗ</a>`,
+				order.Supplier.Description, order.minAmount, order.ID))
+		}
+		if time.Now().Unix() > stationSupplierDeadline(order.StationID, order.Supplier.ID).Unix() {
+			//return TimeoutError
+			return errors.New(fmt.Sprintf(`ЗАКОНЧИЛОСЬ ВРЕМЯ ДОСТАВКИ У ПОСТАВЩИКА &laquo;%s&raquo;.`+
+				` <a href="#" class="delete-order" order-id="%s">ОЧИСТИТЕ ЭТОТ ЗАКАЗ</a> `+
+				`ИЛИ ИЗМЕНИТЕ СТАНЦИЮ ДОСТАВКИ`, order.Supplier.Description, order.ID))
+		}
+	}
+	return nil
 }

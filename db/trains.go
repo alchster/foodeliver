@@ -11,6 +11,7 @@ var startTime time.Time
 var stations []Station
 var stationsList []StationsListItem
 var stationsMap map[UUID]int
+var stationsIds []UUID
 var service Service
 
 type Train struct {
@@ -93,6 +94,7 @@ func SetStart(start string, tid UUID) error {
 	}
 	stations = make([]Station, len(stationsList))
 	stationsMap = make(map[UUID]int)
+	stationsIds = make([]UUID, len(stationsList))
 	for i, si := range stationsList {
 		var s Station
 		if err := db.Where("id = ?", si.StationID).First(&s).Error; err != nil {
@@ -100,7 +102,9 @@ func SetStart(start string, tid UUID) error {
 		}
 		stations[i] = s
 		stationsMap[si.StationID] = i
+		stationsIds[i] = si.StationID
 	}
+	tmpOrders.Init("001", 0) // TODO: fix this with right values
 	return nil
 }
 
@@ -131,10 +135,9 @@ func Stations(suppId string) ([]StationsListItem, []StationsResponseItem, error)
 		return nil, nil, errors.New("Start time not set")
 	}
 	var supplierId UUID
+	var err error
 	if suppId != "" {
-		if sid, err := GetUUID(suppId); err == nil {
-			supplierId = UUID{sid}
-		} else {
+		if supplierId, err = GetUUID(suppId); err != nil {
 			return nil, nil, err
 		}
 	}
@@ -181,4 +184,27 @@ func Stations(suppId string) ([]StationsListItem, []StationsResponseItem, error)
 		})
 	}
 	return lst, res, nil
+}
+
+func stationSupplierDeadline(station, supplier UUID) time.Time {
+	if idx, ok := stationsMap[station]; ok {
+		var ss SupplierStation
+		if db.Where("station_id = ? and supplier_id = ?",
+			station, supplier).First(&ss).Error != nil {
+			return time.Time{}
+		}
+		sli := stationsList[idx]
+		var period time.Duration
+		var deadline time.Time
+		if sli.RelativeDeparture-sli.RelativeArrival > 5*time.Minute {
+			period = 5*time.Minute + ss.DeliveryTime +
+				time.Duration(service.MinutesForPayment)*time.Minute
+			deadline = sli.Departure.Add(-period)
+		} else {
+			period = ss.DeliveryTime + time.Duration(service.MinutesForPayment)*time.Minute
+			deadline = sli.Arrival.Add(-period)
+		}
+		return deadline
+	}
+	return time.Time{}
 }

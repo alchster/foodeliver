@@ -8,8 +8,86 @@ $(function () {
 	});
 	accounts();
 	settings();
+	admin();
 });
 
+function admin() {
+
+	$('.admin____stations .item-station__switch input:checkbox').change(function (e) {
+		var id = $(this.closest('.item-station')).find('.item-station__id').html();
+		var chkbox = this;
+		apiCall('PUT', '/station/'+id, {active: this.checked}).fail(function() {
+			chkbox.checked = !chkbox.checked;
+		});
+	});
+	$('.admin____trains .item-station__switch input:checkbox').change(function (e) {
+		var id = $(this.closest('.item-station')).find('.item-station__id').html();
+		var chkbox = this;
+		apiCall('PUT', '/train/'+id, {active: this.checked}).fail(function() {
+			chkbox.checked = !chkbox.checked;
+		});
+	});
+
+  var serviceId = $('.admin____service .admin____service-id').html();
+  var currentOpt = $('.admin____service select.admin____service-type').val();
+  var checkbox = $('.admin____service .admin____service-active input:checkbox')[0];
+  if (checkbox)
+    checkbox.checked = $('.admin____service .admin____service-' + currentOpt).html() == 'true';
+
+  $('.admin____service select.admin____service-type').selectmenu({
+    change: function () {
+      currentOpt = $('.admin____service select.admin____service-type').val();
+      var checked = $('.admin____service .admin____service-' + currentOpt).html();
+      checkbox.checked = checked == 'true';
+    },
+  });
+
+  $(checkbox).change(function () {
+    var param = currentOpt.replace('-', '_');
+    apiCall('PUT', '/service/'+serviceId, {param: checkbox.checked}).then(function() {
+      $('.admin____service .admin____service-' + currentOpt).html(checkbox.checked);
+    }, function() {
+      checkbox.checked = !checkbox.checked;
+    });
+  });
+  
+  var oldPercent = $('.admin____service .admin____service-percent input').val();
+  var oldFixed = $('.admin____service .admin____service-fixed input').val();
+  var oldTimeout = $('.admin____service .admin____service-timeout input').val();
+
+  $('.admin____service .admin____service-percent input').change(function (e) {
+    e.preventDefault();
+    var input = $(this);
+    var percent = parseInt(input.val());
+    apiCall('PUT', '/service/'+serviceId, {"charge_percent": percent}).then(function() {
+      oldPercent = percent;
+    }, function() {
+      input.val(oldPercent);
+    });
+  });
+  
+  $('.admin____service .admin____service-fixed input').change(function (e) {
+    e.preventDefault();
+    var input = $(this);
+    var fixed = parseInt(input.val());
+    apiCall('PUT', '/service/'+serviceId, {"charge_fixed": fixed}).then(function() {
+      oldFixed = fixed;
+    }, function() {
+      input.val(oldFixed);
+    });
+  });
+
+  $('.admin____service .admin____service-timeout input').change(function (e) {
+    e.preventDefault();
+    var input = $(this);
+    var timeout = parseInt(input.val());
+    apiCall('PUT', '/service/'+serviceId, {"minutes_for_payment": timeout}).then(function() {
+      oldTimeout = timeout;
+    }, function() {
+      input.val(oldTimeout);
+    });
+  });
+}
 
 function settings() {
 	var oldPassNotMatch = $('.settings__err-old-pass');
@@ -66,7 +144,7 @@ function settings() {
 
 function accounts() {
 	$('.moderators__list .switch input:checkbox').change(function(e) {
-		var chkbox = this
+		var chkbox = this;
 		var parent = $(this).closest('.js-moderators-item');
 		var id = $(parent).find('.moderators__user-id').html();
 		var url = '/' + $(parent).find('.moderators__user-type').html();

@@ -10,10 +10,13 @@ import (
 )
 
 type QueryParams struct {
-	PassengerID string `form:"passengerID" json:"passengerID"`
-	ProductID   string `json:"productID"`
-	SupplierID  string `form:"supplierID"`
-	StationID   string `form:"stationID"`
+	PassengerID string `form:"passengerID" json:"passengerID,omitempty"`
+	OrderID     string `form:"orderID" json:"orderID,omitempty"`
+	ProductID   string `form:"productID" json:"productID,omitempty"`
+	SupplierID  string `form:"supplierID" json:"supplierID,omitempty"`
+	StationID   string `form:"stationID" json:"stationID,omitempty"`
+	Count       string `form:"count" json:"count,omitempty"`
+	Fingerprint string `form:"fingerprint" json:"fingerprint,omitempty"`
 }
 
 func (q QueryParams) String() string {
@@ -22,9 +25,7 @@ func (q QueryParams) String() string {
 }
 
 func passengerByFingerprint(c *gin.Context) {
-	var q struct {
-		Fingerprint string `form:"fingerprint"`
-	}
+	var q QueryParams
 	if err := c.Bind(&q); err != nil {
 		badRequest(err, c)
 		return
@@ -135,6 +136,96 @@ func setStartTime(c *gin.Context) {
 	}
 	if err := db.SetStart(j.Time, trainID); err != nil {
 		unprocessable(err, c)
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func updateItemCount(c *gin.Context) {
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.UpdateItemCount(q.PassengerID, q.OrderID, q.ProductID, q.Count); err != nil {
+		unprocessable(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func updateItemStation(c *gin.Context) {
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.UpdateOrderStation(q.PassengerID, q.OrderID, q.StationID); err != nil {
+		unprocessable(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func deleteItem(c *gin.Context) {
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.DeleteItem(q.PassengerID, q.OrderID, q.ProductID); err != nil {
+		unprocessable(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func deleteOrder(c *gin.Context) {
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.DeleteOrder(q.PassengerID, q.OrderID); err != nil {
+		unprocessable(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func clearBasket(c *gin.Context) {
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.ClearBasket(q.PassengerID, q.Fingerprint); err != nil {
+		unprocessable(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func paymentMethods(c *gin.Context) {
+	pm, err := db.PaymentMethods()
+	if err != nil {
+		unprocessable(err, c)
+		return
+	}
+	c.JSON(http.StatusOK, pm)
+}
+
+func validateOrders(c *gin.Context) {
+	var q QueryParams
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.ValidateOrders(q.PassengerID); err != nil {
+		c.JSON(http.StatusOK, h{
+			"result": "error",
+			"error":  err.Error(),
+		})
+		return
 	}
 	c.JSON(http.StatusOK, h{"result": "ok"})
 }

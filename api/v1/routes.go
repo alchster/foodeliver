@@ -45,6 +45,13 @@ func Setup(router *gin.Engine, baseUrl string, train string) error {
 		v1.GET("/basket", basket)
 		v1.POST("/addtobasket", basketAdd)
 		v1.POST("/removefrombasket", basketRemove)
+		v1.POST("/update_item_count", updateItemCount)
+		v1.POST("/update_order_station", updateItemStation)
+		v1.POST("/delete_item", deleteItem)
+		v1.POST("/delete_order", deleteOrder)
+		v1.POST("/clear_cart", clearBasket)
+		v1.GET("/payment_methods", paymentMethods)
+		v1.GET("/validate_orders", validateOrders)
 	}
 	router.NoRoute(func(c *gin.Context) {
 		notFound(nil, c)
