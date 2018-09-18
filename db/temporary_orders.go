@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 const MAX_ORDER_NUM = 9999
@@ -212,6 +213,11 @@ func (t *TemporaryOrders) getOrder(passenger, supplier, station UUID) *OrderInfo
 			supplier, station).First(&ss).Error; err != nil {
 			return nil
 		}
+		sli := stationsList[stationsMap[station]]
+		deadline := sli.Departure.Add(-5 * time.Minute)
+		if deadline.Unix() < sli.Arrival.Unix() {
+			deadline = sli.Arrival
+		}
 		orderInfo = &OrderInfo{
 			ID:     id,
 			Number: t.orderNum(),
@@ -220,10 +226,11 @@ func (t *TemporaryOrders) getOrder(passenger, supplier, station UUID) *OrderInfo
 				Description: sup.Description,
 				Logo:        sup.Photo,
 			},
-			Products:    make([]*BasketProductInfo, 0, 1),
-			StationID:   station,
-			passengerId: passenger,
-			minAmount:   ss.MinAmount,
+			Products:         make([]*BasketProductInfo, 0, 1),
+			StationID:        station,
+			passengerId:      passenger,
+			minAmount:        ss.MinAmount,
+			deliveryDeadline: deadline,
 		}
 		orderInfo.Init()
 		t.orders[passenger] = append(t.orders[passenger], orderInfo)

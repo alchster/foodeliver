@@ -7,25 +7,26 @@ import (
 	"github.com/heetch/confita/backend/file"
 	"github.com/heetch/confita/backend/flags"
 	"strings"
-	"time"
+	//"time"
 )
 
 type Database struct {
-	Host     string   `config:"database-host"`
-	Port     uint16   `config:"database-port"`
-	DBName   string   `config:"database-dbname"`
-	User     string   `config:"database-user"`
-	Password string   `config:"database-password"`
-	Options  []string `config:"database-options"`
+	Host     string   `config:"dbhost"`
+	Port     uint16   `config:"dbport"`
+	DBName   string   `config:"dbname"`
+	User     string   `config:"dbuser"`
+	Password string   `config:"dbpassword"`
+	Options  []string `config:"dboptions"`
 }
 
 type Config struct {
-	ListenOn string   `config:"listen"`
 	Debug    bool     `config:"debug"`
+	ListenOn string   `config:"listen"`
 	Prefix   string   `config:"prefix"`
 	Migrate  bool     `config:"migrate,backend=flags"`
-	TrainID  string   `config:"train-id"`
-	Database Database `config:"required,backend=file"`
+	TrainID  string   `config:"train-id,backend=flags"`
+	Database Database `config:"database,required,backend=file"`
+	Storage  string   `config:"storage,required"`
 }
 
 func loadConfig() (*Config, error) {
@@ -45,9 +46,8 @@ func loadConfig() (*Config, error) {
 		file.NewBackend(CONFIG_FILE_JSON),
 		flags.NewBackend(),
 	)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-	err := loader.Load(ctx, &cfg)
+	err := loader.Load(context.TODO(), &cfg)
+
 	return &cfg, err
 }
 
@@ -57,8 +57,9 @@ func (c *Config) String() string {
 			"  ListenOn:\t%s\n"+
 			"  Debug:\t%v\n"+
 			"  Database:\t%s\n"+
-			"  TrainID:\t%s\n",
-		c.ListenOn, c.Debug, c.Database, c.TrainID)
+			"  TrainID:\t%s\n"+
+			"  StoragePath:\t%s\n",
+		c.ListenOn, c.Debug, c.Database, c.TrainID, c.Storage)
 }
 
 func (d Database) String() string {

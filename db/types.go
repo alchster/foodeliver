@@ -3,7 +3,7 @@ package db
 import (
 	"errors"
 	"github.com/satori/go.uuid"
-	"log"
+	//"log"
 	"strconv"
 	"strings"
 	"time"
@@ -57,7 +57,6 @@ func (p *PasswordStr) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	log.Print(str)
 	if len(strings.TrimSpace(str)) == 0 {
 		return errors.New("Password cannot be empty")
 	}

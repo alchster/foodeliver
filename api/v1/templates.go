@@ -9,10 +9,12 @@ import (
 	"github.com/foolin/gin-template"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
+	"html/template"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 const TEMPLATES_PATH = "templ"
@@ -25,6 +27,18 @@ var templateConfig = gintemplate.TemplateConfig{
 	DisableCache: true,
 	Partials: []string{
 		"parts/create-user",
+	},
+	Funcs: template.FuncMap{
+		"time": func(t time.Time) string {
+			loc, _ := time.LoadLocation("Europe/Moscow")
+			return time.Time(t).In(loc).Format("15:04")
+		},
+		"datetime": func(t time.Time) string {
+			return db.TimeResp(t).String()
+		},
+		"same": func(id1, id2 db.UUID) bool {
+			return id1 == id2
+		},
 	},
 }
 
@@ -43,6 +57,11 @@ func setupTemplates(router *gin.Engine, base string) error {
 	router.GET(base+"/admin", authMiddleware.MiddlewareFunc(), admin)
 	router.GET(base+"/accounts", authMiddleware.MiddlewareFunc(), accounts)
 	router.GET(base+"/settings", authMiddleware.MiddlewareFunc(), settings)
+	router.GET(base+"/orders", authMiddleware.MiddlewareFunc(), supplierOrders)
+	router.GET(base+"/catalog", authMiddleware.MiddlewareFunc(), supplierCatalog)
+	router.GET(base+"/delivery", authMiddleware.MiddlewareFunc(), supplierDelivery)
+	router.GET(base+"/moderator", authMiddleware.MiddlewareFunc(), moderatorSuppliers)
+	router.GET(base+"/moderator-catalog", authMiddleware.MiddlewareFunc(), moderatorCatalog)
 	router.GET(base, authMiddleware.MiddlewareFunc(), settings)
 	return nil
 }
@@ -142,16 +161,72 @@ func admin(c *gin.Context) {
 	})
 }
 
-func supplier(c *gin.Context) {
-	ui, ok := userInfo(c, "/supplier")
+func supplierOrders(c *gin.Context) {
+	ui, ok := userInfo(c, "/orders")
 	if !ok {
 		return
 	}
 
 	c.HTML(http.StatusOK, "provider.template", h{
 		"userInfo": ui,
-		"url":      "/supplier",
+		"url":      "/orders",
 		"menu":     menuItems(ui.Role),
-		//"data":     adminIndexInfo(ui.ID.String()),
+		"data":     supplierDataOrders(ui.ID),
+	})
+}
+
+func supplierCatalog(c *gin.Context) {
+	ui, ok := userInfo(c, "/catalog")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "provider-catalog.template", h{
+		"userInfo": ui,
+		"url":      "/catalog",
+		"menu":     menuItems(ui.Role),
+		"data":     supplierDataProducts(ui.ID),
+	})
+}
+
+func supplierDelivery(c *gin.Context) {
+	ui, ok := userInfo(c, "/delivery")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "delivery-settings.template", h{
+		"userInfo": ui,
+		"url":      "/delivery",
+		"menu":     menuItems(ui.Role),
+		"data":     supplierDataDelivery(ui.ID),
+	})
+}
+
+func moderatorSuppliers(c *gin.Context) {
+	ui, ok := userInfo(c, "/moderator")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "supplier-register.template", h{
+		"userInfo": ui,
+		"url":      "/moderator",
+		"menu":     menuItems(ui.Role),
+		"data":     moderatorDataCatalog(ui.ID),
+	})
+}
+
+func moderatorCatalog(c *gin.Context) {
+	ui, ok := userInfo(c, "/moderator-catalog")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "moderator-catalog.template", h{
+		"userInfo": ui,
+		"url":      "/moderator-catalog",
+		"menu":     menuItems(ui.Role),
+		"data":     moderatorDataCatalog(ui.ID),
 	})
 }

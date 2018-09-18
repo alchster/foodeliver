@@ -37,6 +37,14 @@ func (u *User) BeforeDelete(tx *gorm.DB) error {
 	return tx.Model(&User{}).Where("id = ?", u.ID).UpdateColumn("login", login).Error
 }
 
+func (u *User) AfterFind() {
+	if !u.Admin {
+		var sids []UUID
+		db.Table("user_suppliers").Where("user_id = ?", u.ID).Pluck("supplier_id", &sids)
+		db.Where("id in (?)", sids).Find(&u.AllowedSuppliers)
+	}
+}
+
 func createAdmin() error {
 	pass := pwgen.AlphaNum(16)
 	admin := User{
@@ -52,4 +60,12 @@ func createAdmin() error {
 	}
 	log.Printf("Created admin user\n\tID:\t\t%v\n\tPassword:\t%v", admin.ID, pass)
 	return nil
+}
+
+func AddModerSupplier(userId, supId UUID) error {
+	return db.Exec("INSERT INTO user_suppliers (user_id, supplier_id) VALUES (?, ?)", userId, supId).Error
+}
+
+func DeleteModerSupplier(userId, supId UUID) error {
+	return db.Exec("DELETE FROM user_suppliers WHERE user_id = ? AND supplier_id = ?", userId, supId).Error
 }

@@ -1,33 +1,133 @@
-# Food delivery service JSON API
+#  Доставка еды
 
-## Requirements
+## Требования
 
-- PostgreSQL
+- PostgreSQL >=9.4
+- Компилтор языка Go версии >=1.8 (нужен, чтобы скомпилировать приложение, если будет использоваться прекомпилированный бинарный файл, то можно проигнорировать этот пункт)
 
-## Installation
-(_This is sample configuration. Default names and paths are used. Please don't use commands as they are given here_)
+## Установка
+(_Эта конфигурация приведена для примера. Использованы значения и пути по-умолчанию. Пожалуйста, используйте свои значения_)
 
-1. Create DB user:
-```Shell
-$ createuser food
+1. Создание пользователя базы данных:
+
+	```Shell
+	$ createuser food
+	```
+
+2. Создание базы данных:
+
+	```Shell
+	$ createdb -U postgres --owner=food --encoding=utf-8 food
+	```
+
+3. Скачайте исходные тексты программы и скомпилируйте бинарный файл (пропустите этот пункт, если вы используете собранный бинарный файл):
+
+	```Shell
+	$ go get github.com/alchster/foodeliver
+	$ cd $HOME/go/src/github.com/alchster/foodeliver
+	$ go build
+	(_optional step:_)
+	$ npm run build
+	```
+
+4. Отредактируйте конфигурационный файл, используя ваши значения (`foodeliver.config.json`).
+5. Создание схемы базы данных (миграция БД):
+
+	```Shell
+	$ ./foodeliver -migrate
+	```
+
+При выполнении последнего пункта будет так же создан пользователь с административными полномочиями. Сгенерированный пароль будет выведен на консоль.
+
+
+## Запуск
+
+Приложение может работать в двух режимах:
+
+	- административный
+
+	- поездной
+
+
+Список параметров командной строки можно получить, запустив приложение с параметром `-help`.
+Приложение не имеет встроенного режима работы в качестве службы. Его можно использовать в качестве облачной службы или запустить с параметром `&` в конце командной строки, чтобы оно работало в фоновом режиме. Лог по-умолчанию выводится на `stdout`. Перенаправить в файл можно стандартными средствами используемой оболочки командной строки.
+
+
+### Административный режим
+
+Приложение запускается в этом режиме, если не указан параметр `-train`. Данный режим предназанчен для управления работой сервиса.
+
+Приложение способно работать полноценно самостоятельно, но для уменьшения нагрузки на процессор рекомендуется статические файлы, а так же файлы изображений из динамического хранилища отдавать через nginx. Так же, для дополнительной безопасности паролей пользователей рекомендуется использовать протокол HTTPS.
+
+Пример конфигурации сервера для nginx:
+
+```nginx
+server {
+	listen <порт>;
+	server_name <имя сервера>;
+
+	root /dev/null;
+	# дополнительные опции
+
+	location / {
+		proxy_pass http://<адрес и порт, указанные в конфигурации приложения>/;
+		proxy_set_header X-Real-IP $remote_addr;
+		# дополнительные опции
+	}
+	location ~ \.(jpg,png,js,css) {
+		root <путь к приложению>/static;
+		# дополнительные опции	
+	}
+	location /files {
+		root /media/storage;
+		# дополнительные опции
+	}
+}
 ```
-2. Create database:
-```Shell
-$ createdb -U postgres --owner=food --encoding=utf-8 food
-```
-3. Go to package directory and build the package (skip this option, if you are using pre-compiled binary):
-```Shell
-$ go get github.com/alchster/foodeliver
-$ cd $HOME/go/src/github.com/alchster/foodeliver
-$ go build
-```
-4. Edit the configuration file (`foodeliver.config.json`). Replace configuration options values with ones that you specified at previous steps.
-5. Create database schema:
-```Shell
-$ ./foodeliver -migrate
-```
-If you hadn't see any error after running this command, you're the lucky one. If not, please check you've done all the previous steps right
 
-## Running and deployment
 
-...
+### Поездной режим
+
+Данный режим предназначен для запуска на каждом поезде, на котором используется сервис. Для запуска в этом режиме необходимо запустить приложение с параметром `-train <номер поезда>`. Пример:
+```Shell
+$ ./foodeliver -train 472C
+```
+Чтобы упростить установку на поездные системы, необходимо поправить параметры (пути установки, пути к конфигурационным файлам, запускаемые дополнительно скрипты и т.п.) в файле `deploy-train.sh`, после чего можно использовать эту утилиту, просто передавая IP адрес системы, куда производится установка.
+
+В поездном режиме приложение работает только как сервер API, поэтому для работы необходимо настроить отдельные конфигурации: для статических файлов портала и для работы API через CORS.
+
+Статические файлы (аналогично и для мобильной версии):
+
+```nginx
+server {
+	listen <порт>;
+	server_name <имя сервера>;
+
+	root <путь к статическим файлам>;
+	# дополнительные опции
+}
+```
+
+API:
+
+```nginx
+server {
+	listen <порт>;
+	server_name <имя сервера>;
+
+	root /dev/null;
+	# дополнительные опции
+
+	location / {
+		add_header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE" always;
+		add_header Access-Control-Allow-Headers * always;
+		add_header Access-Control-Allow-Origin * always;
+		if ($request_method = OPTIONS) {
+			return 200;
+		}
+
+		proxy_pass http://<адрес и порт, указанные в конфигурации приложения>/;
+		proxy_set_header X-Real-IP $remote_addr;
+	}
+}
+```

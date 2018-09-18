@@ -30,6 +30,7 @@ func (s *Service) BeforeCreate() error {
 }
 
 var banknotesInfo = []int{100, 200, 500, 1000, 2000, 5000}
+var banknotes map[int]bool
 
 type PaymentStatus struct {
 	Status bool `json:"status"`
@@ -58,4 +59,18 @@ func PaymentMethods() (*PaymentResp, error) {
 		CardOffline: PaymentStatus{service.PlasticOffline},
 		CardOnline:  PaymentStatus{service.PlasticOnline},
 	}, nil
+}
+
+func createBanknotesMap() {
+	banknotes = make(map[int]bool)
+	for _, b := range banknotesInfo {
+		banknotes[b] = true
+	}
+}
+
+func createBaseService() {
+	db.Save(&Service{
+		Entity: Entity{ID: NewID()},
+		Name:   "Food delivery",
+	})
 }

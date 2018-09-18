@@ -12,7 +12,13 @@ var InvalidID = errors.New("Invalid ID")
 var TimeNotSet = errors.New("Start time not set")
 var InvalidParameter = errors.New("Invalid parameter value")
 var InvalidPassenger = errors.New("Invalid passenger")
+var InvalidFingerprint = errors.New("Invalid fingerprint")
 var InvalidStation = errors.New("Invalid station")
+var InvalidCarNumber = errors.New("Invalid train car number")
+var InvalidSeatNumber = errors.New("Invalid seat number")
+var InvalidPaymentMethod = errors.New("Invalid payment method")
+var UnavailablePaymentMethod = errors.New("Payment method is temporary unavailable")
+var InvalidChange = errors.New("Invalid change banknote")
 
 //var MinAmountError = errors.New("Total is less than minimal amount for this supplier")
 //var TimeoutError = errors.New("Time is out for this supplier at this station")
@@ -42,6 +48,7 @@ type BasketProductInfo struct {
 	Count       int             `json:"count"`
 	Image       string          `json:"image"`
 	StationID   UUID            `json:"-"`
+	product     Product         `json:"-"`
 }
 
 type BasketSupplierInfo struct {
@@ -248,7 +255,7 @@ func ClearBasket(passId, fingerprint string) error {
 	var fp string
 	if err := db.Raw("SELECT fingerprint FROM passengers WHERE id = ?",
 		psid).Row().Scan(&fp); err != nil || fp != fingerprint {
-		return err
+		return InvalidFingerprint
 	}
 	return tmpOrders.DeleteAll(psid)
 }
@@ -280,4 +287,93 @@ func ValidateOrders(passId string) error {
 		}
 	}
 	return nil
+}
+
+type OrderParameters struct {
+	CarNumber      int    `json:"car_number,omitempty"`
+	SeatNumber     int    `json:"seat_number,omitempty"`
+	PaymentMethod  string `json:"payment_method,omitempty"`
+	ChangeBanknote int    `json:"change_banknote,omitempty"`
+}
+
+func CreateOrders(passId, fingerprint string, params *OrderParameters) error {
+	if debugMode {
+		log.Printf("CREATE ORDERS:\n  passengerID: %s\n\n", passId)
+	}
+	psid, err := GetUUID(passId)
+	if err != nil {
+		return InvalidID
+	}
+	var fp string
+	if err := db.Raw("SELECT fingerprint FROM passengers WHERE id = ?",
+		psid).Row().Scan(&fp); err != nil || fp != fingerprint {
+		return InvalidFingerprint
+	}
+	if err := ValidateOrders(passId); err != nil {
+		return err
+	}
+	if params.CarNumber < 1 {
+		return InvalidCarNumber
+	}
+	if params.SeatNumber < 1 {
+		return InvalidSeatNumber
+	}
+
+	var pm PaymentType
+	switch params.PaymentMethod {
+	case "cash":
+		if !service.Cash {
+			return UnavailablePaymentMethod
+		}
+		if _, ok := banknotes[params.ChangeBanknote]; !ok {
+			return InvalidChange
+		}
+		pm = CASH
+	case "card_agent":
+		if !service.PlasticOffline {
+			return UnavailablePaymentMethod
+		}
+		pm = PLASTIC_OFFLINE
+	case "card_online":
+		if !service.PlasticOnline {
+			return UnavailablePaymentMethod
+		}
+		pm = PLASTIC_ONLINE
+	}
+
+	for _, order := range tmpOrders.PassengerOrders(psid) {
+		station := stationsList[stationsMap[order.StationID]]
+		orderId := NewID()
+		if err := db.Save(&Order{
+			Entity:         Entity{ID: orderId},
+			Number:         order.Number,
+			PassengerID:    psid,
+			TrainID:        trainID,
+			StationID:      order.StationID,
+			Arrival:        station.Arrival,
+			Departure:      station.Departure,
+			DeliverUntil:   order.deliveryDeadline,
+			CarNumber:      params.CarNumber,
+			Seat:           params.SeatNumber,
+			PaymentMethod:  pm,
+			ChangeBanknote: params.ChangeBanknote,
+			Total:          order.Total,
+			Charge:         order.Charge,
+			StatusCode:     ORDER_STATUS_NEW,
+			SupplierID:     order.Supplier.ID,
+		}).Error; err != nil {
+			return err
+		}
+		for _, prod := range order.Products {
+			if err := db.Save(&OrderProduct{
+				OrderID:   orderId,
+				ProductID: prod.ID,
+				Count:     prod.Count,
+			}).Error; err != nil {
+				return err
+			}
+		}
+	}
+
+	return tmpOrders.DeleteAll(psid)
 }

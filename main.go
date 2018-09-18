@@ -4,6 +4,7 @@ import (
 	api_v1 "github.com/alchster/foodeliver/api/v1"
 	"github.com/alchster/foodeliver/db"
 	"github.com/alchster/foodeliver/i18n"
+	"github.com/alchster/foodeliver/storage"
 	"github.com/gin-gonic/gin"
 	"log"
 	"os"
@@ -20,8 +21,14 @@ func main() {
 	} else {
 		gin.SetMode(gin.ReleaseMode)
 	}
+	log.Print(config)
 
-	if err = db.Open(config.Database.String(), config.Debug); err != nil {
+	var store storage.Storage
+	if store, err = storage.NewFSStorage(config.Storage); err != nil {
+		log.Fatal("Storage error:", err)
+	}
+
+	if err = db.Open(config.Database.String(), config.Debug, store); err != nil {
 		log.Fatal("Database error:", err)
 	}
 	defer db.Close()
@@ -40,7 +47,7 @@ func main() {
 	//router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	err = api_v1.Setup(router, config.Prefix, config.TrainID)
+	err = api_v1.Setup(router, config.Prefix, config.TrainID, store)
 	if err != nil {
 		log.Print(err)
 		return

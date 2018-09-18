@@ -8,12 +8,18 @@ type Text struct {
 }
 
 type TextReference struct {
-	Status *Text `json:"status" gorm:"association_autoupdate:false;foreignkey:TextID;association_foreignkey:ID"`
-	TextID UUID  `json:"-" sql:"type:uuid REFERENCES texts(id)"`
+	Status Text `json:"status" gorm:"association_autoupdate:false;foreignkey:TextID;association_foreignkey:ID"`
+	TextID UUID `json:"-" sql:"type:uuid REFERENCES texts(id)"`
 }
 
-func NewText(en, ru, zh string) *Text {
-	return &Text{
+func (s *TextReference) BeforeCreate() error {
+	db.Save(&s.Status)
+	s.TextID = s.Status.ID
+	return nil
+}
+
+func NewText(en, ru, zh string) Text {
+	return Text{
 		ID: NewID(),
 		EN: makeString(en),
 		RU: makeString(ru),

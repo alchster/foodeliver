@@ -157,17 +157,17 @@
           <span class="moderators__name">{{$val.Description}}</span>
         </div>
 
-        <div class="moderators__col moderators__col--small js-moderators-col">
+        <div class="moderators__col moderators__col--large js-moderators-col">
           <span class="moderators__label">Назначенные поставщики</span>
-          <div class="select-wrapp select-checkbox">
-            <select name="provider" class="custom-select-checkbox">
-            <option value="">Макдональдс</option>
-            <option value="">Domino Pizza</option>
-            <option value="">Тануки</option>
+          <div class="select-wrapp multiselect-wrap">
+            <select name="Select" id="" class="js-multiselect" multiple="multiple">
+            {{range .Suppliers}}
+              <option value="{{.ID}}"{{if .Allowed}} selected="selected"{{end}}>{{.Description}}</option>
+            {{end}}
           </select>
           </div>
         </div>
-
+<!--
         <div class="moderators__col moderators__col--small js-moderators-col">
           <span class="moderators__label">Запрещенные поставщики</span>
           <div class="select-wrapp select-checkbox">
@@ -178,7 +178,7 @@
           </select>
           </div>
         </div>
-
+-->
         <div class="moderators__col moderators__col--small moderators__col--checkbox js-moderators-col">
           <span class="moderators__label">Работа с поставщиками</span>
           <label class="switch">

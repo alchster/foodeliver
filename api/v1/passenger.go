@@ -17,6 +17,7 @@ type QueryParams struct {
 	StationID   string `form:"stationID" json:"stationID,omitempty"`
 	Count       string `form:"count" json:"count,omitempty"`
 	Fingerprint string `form:"fingerprint" json:"fingerprint,omitempty"`
+	db.OrderParameters
 }
 
 func (q QueryParams) String() string {
@@ -226,6 +227,21 @@ func validateOrders(c *gin.Context) {
 			"error":  err.Error(),
 		})
 		return
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func createOrders(c *gin.Context) {
+	var q QueryParams
+	if err := c.BindJSON(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+	if err := db.CreateOrders(q.PassengerID, q.Fingerprint, &q.OrderParameters); err != nil {
+		c.JSON(http.StatusOK, h{
+			"result": "error",
+			"error":  err.Error(),
+		})
 	}
 	c.JSON(http.StatusOK, h{"result": "ok"})
 }

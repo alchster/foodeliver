@@ -58,126 +58,12 @@
 	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
  		
  	</div>
-<header class="header">
-	<a href="#" class="header__logo">
-		<svg class="icon-logo">
-			<use xlink:href="#logo"></use>
-		</svg>
-	</a>
-	<div class="header__ctrl">
-		<div class="header__ctrl-item header__user">
-			<div class="header__user-text">
-				
-					<span class="header__user-name">Елизавета</span>
-					<span class="header__user-surname">Кармишевская</span>
-				
-				
-			</div>
-			<div class="header__user-image">
-				<img src="pic/user.jpg" alt="user">
-			</div>
-		</div>
-		<div class="header__ctrl-item header__menu">
-			<ul class="header__menu-list">
-				<li class="header__menu-item">
-					<a href="#" class="header__menu-link header__message">
-						
-							<span class="header__message-num" data-num="3"></span>
-						
-						<svg class="icon-mail">
-							<use xlink:href="#mail"></use>
-						</svg>
-					</a>
-				</li>
-				<li class="header__menu-item">
-					<div class="header__menu-link header__search js-search-btn">
-						<svg class="icon-search">
-							<use xlink:href="#search"></use>
-						</svg>
-					</div>
-					<div class="header__search-more js-header-search">
-						<input type="text" class="header__search-input" placeholder="Искать">
-						<span class="header__search-close js-search-close"></span>
-					</div>
 
-				</li>
-			</ul>
-		</div>
-		<div class="header__ctrl-item header__logout">
-			<div class="header__menu-link">
-				<span class="header__logout-txt">Выход</span>
-				<div class="header__logout-icon">
-					<svg class="icon-turn-off">
-						<use xlink:href="#turn-off"></use>
-					</svg>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-
+{{include "parts/header"}}
 
 	<div class="wrapper">
 
-			<aside class="custom-scroll">
-				<ul class="sidebar">
-	<li class="sidebar__item active">
-		<a href="#" class="sidebar__link">
-			<span class="sidebar__icon">
-				<svg class="icon-hamburger-2">
-					<use xlink:href="#hamburger-2"></use>
-				</svg>
-			</span>
-			<span class="sidebar__text">
-				Каталог
-			</span>
-		</a>
-	</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-cart">
-						<use xlink:href="#cart"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Заказы на доставку
-				</span>
-				<span class="sidebar__message">14</span>
-			</a>
-		</li>
-	
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-delivery">
-						<use xlink:href="#delivery"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Настройки доставки
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-nastroika">
-						<use xlink:href="#nastroika"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Настройки
-				</span>
-			</a>
-		</li>
-	
-	
-</ul>
-			</aside>
+{{include "parts/menu"}}
 
 			<div class="content">
 				<div class="head-search head-search--catalog">
@@ -204,24 +90,11 @@
 			<li class="provider-catalog__item-tab js-tab active">
 				<span class="provider-catalog__tab-text">Все категории</span>
 			</li>
+{{range .data.categories}}
 			<li class="provider-catalog__item-tab js-tab">
-				<span class="provider-catalog__tab-text">гамбургеры</span>
+        <span class="provider-catalog__tab-text">{{.Name}}</span>
 			</li>
-			<li class="provider-catalog__item-tab js-tab">
-				<span class="provider-catalog__tab-text">гамбургеры из курицы</span>
-			</li>
-			<li class="provider-catalog__item-tab js-tab">
-				<span class="provider-catalog__tab-text">закуски</span>
-			</li>
-			<li class="provider-catalog__item-tab js-tab">
-				<span class="provider-catalog__tab-text">горячие блюда</span>
-			</li>
-			<li class="provider-catalog__item-tab js-tab">
-				<span class="provider-catalog__tab-text">напитки</span>
-			</li>
-			<li class="provider-catalog__item-tab js-tab">
-				<span class="provider-catalog__tab-text">мороженное</span>
-			</li>
+{{end}}
 		</ul>
 
 		<div class="provider-catalog__add js-add-category">
@@ -230,10 +103,10 @@
 					<span class="provider-catalog__add-icon"></span>
 					<span class="provider-catalog__add-text">Добавить новый товар</span>
 				</div>
-				<div class="provider-catalog__goods">
+				<div class="provider-catalog__goods provider-catalog__api-item">
 					<div class="provider-catalog__col-add provider-catalog__col-add--photo">
 						<span class="provider-catalog__icon-photo">
-							<img src="pic/no-pic.png" alt="">
+							<img class="provider-catalog__api-img" src="pic/no-pic.png" alt="">
 						</span>
 						<span class="provider-catalog__btn-file">
 							<input type="file" id="input-file">
@@ -251,11 +124,9 @@
 							<div class="provider-catalog__col-select">
 								<div class="select-wrapp select-filter">
 									<select name="Select" id="" class="custom-select-filter">
-										<option disabled selected>Категория</option>
-										<option value="">Гамбургеры</option>
-										<option value="">Категория 2</option>
-										<option value="">Категория 3</option>
-										<option value="">Категория 4</option>
+                  {{range .data.categories}}
+              			<option value="{{.ID}}">{{.Name}}</option>
+                  {{end}}
 									</select>
 								</div>
 							</div>
@@ -275,6 +146,7 @@
 							</div>
 						</div>
 						<div class="provider-catalog__col-inner">
+            <!--
 							<span class="provider-catalog__col-title">Станции доставки</span>
 							<div class="provider-catalog__col-station">
 								<div class="select-wrapp select-checkbox">
@@ -285,6 +157,7 @@
 									</select>
 								</div>
 							</div>
+            -->
 						</div>
 					</div>
 					<div class="provider-catalog__save-btn">
@@ -295,20 +168,26 @@
 		</div>
 
 		<div class="provider-catalog__content js-tab-content active">
+{{$products := .data.products}}
+{{$categories := .data.categories}}
+{{range .data.categories}}
 			<div class="provider-catalog__item">
 				<div class="provider-catalog__item-head">
-					<span class="provider-catalog__head-title">Гамбургеры</span>
+					<span class="provider-catalog__head-title">{{.Name}}</span>
 				</div>
 
+{{$cat := .}}
+{{range $products}}
+{{if same $cat.ID .CategoryID}}
 
-
-				<div class="box-item provider-catalog__item-card js-catalog-card">
+				<div class="box-item provider-catalog__item-card js-catalog-card provider-catalog__api-item">
+					<span class="provider-catalog__product-id" style="display:none !important;">{{.ID}}</span>
 					<div class="provider-catalog__col provider-catalog__col--img">
-						<img src="pic/products/product-01.jpg" alt="">
+						<img class="provider-catalog__api-img" src="{{.Image}}" alt="">
 
 						<span class="provider-catalog__btn-file provider-catalog__btn-file--edit">
-							<input type="file" id="input-file">
-							<label for="input-file">
+							<input type="file" id="input-file-{{.ID}}">
+							<label for="input-file-{{.ID}}">
 								Изменить фото
 							</label>
 						</span>
@@ -318,18 +197,16 @@
 						<div class="provider-catalog__inner">
 							<span class="provider-catalog__title">Наименование</span>
 							<div class="provider-catalog__name-goods">
-								<input type="text" class="input-bottom js-catalog-input" value="Стейк Хаус" disabled>
+							  <span class="provider-catalog__name-id" style="display:none !important">{{.Name.ID}}</span>
+								<input type="text" class="input-bottom js-catalog-input" value="{{.Name.RU}}" disabled>
 							</div>
-							<span class="provider-catalog__category">гамбургеры</span>
+							<span class="provider-catalog__category"></span>
 							<div class="provider-catalog__category-select">
 								<div class="select-wrapp select-filter">
 									<select name="Select" id="" class="custom-select-filter">
-										<option value="">Закуски</option>
-										<option value="">Напитки</option>
-										<option value="">Горячие блюда</option>
-										<option value="" selected>Гамбургеры</option>
-										<option value="">Мороженое</option>
-										<option value="">Гамбургеры из курицы</option>
+                  {{range $categories}}
+										<option value="{{.ID}}"{{if same $cat.ID .ID}} selected{{end}}>{{.Name}}</option>
+                  {{end}}
 									</select>
 								</div>
 							</div>
@@ -337,10 +214,12 @@
 						<div class="provider-catalog__inner">
 							<span class="provider-catalog__title">Описание</span>
 							<div class="provider-catalog__descr">
-								<div contenteditable="false" class="editor disabled">Сочетание нашей фирменной, приготовленной на огне 100% говядины с ломтиками бекона и соусом «Барбекю», майонезом, листьями свежего салата, помидором и хрустящим луком на воздушной булочке, посыпанной кукурузной крошкой.</div>
+							  <span class="provider-catalog__descr-id" style="display:none !important">{{.Description.ID}}</span>
+								<div contenteditable="false" class="editor disabled">{{.Description.RU}}</div>
 							</div>
 						</div>
 						<div class="provider-catalog__inner">
+            <!--
 							<span class="provider-catalog__title">Станции доставки</span>
 							<div class="provider-catalog__delivery-station">
 								<span class="provider-catalog__delivery-station-item">
@@ -374,6 +253,7 @@
 									<input type="text" class="input-bottom">
 								</span>
 							</div>
+            -->
 						</div>
 						<div class="provider-catalog__save-catalog">
 							<button class="btn">Сохранить</button>
@@ -399,15 +279,15 @@
 							<span class="provider-catalog__title">Цена</span>
 							<div class="provider-catalog__price">
 								<span class="provider-catalog__price-input">
-									<input type="text" disabled class="input-bottom js-catalog-input" value="340">
+									<input type="text" disabled class="input-bottom js-catalog-input" value="{{.Cost}}">
 								</span>
 							</div>
 						</div>
 						<div class="provider-catalog__inner provider-catalog__inner--status">
 							<span class="provider-catalog__title">Статус товара</span>
 							<div class="provider-catalog__status-select">
-								<span class="provider-catalog__status-color"></span>
-								<span class="provider-catalog__status-result">Новый</span>
+                <span class="provider-catalog__status-color{{if eq .Status.Code 2}} approved{{end}}{{if eq .Status.Code 3}} not-approved{{end}}{{if eq .Status.Code 1}} not-available{{end}}"></span>
+                <span class="provider-catalog__status-result">{{.Status.Status.RU}}</span>
 							</div>
 						</div>
 						<div class="provider-catalog__inner provider-catalog__inner--date">
@@ -423,13 +303,15 @@
 						</div>
 						<div class="provider-catalog__inner">
 							<span class="provider-catalog__title">Дата добавления</span>
-							<span class="provider-catalog__date">21 апреля 2018 года, 15:32</span>
+              <span class="provider-catalog__date">{{datetime .UpdatedAt}}</span>
 						</div>
 					</div>
 				</div>
+{{end}}
+{{end}}
+{{end}}
 
-
-
+<!--
 				<div class="box-item provider-catalog__item-card js-catalog-card">
 					<div class="provider-catalog__col provider-catalog__col--img">
 						<img src="pic/products/product-02.jpg" alt="">
@@ -977,7 +859,8 @@
 					</div>
 				</div>
 			</div>
-
+-->
+<!--
 			<div class="pagination pagination--catalog">
 	<ul class="pagination__list">
 		<li class="pagination__item">
@@ -1006,6 +889,7 @@
 		</li>
 	</ul>
 </div>
+-->
 		</div>
 	</div>
 </div>
@@ -1021,6 +905,7 @@
 
     <script src="js/vendor.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
 
 </body>
 </html>

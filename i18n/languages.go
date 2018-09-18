@@ -3,7 +3,7 @@ package i18n
 import (
 	"golang.org/x/text/language"
 	//"golang.org/x/text/language/display"
-	"log"
+	//"log"
 )
 
 type LanguageCode [2]rune
@@ -25,7 +25,7 @@ func LoadLanguage(languageCode string) *Language {
 	//	if err != nil {
 	//		return false
 	//	}
-	log.Print(l)
+	//	log.Print(l)
 	return &l
 }
 

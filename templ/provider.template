@@ -58,129 +58,17 @@
 	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
  		
  	</div>
-<header class="header">
-	<a href="#" class="header__logo">
-		<svg class="icon-logo">
-			<use xlink:href="#logo"></use>
-		</svg>
-	</a>
-	<div class="header__ctrl">
-		<div class="header__ctrl-item header__user">
-			<div class="header__user-text">
-				
-				
-					<span class="header__user-company">Бургер Кинг</span>
-				
-			</div>
-			<div class="header__user-image">
-				<img src="pic/postavshic.jpg" alt="user">
-			</div>
-		</div>
-		<div class="header__ctrl-item header__menu">
-			<ul class="header__menu-list">
-				<li class="header__menu-item">
-					<a href="#" class="header__menu-link header__message">
-						
-						<svg class="icon-mail">
-							<use xlink:href="#mail"></use>
-						</svg>
-					</a>
-				</li>
-				<li class="header__menu-item">
-					<div class="header__menu-link header__search js-search-btn">
-						<svg class="icon-search">
-							<use xlink:href="#search"></use>
-						</svg>
-					</div>
-					<div class="header__search-more js-header-search">
-						<input type="text" class="header__search-input" placeholder="Искать">
-						<span class="header__search-close js-search-close"></span>
-					</div>
 
-				</li>
-			</ul>
-		</div>
-		<div class="header__ctrl-item header__logout">
-			<div class="header__menu-link">
-				<span class="header__logout-txt">Выход</span>
-				<div class="header__logout-icon">
-					<svg class="icon-turn-off">
-						<use xlink:href="#turn-off"></use>
-					</svg>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-
+{{include "parts/header"}}
 
 	<div class="wrapper">
 
-			<aside class="custom-scroll">
-				<ul class="sidebar">
-	<li class="sidebar__item active">
-		<a href="#" class="sidebar__link">
-			<span class="sidebar__icon">
-				<svg class="icon-hamburger-2">
-					<use xlink:href="#hamburger-2"></use>
-				</svg>
-			</span>
-			<span class="sidebar__text">
-				Каталог
-			</span>
-		</a>
-	</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-cart">
-						<use xlink:href="#cart"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Заказы на доставку
-				</span>
-				<span class="sidebar__message">14</span>
-			</a>
-		</li>
-	
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-delivery">
-						<use xlink:href="#delivery"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Настройки доставки
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-nastroika">
-						<use xlink:href="#nastroika"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Настройки
-				</span>
-			</a>
-		</li>
-	
-	
-</ul>
-			</aside>
+{{include "parts/menu"}}
 
 			<div class="content">
 				<div class="provider">
 	<h1 class="provider__caption">Заказы на доставку</h1>
-
-	<!-- filter -->
+<!-- filter 
 	<div class="provider__filter">
 		<span class="provider__filter-text">Фильтры:</span>
 		<div class="provider__select">
@@ -206,563 +94,78 @@
 			</div>
 		</div>
 	</div>
-	<!-- filter end-->
-	
+	 filter end -->
+{{range .data}}
 	<div class="provider__item box-item">
+	<span class="provider__item-order-id">{{.ID}}</span>
 	<div class="provider__row">
 		<div class="provider__col provider__col--order">
 			<span class="provider__item-subtitle">Номер заказа</span>
-			<span class="provider__item-num">12934574334</span>
+			<span class="provider__item-num">{{.Number}}</span>
 
 			<div class="provider__order">
 				<span class="provider__item-subtitle">Состав заказа</span>
 				<ul class="provider__order-list">
-					
+				
+        {{range .Products}}
 						<li class="provider__order-item">
 							<span class="provider__order-name provider__order-elem">
-								Стейк Хаус
+								{{.Product.Name.RU}}
 							</span>
 							<span class="provider__order-quantity provider__order-elem">
-								1 шт
+								{{.Count}} шт
 							</span>
-							<span class="provider__order-price provider__order-elem">
-								340
+							<span class="provideqqr__order-price provider__order-elem">
+                {{.Product.Cost}}
 								<span class="rubl">i</span>
 							</span>
 						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Родео Чизбургер
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								420
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Сырные медальоны с Халапеньо
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								390
-								<span class="rubl">i</span>
-							</span>
-						</li>
+        {{end}}
 					
 				</ul>
 				<div class="provider__order-total">
-					<span>Итого: 1 150 <span class="rubl">i</span></span>
+					<span>Итого: {{.Total}} <span class="rubl">i</span></span>
 				</div>
 			</div>
 		</div>
 		<div class="provider__col provider__col--delivery">
 			<div class="provider__item-head">
 				<span class="provider__item-subtitle">Город доставки и станция</span>
-				<span class="provider__item-text">Адлер, станция Адлер</span>		
+
+        <span class="provider__item-text">{{.Station.Name.RU}}</span>
 			</div>
 
 			<div class="provider__col-inner">
 				<span class="provider__item-subtitle provider__item-subtitle--mod">
 					Время прибытия поезда
 				</span>
-				<span class="provider__item-text">11:00</span>
+				<span class="provider__item-text">{{time .Arrival}}</span>
 
 				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">472C</span>
+				<span class="provider__item-text">{{.TrainNumber}}</span>
 
 				<span class="provider__item-subtitle">Дата и время доставки</span>
-				<span class="provider__item-text">29 июня 2018, 11:20</span>
+				<span class="provider__item-text">{{datetime .DeliverUntil}}</span>
 
 			</div>
 			<div class="provider__col-inner">
 				<span class="provider__item-subtitle provider__item-subtitle--mod">
 					Время отправления поезда
 				</span>
-				<span class="provider__item-text">11:30</span>
+				<span class="provider__item-text">{{time .Departure}}</span>
 
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">13</span>
-
-				<span class="provider__item-subtitle">Статус заказа</span>
-				<div class="provider__item-status">
-					<span class="provider__item-status-color js-color"></span>
-					<div class="select-wrapp select-center">
-						<select name="Select" id="" class="custom-select-center">
-							<option value="" data-color="#f5a623" data-status="approved">Оплачен</option>
-							<option value="" data-color="#7ed321" data-status="new">Принят поставщиком</option>
-							<option value="" data-color="#ff0033" data-status="not-approved">Не принят поставщиком</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-</div><div class="provider__item box-item">
-	<div class="provider__row">
-		<div class="provider__col provider__col--order">
-			<span class="provider__item-subtitle">Номер заказа</span>
-			<span class="provider__item-num">58473987961</span>
-
-			<div class="provider__order">
-				<span class="provider__item-subtitle">Состав заказа</span>
-				<ul class="provider__order-list">
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Стейк Хаус
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								340
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-				</ul>
-				<div class="provider__order-total">
-					<span>Итого: 340 <span class="rubl">i</span></span>
-				</div>
-			</div>
-		</div>
-		<div class="provider__col provider__col--delivery">
-			<div class="provider__item-head">
-				<span class="provider__item-subtitle">Город доставки и станция</span>
-				<span class="provider__item-text">Адлер, станция Адлер</span>		
-			</div>
-
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время прибытия поезда
-				</span>
-				<span class="provider__item-text">11:00</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">472C</span>
-
-				<span class="provider__item-subtitle">Дата и время доставки</span>
-				<span class="provider__item-text">29 июня 2018, 11:20</span>
-
-			</div>
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время отправления поезда
-				</span>
-				<span class="provider__item-text">11:30</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">13</span>
+				<span class="provider__item-subtitle">Номер вагона</span>
+				<span class="provider__item-text">{{.CarNumber}}</span>
 
 				<span class="provider__item-subtitle">Статус заказа</span>
 				<div class="provider__item-status">
 					<span class="provider__item-status-color js-color"></span>
 					<div class="select-wrapp select-center">
 						<select name="Select" id="" class="custom-select-center">
-							<option value="" data-color="#f5a623" data-status="approved">Оплачен</option>
-							<option value="" data-color="#7ed321" data-status="new">Принят поставщиком</option>
-							<option value="" data-color="#ff0033" data-status="not-approved">Не принят поставщиком</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-</div><div class="provider__item box-item">
-	<div class="provider__row">
-		<div class="provider__col provider__col--order">
-			<span class="provider__item-subtitle">Номер заказа</span>
-			<span class="provider__item-num">12934574334</span>
-
-			<div class="provider__order">
-				<span class="provider__item-subtitle">Состав заказа</span>
-				<ul class="provider__order-list">
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Стейк Хаус
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								340
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Родео Чизбургер
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								420
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Сырные медальоны с Халапеньо
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								390
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-				</ul>
-				<div class="provider__order-total">
-					<span>Итого: 1 150 <span class="rubl">i</span></span>
-				</div>
-			</div>
-		</div>
-		<div class="provider__col provider__col--delivery">
-			<div class="provider__item-head">
-				<span class="provider__item-subtitle">Город доставки и станция</span>
-				<span class="provider__item-text">Адлер, станция Адлер</span>		
-			</div>
-
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время прибытия поезда
-				</span>
-				<span class="provider__item-text">11:00</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">472C</span>
-
-				<span class="provider__item-subtitle">Дата и время доставки</span>
-				<span class="provider__item-text">29 июня 2018, 11:20</span>
-
-			</div>
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время отправления поезда
-				</span>
-				<span class="provider__item-text">11:30</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">13</span>
-
-				<span class="provider__item-subtitle">Статус заказа</span>
-				<div class="provider__item-status">
-					<span class="provider__item-status-color js-color"></span>
-					<div class="select-wrapp select-center">
-						<select name="Select" id="" class="custom-select-center">
-							<option value="" data-color="#f5a623" data-status="approved">Оплачен</option>
-							<option value="" data-color="#7ed321" data-status="new">Принят поставщиком</option>
-							<option value="" data-color="#ff0033" data-status="not-approved">Не принят поставщиком</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-</div><div class="provider__item box-item">
-	<div class="provider__row">
-		<div class="provider__col provider__col--order">
-			<span class="provider__item-subtitle">Номер заказа</span>
-			<span class="provider__item-num">12934574334</span>
-
-			<div class="provider__order">
-				<span class="provider__item-subtitle">Состав заказа</span>
-				<ul class="provider__order-list">
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Стейк Хаус
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								340
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Родео Чизбургер
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								420
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Сырные медальоны с Халапеньо
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								390
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-				</ul>
-				<div class="provider__order-total">
-					<span>Итого: 1 150 <span class="rubl">i</span></span>
-				</div>
-			</div>
-		</div>
-		<div class="provider__col provider__col--delivery">
-			<div class="provider__item-head">
-				<span class="provider__item-subtitle">Город доставки и станция</span>
-				<span class="provider__item-text">Адлер, станция Адлер</span>		
-			</div>
-
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время прибытия поезда
-				</span>
-				<span class="provider__item-text">11:00</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">472C</span>
-
-				<span class="provider__item-subtitle">Дата и время доставки</span>
-				<span class="provider__item-text">29 июня 2018, 11:20</span>
-
-			</div>
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время отправления поезда
-				</span>
-				<span class="provider__item-text">11:30</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">13</span>
-
-				<span class="provider__item-subtitle">Статус заказа</span>
-				<div class="provider__item-status">
-					<span class="provider__item-status-color js-color"></span>
-					<div class="select-wrapp select-center">
-						<select name="Select" id="" class="custom-select-center">
-							<option value="" data-color="#f5a623" data-status="approved">Оплачен</option>
-							<option value="" data-color="#7ed321" data-status="new">Принят поставщиком</option>
-							<option value="" data-color="#ff0033" data-status="not-approved">Не принят поставщиком</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-</div><div class="provider__item box-item">
-	<div class="provider__row">
-		<div class="provider__col provider__col--order">
-			<span class="provider__item-subtitle">Номер заказа</span>
-			<span class="provider__item-num">12934574334</span>
-
-			<div class="provider__order">
-				<span class="provider__item-subtitle">Состав заказа</span>
-				<ul class="provider__order-list">
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Стейк Хаус
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								340
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Родео Чизбургер
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								420
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Сырные медальоны с Халапеньо
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								390
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-				</ul>
-				<div class="provider__order-total">
-					<span>Итого: 1 150 <span class="rubl">i</span></span>
-				</div>
-			</div>
-		</div>
-		<div class="provider__col provider__col--delivery">
-			<div class="provider__item-head">
-				<span class="provider__item-subtitle">Город доставки и станция</span>
-				<span class="provider__item-text">Адлер, станция Адлер</span>		
-			</div>
-
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время прибытия поезда
-				</span>
-				<span class="provider__item-text">11:00</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">472C</span>
-
-				<span class="provider__item-subtitle">Дата и время доставки</span>
-				<span class="provider__item-text">29 июня 2018, 11:20</span>
-
-			</div>
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время отправления поезда
-				</span>
-				<span class="provider__item-text">11:30</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">13</span>
-
-				<span class="provider__item-subtitle">Статус заказа</span>
-				<div class="provider__item-status">
-					<span class="provider__item-status-color js-color"></span>
-					<div class="select-wrapp select-center">
-						<select name="Select" id="" class="custom-select-center">
-							<option value="" data-color="#f5a623" data-status="approved">Оплачен</option>
-							<option value="" data-color="#7ed321" data-status="new">Принят поставщиком</option>
-							<option value="" data-color="#ff0033" data-status="not-approved">Не принят поставщиком</option>
-						</select>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-	</div>
-</div><div class="provider__item box-item">
-	<div class="provider__row">
-		<div class="provider__col provider__col--order">
-			<span class="provider__item-subtitle">Номер заказа</span>
-			<span class="provider__item-num">12934574334</span>
-
-			<div class="provider__order">
-				<span class="provider__item-subtitle">Состав заказа</span>
-				<ul class="provider__order-list">
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Стейк Хаус
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								340
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Родео Чизбургер
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								420
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-						<li class="provider__order-item">
-							<span class="provider__order-name provider__order-elem">
-								Сырные медальоны с Халапеньо
-							</span>
-							<span class="provider__order-quantity provider__order-elem">
-								1 шт
-							</span>
-							<span class="provider__order-price provider__order-elem">
-								390
-								<span class="rubl">i</span>
-							</span>
-						</li>
-					
-				</ul>
-				<div class="provider__order-total">
-					<span>Итого: 1 150 <span class="rubl">i</span></span>
-				</div>
-			</div>
-		</div>
-		<div class="provider__col provider__col--delivery">
-			<div class="provider__item-head">
-				<span class="provider__item-subtitle">Город доставки и станция</span>
-				<span class="provider__item-text">Адлер, станция Адлер</span>		
-			</div>
-
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время прибытия поезда
-				</span>
-				<span class="provider__item-text">11:00</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">472C</span>
-
-				<span class="provider__item-subtitle">Дата и время доставки</span>
-				<span class="provider__item-text">29 июня 2018, 11:20</span>
-
-			</div>
-			<div class="provider__col-inner">
-				<span class="provider__item-subtitle provider__item-subtitle--mod">
-					Время отправления поезда
-				</span>
-				<span class="provider__item-text">11:30</span>
-
-				<span class="provider__item-subtitle">Номер поезда</span>
-				<span class="provider__item-text">13</span>
-
-				<span class="provider__item-subtitle">Статус заказа</span>
-				<div class="provider__item-status">
-					<span class="provider__item-status-color js-color"></span>
-					<div class="select-wrapp select-center">
-						<select name="Select" id="" class="custom-select-center">
-							<option value="" data-color="#f5a623" data-status="approved">Оплачен</option>
-							<option value="" data-color="#7ed321" data-status="new">Принят поставщиком</option>
-							<option value="" data-color="#ff0033" data-status="not-approved">Не принят поставщиком</option>
+            {{$statusCode := .StatusCode}}
+            {{range .StatusesList}}
+							<option value="{{.Code}}" data-color="{{.Color}}" data-status=""{{if eq $statusCode .Code}} selected{{end}}>{{.Status.RU}}</option>
+            {{end}}
 						</select>
 					</div>
 				</div>
@@ -771,7 +174,8 @@
 		
 	</div>
 </div>
-
+{{end}}
+<!--
 	<div class="pagination ">
 	<ul class="pagination__list">
 		<li class="pagination__item">
@@ -800,7 +204,7 @@
 		</li>
 	</ul>
 </div>
-
+-->
 </div>
 			</div>
 
@@ -813,6 +217,7 @@
 
     <script src="js/vendor.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
 
 </body>
 </html>

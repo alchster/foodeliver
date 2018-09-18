@@ -11,19 +11,36 @@ import (
 const tagName = "crud"
 
 var crudEntities = map[string]reflect.Type{
+	"text":             reflect.TypeOf(Text{}),
 	"user":             reflect.TypeOf(User{}),
 	"supplier":         reflect.TypeOf(Supplier{}),
 	"station":          reflect.TypeOf(Station{}),
 	"train":            reflect.TypeOf(Train{}),
 	"service":          reflect.TypeOf(Service{}),
-	"-stationlist":     reflect.TypeOf(StationsListItem{}),
-	"-supplierstation": reflect.TypeOf(SupplierStation{}),
-	"-basketproduct":   reflect.TypeOf(BasketProduct{}),
 	"passenger":        reflect.TypeOf(Passenger{}),
 	"product":          reflect.TypeOf(Product{}),
 	"order":            reflect.TypeOf(Order{}),
+	"-supplierstation": reflect.TypeOf(SupplierStation{}),
+	"-stationlist":     reflect.TypeOf(StationsListItem{}),
+	"-orderproduct":    reflect.TypeOf(OrderProduct{}),
+	"-basketproduct":   reflect.TypeOf(BasketProduct{}),
 }
-var EntitiesList []string
+
+var EntitiesList = []string{
+	"text",
+	"user",
+	"supplier",
+	"station",
+	"train",
+	"service",
+	"passenger",
+	"product",
+	"order",
+	"-supplierstation",
+	"-stationlist",
+	"-orderproduct",
+	"-basketproduct",
+}
 
 func NewObject(entityName string) (interface{}, error) {
 	objType, ok := crudEntities[entityName]
@@ -94,6 +111,7 @@ func Update(entityName, id string, data map[string]interface{}, userId string) e
 		data["password"] = cryptPassword(val.(string))
 	}
 	data["updated_at"] = time.Now()
+
 	return db.Model(objPtr).Where("id = ?", id).UpdateColumns(data).Error
 }
 
@@ -136,14 +154,6 @@ func cryptPassword(password string) string {
 
 func CheckPassword(hash, password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)) == nil
-}
-
-func fillEntitiesList() {
-	keys := make([]string, 0, len(crudEntities))
-	for e := range crudEntities {
-		keys = append(keys, e)
-	}
-	EntitiesList = keys
 }
 
 func migrateEntities() error {

@@ -3,20 +3,22 @@ package db
 import (
 	"fmt"
 	"github.com/shopspring/decimal"
+	"time"
 )
 
 type OrderInfo struct {
-	ID          UUID                        `json:"id"`
-	Number      string                      `json:"number"`
-	Products    []*BasketProductInfo        `json:"products"`
-	Supplier    BasketSupplierInfo          `json:"supplier"`
-	Total       decimal.Decimal             `json:"supplier_cost_total"`
-	Charge      decimal.Decimal             `json:"supplier_cost_service"`
-	StationID   UUID                        `json:"-"`
-	productsMap map[UUID]*BasketProductInfo `json:"-"`
-	passengerId UUID                        `json:"-"`
-	size        int                         `json:"-"`
-	minAmount   decimal.Decimal             `json:"-"`
+	ID               UUID                        `json:"id"`
+	Number           string                      `json:"number"`
+	Products         []*BasketProductInfo        `json:"products"`
+	Supplier         BasketSupplierInfo          `json:"supplier"`
+	Total            decimal.Decimal             `json:"supplier_cost_total"`
+	Charge           decimal.Decimal             `json:"supplier_cost_service"`
+	StationID        UUID                        `json:"-"`
+	productsMap      map[UUID]*BasketProductInfo `json:"-"`
+	passengerId      UUID                        `json:"-"`
+	size             int                         `json:"-"`
+	minAmount        decimal.Decimal             `json:"-"`
+	deliveryDeadline time.Time                   `json:"-"`
 }
 
 func (oi *OrderInfo) Init() {
@@ -42,6 +44,7 @@ func (oi *OrderInfo) Add(product UUID, quantity int) (count int, err error) {
 			Count:       count,
 			Image:       prod.Image,
 			StationID:   oi.StationID,
+			product:     prod,
 		}
 		oi.Products = append(oi.Products, bpi)
 		oi.productsMap[product] = bpi //&oi.Products[len(oi.Products)-1]

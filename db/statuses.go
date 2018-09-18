@@ -3,22 +3,23 @@ package db
 type SupplierStatus struct {
 	Code SupplierStatusCode `json:"code" gorm:"type:smallint;primary_key;default:0"`
 	TextReference
+	Color string `json:"color" gorm:"-"`
 }
 
 type ProductStatus struct {
 	Code ProductStatusCode `json:"code" gorm:"type:smallint;primary_key;default:0"`
 	TextReference
+	Color string `json:"color" gorm:"-"`
+}
+
+func (ps *ProductStatus) AfterFind() {
+	db.Where("id = ?", ps.TextID).First(&ps.Status)
 }
 
 type OrderStatus struct {
 	Code OrderStatusCode `json:"code" gorm:"type:smallint;primary_key;default:0"`
 	TextReference
-}
-
-func (s *TextReference) BeforeCreate() error {
-	db.Save(s.Status)
-	s.TextID = s.Status.ID
-	return nil
+	Color string `json:"color" gorm:"-"`
 }
 
 func NewStatus(code interface{}, ru, en, zh string) interface{} {
@@ -116,4 +117,11 @@ func statusesList() map[interface{}]interface{} {
 		"fullfilled", "исполнен", "")
 
 	return res
+}
+
+var productStatusColors = map[ProductStatusCode]string{
+	PRODUCT_STATUS_NEW:          "#f5a623",
+	PRODUCT_STATUS_APPROVED:     "#7ed321",
+	PRODUCT_STATUS_UNAVAILABLE:  "#9b9b9b",
+	PRODUCT_STATUS_NOT_APPROVED: "#ff0033",
 }

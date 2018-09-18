@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/alchster/foodeliver/storage"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"log"
@@ -9,14 +10,16 @@ import (
 var (
 	db        *gorm.DB
 	debugMode bool
+	store     storage.Storage
 )
 
 func Raw(query string) *gorm.DB {
 	return db.Raw(query)
 }
 
-func Open(uri string, debug bool) error {
+func Open(uri string, debug bool, s storage.Storage) error {
 	debugMode = debug
+	store = s
 	if debugMode {
 		log.Print("Connecting to database")
 	}
@@ -25,7 +28,8 @@ func Open(uri string, debug bool) error {
 		return err
 	}
 	db.LogMode(debugMode)
-	fillEntitiesList()
+	createBanknotesMap()
+	supplierOrderStatuses = getSupplierOrderStatuses()
 
 	return nil
 }
@@ -43,6 +47,7 @@ func Migrate() error {
 		return err
 	}
 	createStatuses()
+	createBaseService()
 	createAdmin()
 	return nil
 }

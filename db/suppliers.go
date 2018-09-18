@@ -2,12 +2,16 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"github.com/shopspring/decimal"
 	"golang.org/x/crypto/bcrypt"
 	"log"
 	"time"
 )
+
+var InvalidMinAmount = errors.New("Invalid minimal amount")
+var InvalidDeliveryTime = errors.New("Invalid delivery time")
 
 type Supplier struct {
 	LoginUser
@@ -20,8 +24,9 @@ type Supplier struct {
 }
 
 type SupplierStation struct {
-	SupplierID   UUID            `gorm:"foreignkey:Supplier; association_foreignkey:ID"`
-	StationID    UUID            `gorm:"foreignkey:Station; association_foreignkey:ID"`
+	SupplierID   UUID            `gorm:"type:uuid REFERENCES suppliers(id);primary_key"`
+	StationID    UUID            `gorm:"type:uuid REFERENCES stations(id);primary_key"`
+	Station      Station         `gorm:"foreignkey:StationID; association_foreignkey:ID"`
 	MinAmount    decimal.Decimal `gorm:"type:numeric"`
 	DeliveryTime time.Duration   `gorm:"notnull"`
 }
@@ -284,4 +289,86 @@ func SupplierProducts(suppId string) (*SupplierCategoriesItem, error) {
 		Categories: cat,
 		Stations:   stations,
 	}, nil
+}
+
+type Minutes int
+
+func (m *Minutes) Duration() time.Duration {
+	return time.Duration(*m) * time.Minute
+}
+
+func (m *Minutes) FromDuration(dur time.Duration) {
+	*m = Minutes(dur / time.Minute)
+}
+
+type StationDeliveryResp struct {
+	StationID       UUID            `json:"station_id"`
+	Name            string          `json:"station_name"`
+	DeliveryMinutes Minutes         `json:"delivery_time"`
+	MinAmount       decimal.Decimal `json:"min_amount"`
+	Active          bool            `json:"enable,omitempty"`
+}
+
+func GetSupplierStations(spid UUID) ([]StationDeliveryResp, error) {
+	stations := make([]StationDeliveryResp, 0)
+	columns := fmt.Sprintf("station_id, texts.ru as station_name, delivery_time/%d, "+
+		"supplier_stations.min_amount", time.Minute)
+	rows, err := db.Table("supplier_stations").Select(columns).
+		Joins("LEFT JOIN stations on station_id = stations.id").
+		Joins("LEFT JOIN texts on text_id = texts.id").
+		Order("texts.ru").Where("supplier_id = ?", spid).Rows()
+	defer rows.Close()
+	if err != nil {
+		return nil, err
+	}
+	ids := make([]UUID, 0)
+	for rows.Next() {
+		var (
+			id   UUID
+			name string
+			dt   Minutes
+			ma   decimal.Decimal
+		)
+		rows.Scan(&id, &name, &dt, &ma)
+		ids = append(ids, id)
+		stations = append(stations, StationDeliveryResp{id, name, dt, ma, true})
+	}
+
+	var ss []Station
+	err = db.Joins("LEFT JOIN texts on text_id = texts.id").Order("texts.ru").
+		Where("stations.id not in (?)", ids).Find(&ss).Error
+	if err != nil {
+		return nil, err
+	}
+	for _, s := range ss {
+		stations = append(stations, StationDeliveryResp{
+			s.ID,
+			*s.Name.RU,
+			Minutes(0),
+			decimal.Decimal{},
+			false,
+		})
+	}
+
+	return stations, nil
+}
+
+func AddSupplierStation(suppId UUID, sd *StationDeliveryResp) error {
+	if int(sd.DeliveryMinutes) == 0 {
+		return InvalidDeliveryTime
+	}
+	if sd.MinAmount.IsZero() {
+		return InvalidMinAmount
+	}
+	return db.Save(&SupplierStation{
+		SupplierID:   suppId,
+		StationID:    sd.StationID,
+		DeliveryTime: sd.DeliveryMinutes.Duration(),
+		MinAmount:    sd.MinAmount,
+	}).Error
+}
+
+func DeleteSupplierStation(suppId UUID, sd *StationDeliveryResp) error {
+	return db.Exec("DELETE FROM supplier_stations WHERE supplier_id = ? and station_id = ?",
+		suppId, sd.StationID).Error
 }
