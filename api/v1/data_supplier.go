@@ -18,7 +18,7 @@ func supplierDataOrders(supplierId db.UUID) []db.Order {
 func supplierDataProducts(supplierId db.UUID) map[string]interface{} {
 	data := make(map[string]interface{})
 	data["products"], _ = db.SupplierCatalogProducts(supplierId)
-	data["categories"], _ = db.SupplierCategories(supplierId)
+	data["categories"], _ = db.Categories()
 	return data
 }
 

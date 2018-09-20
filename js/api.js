@@ -14,8 +14,56 @@ $(function () {
   moder();
   supList();
   statistics();
+  categories();
 });
 
+
+function categories() {
+  $('.btn.catalog__create-new').click(function () {
+    var name = $(this).closest('.catalog__category').find('input').val().trim();
+    if (name !== "") {
+      apiCall('POST', '/category', {name: name}).done(function () {
+        window.location = window.location;
+      });
+    }
+  });
+  $('.catalog__btn-edit').click(function () {
+    var parent = $(this).closest('.catalog__item');
+    var input = parent.find('input');
+    if (!parent.hasClass('active-delete')) {
+      parent.toggleClass('active-edit');
+      if (parent.hasClass('active-edit')) {
+        input.removeAttr('disabled');
+      } else {
+        input.attr('disabled', true);
+      }
+    }
+  });
+  $('.catalog__btn-delete, .catalog__btn-delete-cancel').click(function () {
+    var parent = $(this).closest('.catalog__item');
+    if (!parent.hasClass('active-edit')) {
+      parent.toggleClass('active-delete');
+    }
+  });
+  $('.btn.catalog__btn-save').click(function () {
+    var parent = $(this).closest('.catalog__item');
+    var id = parent.attr('data-cat-id');
+    var input = parent.find('input');
+    var name = input.val().trim();
+    if (name !== "") {
+      apiCall('PUT', '/text/'+id, {ru: name, en: name}).done(function () {
+        window.location = window.location;
+      });
+    }
+  });
+  $('.btn.catalog__btn-delete-accept').click(function () {
+    var parent = $(this).closest('.catalog__item');
+    var id = parent.attr('data-cat-id');
+    apiCall('DELETE', '/category/'+id).done(function() {
+      window.location = window.location;
+    });
+  });
+}
 
 function statusChangeUpdate(self) {
   var status = self.find('select').val();

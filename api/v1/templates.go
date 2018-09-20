@@ -79,6 +79,7 @@ func setupTemplates(router *gin.Engine, base string) error {
 	router.GET(base+"/moderator-catalog", authMiddleware.MiddlewareFunc(), moderatorCatalog)
 	router.GET(base+"/registry", authMiddleware.MiddlewareFunc(), adminSuppliers)
 	router.GET(base+"/statistics", authMiddleware.MiddlewareFunc(), adminStatistics)
+	router.GET(base+"/categories", authMiddleware.MiddlewareFunc(), adminCategories)
 	router.GET(base, authMiddleware.MiddlewareFunc(), settings)
 	return nil
 }
@@ -175,6 +176,20 @@ func admin(c *gin.Context) {
 		"url":      "/admin",
 		"menu":     menuItems(ui.Role),
 		"data":     adminIndexInfo(ui.ID.String()),
+	})
+}
+
+func adminCategories(c *gin.Context) {
+	ui, ok := userInfo(c, "/categories")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "catalog.template", h{
+		"userInfo": ui,
+		"url":      "/categories",
+		"menu":     menuItems(ui.Role),
+		"data":     adminDataCategories(),
 	})
 }
 

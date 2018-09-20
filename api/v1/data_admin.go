@@ -28,6 +28,12 @@ func adminDataCatalog(userId db.UUID) map[string]interface{} {
 	return data
 }
 
+func adminDataCategories() map[string]interface{} {
+	data := make(map[string]interface{})
+	data["categories"], _ = db.Categories()
+	return data
+}
+
 func adminStats(userId db.UUID) map[string]interface{} {
 	data := make(map[string]interface{})
 	data["orderStatuses"], _ = db.OrderStatuses()

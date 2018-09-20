@@ -58,151 +58,12 @@
 	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
  		
  	</div>
-<header class="header">
-	<a href="#" class="header__logo">
-		<svg class="icon-logo">
-			<use xlink:href="#logo"></use>
-		</svg>
-	</a>
-	<div class="header__ctrl">
-		<div class="header__ctrl-item header__user">
-			<div class="header__user-text">
-				
-					<span class="header__user-name">Константин</span>
-					<span class="header__user-surname">Константинопольский</span>
-				
-				
-			</div>
-			<div class="header__user-image">
-				<img src="pic/user.jpg" alt="user">
-			</div>
-		</div>
-		<div class="header__ctrl-item header__menu">
-			<ul class="header__menu-list">
-				<li class="header__menu-item">
-					<a href="#" class="header__menu-link header__message">
-						
-							<span class="header__message-num" data-num="3"></span>
-						
-						<svg class="icon-mail">
-							<use xlink:href="#mail"></use>
-						</svg>
-					</a>
-				</li>
-				<li class="header__menu-item">
-					<div class="header__menu-link header__search js-search-btn">
-						<svg class="icon-search">
-							<use xlink:href="#search"></use>
-						</svg>
-					</div>
-					<div class="header__search-more js-header-search">
-						<input type="text" class="header__search-input" placeholder="Искать">
-						<span class="header__search-close js-search-close"></span>
-					</div>
 
-				</li>
-			</ul>
-		</div>
-		<div class="header__ctrl-item header__logout">
-			<div class="header__menu-link">
-				<span class="header__logout-txt">Выход</span>
-				<div class="header__logout-icon">
-					<svg class="icon-turn-off">
-						<use xlink:href="#turn-off"></use>
-					</svg>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-
+{{include "parts/header"}}
 
 	<div class="wrapper">
 
-			<aside class="custom-scroll">
-				<ul class="sidebar">
-	<li class="sidebar__item active">
-		<a href="#" class="sidebar__link">
-			<span class="sidebar__icon">
-				<svg class="icon-administrirov">
-					<use xlink:href="#administrirov"></use>
-				</svg>
-			</span>
-			<span class="sidebar__text">
-				Администри- рование
-			</span>
-		</a>
-	</li>
-	
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-users">
-						<use xlink:href="#users"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Учетные записи
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-nastroika">
-						<use xlink:href="#nastroika"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Настройки
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-list">
-						<use xlink:href="#list"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Реест поставщиков
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-hamburger-2">
-						<use xlink:href="#hamburger-2"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Категории товаров
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-sale-statistics">
-						<use xlink:href="#sale-statistics"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Статистика
-				</span>
-			</a>
-		</li>
-	
-	
-</ul>
-			</aside>
+{{include "parts/menu"}}
 
 			<div class="content">
 				<div class="head-search ">
@@ -236,7 +97,7 @@
 				</div>
 				<div class="catalog__category-btns-wrapp">
 					<div class="catalog__category-btn">
-						<a class="btn">Создать</a>
+						<a class="btn catalog__create-new">Создать</a>
 					</div>
 					<div class="catalog__category-btn">
 						<button type="reset" class="btn btn--orange js-category-cancel">Отменить</button>
@@ -245,524 +106,45 @@
 			</div>
 		</form>
 	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
+{{range .data.categories}}
+  <div class="box-item catalog__item" data-cat-id={{.ID}}>
+    <span class="catalog__number catalog__category-id">{{.ID}}</span>
 		<div class="catalog__bottom">
 			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Гамбургеры из говядины" disabled>
+        <input type="text" class="input-bottom catalog__input-name" value="{{.Name}}" disabled>
 			</div>
 			<div class="catalog__control">
 				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
+					<span class="catalog__control-icon catalog catalog__btn-edit">
 						<svg class="icon-edit">
 							<use xlink:href="#edit"></use>
 						</svg>
 					</span>
-					<span class="catalog__control-icon">
+					<span class="catalog__control-icon catalog__btn-delete">
 						<svg class="icon-close">
 							<use xlink:href="#close"></use>
 						</svg>
 					</span>
 				</div>
 				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
+					<button class="btn catalog__btn-save">Сохранить</button>
 				</div>
 
 				<div class="catalog__control-btn-delete">
 					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
+						<button class="btn catalog__btn-delete-accept">Удалить</button>
 					</div>
 					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
+						<button class="btn btn--orange catalog__btn-delete-cancel">Отменить</button>
 					</div>
 				</div>
 				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
+          <span class="catalog__message-text">Вы уверены, что хотите удалить категорию &laquo;{{.Name}}&raquo;?</span>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="box-item catalog__item active-edit">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Гамбургеры из курицы" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Сендвичи" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item active-delete">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Закуски" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Пончики" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Пицца" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Роллы" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Суши" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Сеты" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Пельмени" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Вареники" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Блины" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Салаты" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="box-item catalog__item">
-		<span class="catalog__number">№596843456</span>
-		<div class="catalog__bottom">
-			<div class="catalog__category-name">
-				<input type="text" class="input-bottom catalog__input-name" value="Горячие блюда" disabled>
-			</div>
-			<div class="catalog__control">
-				<div class="catalog__control-btn-icon">
-					<span class="catalog__control-icon">
-						<svg class="icon-edit">
-							<use xlink:href="#edit"></use>
-						</svg>
-					</span>
-					<span class="catalog__control-icon">
-						<svg class="icon-close">
-							<use xlink:href="#close"></use>
-						</svg>
-					</span>
-				</div>
-				<div class="catalog__control-btn-wrapp">
-					<button class="btn">Сохранить</button>
-				</div>
-
-				<div class="catalog__control-btn-delete">
-					<div class="catalog__btn-inner">
-						<button class="btn">Удалить</button>
-					</div>
-					<div class="catalog__btn-inner">
-						<button class="btn btn--orange">Отменить</button>
-					</div>
-				</div>
-				<div class="catalog__message">
-					<span class="catalog__message-text">Вы уверены, что хотите удалить категорию «Закуски»?</span>
-				</div>
-			</div>
-		</div>
-	</div>
+{{end}}
 </div>
 			</div>
 
@@ -775,6 +157,7 @@
 
     <script src="js/vendor.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
 
 </body>
 </html>

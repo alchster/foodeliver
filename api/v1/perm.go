@@ -17,6 +17,7 @@ type entityPermissions map[string]permissions
 var permissionsTable = map[string]entityPermissions{
 	"administrator": entityPermissions{
 		"text":        UPDATE,
+		"category":    FULL,
 		"user":        FULL,
 		"supplier":    FULL,
 		"station":     FULL,
@@ -69,10 +70,9 @@ var pages = map[string]MenuItem{
 }
 
 var rolePages = map[string][]string{
-	"administrator": {"admin", "accounts", "registry", "statistics", "settings"},
+	"administrator": {"admin", "accounts", "registry", "categories", "statistics", "settings"},
 	"moderator":     {"moder-catalog", "moder", "settings"},
 	"supplier":      {"orders", "catalog", "delivery", "settings"},
-	//"administrator": {"admin", "accounts", "registry", "categories", "statistics", "settings"},
 }
 
 func indexForRole(role string) string {

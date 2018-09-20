@@ -50,11 +50,6 @@ func (p *Product) AfterFind() error {
 	return nil
 }
 
-func SupplierCategories(supId UUID) (cats []Category, err error) {
-	err = db.Joins("JOIN texts ON categories.id = texts.id").Order("ru").Find(&cats).Error
-	return
-}
-
 func SupplierCatalogProducts(supId UUID) ([]Product, error) {
 	var prods []Product
 	if err := db.Where("supplier_id = ?", supId).Find(&prods).Error; err != nil {
