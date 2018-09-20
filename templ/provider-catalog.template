@@ -7,8 +7,6 @@
     <!-- @if NODE_ENV='production' -->
     <link rel="stylesheet" href="css/main.css">
     <!-- @endif -->
-    <style>
-    </style>
 </head>
 <body class=" @@class ">
 <script>
@@ -63,29 +61,28 @@
 
 {{include "parts/header"}}
 
-	<div class="wrapper">
+<div class="wrapper">
 
 {{include "parts/menu"}}
 
-			<div class="content">
-				<div class="head-search head-search--catalog">
-	<div class="head-search__holder">
-		<span class="head-search__title">Каталог </span>		
-		<div class="head-search__box">
-			<label class="input-icon-label">
-				<span>
-					<svg class="icon-search">
-						<use xlink:href="#search"></use>
-					</svg>
-				</span>
-				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти товар">
-			</label>
-		</div>
-	</div>
-	
-</div>
+	<div class="content">
+		<div class="head-search head-search--catalog">
+    	<div class="head-search__holder">
+    		<span class="head-search__title">Каталог </span>		
+    		<div class="head-search__box">
+    			<label class="input-icon-label">
+    				<span>
+    					<svg class="icon-search">
+    						<use xlink:href="#search"></use>
+    					</svg>
+    				</span>
+    				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти товар">
+    			</label>
+    		</div>
+    	</div>
+    </div>
 
-				<div class="provider-catalog">
+<div class="provider-catalog">
 	<div class="provider-catalog__wrapp js-tabs-wrapp">
 
 		<ul class="provider-catalog__tabs">
@@ -144,22 +141,10 @@
 						<div class="provider-catalog__col-inner">
 							<span class="provider-catalog__col-title">Цена</span>
 							<div class="provider-catalog__col-input">
-								<input type="text" class="input-bottom" value="230">
+								<input type="text" class="input-bottom" placeholder="0">
 							</div>
 						</div>
 						<div class="provider-catalog__col-inner">
-            <!--
-							<span class="provider-catalog__col-title">Станции доставки</span>
-							<div class="provider-catalog__col-station">
-								<div class="select-wrapp select-checkbox">
-									<select name="Select" id="" class="custom-select-checkbox">
-										<option value="">Кантемировская</option>
-										<option value="">Кантемировская 2</option>
-										<option value="">Кантемировская 3</option>
-									</select>
-								</div>
-							</div>
-            -->
 						</div>
 					</div>
 					<div class="provider-catalog__save-btn">
@@ -252,41 +237,6 @@
 							</div>
 						</div>
 						<div class="provider-catalog__inner">
-{{if false}}
-							<span class="provider-catalog__title">Станции доставки</span>
-							<div class="provider-catalog__delivery-station">
-								<span class="provider-catalog__delivery-station-item">
-									<span class="provider-catalog__delivery-station-delete"></span>
-									<span class="provider-catalog__delivery-station-name">Москва, </span>
-								</span>
-								<span class="provider-catalog__delivery-station-item">
-									<span class="provider-catalog__delivery-station-delete"></span>
-									<span class="provider-catalog__delivery-station-name">Тула, </span>
-								</span>
-								<span class="provider-catalog__delivery-station-item">
-									<span class="provider-catalog__delivery-station-delete"></span>
-									<span class="provider-catalog__delivery-station-name">Курск, </span>
-								</span>
-								<span class="provider-catalog__delivery-station-item">
-									<span class="provider-catalog__delivery-station-delete"></span>
-									<span class="provider-catalog__delivery-station-name">Воронеж, </span>
-								</span>
-								<span class="provider-catalog__delivery-station-item">
-									<span class="provider-catalog__delivery-station-delete"></span>
-									<span class="provider-catalog__delivery-station-name">Краснодар, </span>
-								</span>
-								<span class="provider-catalog__delivery-station-item">
-									<span class="provider-catalog__delivery-station-delete"></span>
-									<span class="provider-catalog__delivery-station-name">Туапсе</span>
-								</span>
-							</div>
-							<div class="provider-catalog__delivery-add">
-								<span class="provider-catalog__delivery-add-text">добавить еще одну станцию</span>
-								<span class="provider-catalog__delivery-add-input">
-									<input type="text" class="input-bottom">
-								</span>
-							</div>
-{{end}}
 						</div>
 						<div class="provider-catalog__save-catalog">
 							<button class="btn">Сохранить</button>
@@ -352,6 +302,7 @@
 				</div>
 {{end}}
 {{end}}
+      </div>
 {{end}}
 		</div>
 	</div>
