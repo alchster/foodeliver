@@ -4,6 +4,7 @@ import (
 	api_v1 "github.com/alchster/foodeliver/api/v1"
 	"github.com/alchster/foodeliver/db"
 	"github.com/alchster/foodeliver/i18n"
+	"github.com/alchster/foodeliver/mail"
 	"github.com/alchster/foodeliver/storage"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -38,6 +39,12 @@ func main() {
 		}
 		log.Print("Migration succeeded")
 		os.Exit(0)
+	}
+	if config.Mailer.Server != "" {
+		c := config.Mailer
+		if err := mail.Init(c.User, c.Password, c.Server, c.Options, c.From); err != nil {
+			log.Fatal("Mailer error:", err)
+		}
 	}
 
 	i18n.LoadLanguage("en")

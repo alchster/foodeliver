@@ -10,13 +10,21 @@ import (
 	//"time"
 )
 
+type Mailer struct {
+	Server   string   `config:"server,backend=json"`
+	User     string   `config:"user,backend=json"`
+	Password string   `config:"password,backend=json"`
+	Options  []string `config:"options,backend=json"`
+	From     string   `config:"from,backend=json"`
+}
+
 type Database struct {
-	Host     string   `config:"dbhost"`
-	Port     uint16   `config:"dbport"`
-	DBName   string   `config:"dbname"`
-	User     string   `config:"dbuser"`
-	Password string   `config:"dbpassword"`
-	Options  []string `config:"dboptions"`
+	Host     string   `config:"host,backend=json"`
+	Port     uint16   `config:"port,backend=json"`
+	DBName   string   `config:"name,backend=json"`
+	User     string   `config:"user,backend=json"`
+	Password string   `config:"password,backend=json"`
+	Options  []string `config:"options,backend=json"`
 }
 
 type Config struct {
@@ -25,7 +33,8 @@ type Config struct {
 	Prefix   string   `config:"prefix"`
 	Migrate  bool     `config:"migrate,backend=flags"`
 	TrainID  string   `config:"train-id,backend=flags"`
-	Database Database `config:"database,required,backend=file"`
+	Database Database `config:"database,required,backend=json"`
+	Mailer   Mailer   `config:"mailer,backend=json"`
 	Storage  string   `config:"storage,required"`
 }
 
@@ -58,8 +67,9 @@ func (c *Config) String() string {
 			"  Debug:\t%v\n"+
 			"  Database:\t%s\n"+
 			"  TrainID:\t%s\n"+
-			"  StoragePath:\t%s\n",
-		c.ListenOn, c.Debug, c.Database, c.TrainID, c.Storage)
+			"  StoragePath:\t%s\n"+
+			"  Mailer:\t%s\n",
+		c.ListenOn, c.Debug, c.Database, c.TrainID, c.Storage, c.Mailer)
 }
 
 func (d Database) String() string {
@@ -68,5 +78,14 @@ func (d Database) String() string {
 	if len(d.Options) > 0 {
 		s = fmt.Sprintf("%s?%s", s, strings.Join(d.Options, "&"))
 	}
+	return s
+}
+
+func (m Mailer) String() string {
+	s := fmt.Sprintf("\n    URI: smtp://%s:%s@%s", m.User, m.Password, m.Server)
+	if len(m.Options) > 0 {
+		s = fmt.Sprintf("%s?%s", s, strings.Join(m.Options, "&"))
+	}
+	s = fmt.Sprintf("%s\n    From: %s", s, m.From)
 	return s
 }
