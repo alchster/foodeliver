@@ -187,7 +187,9 @@ function moder() {
     var parent = $(this).closest('.moderator-catalog__item');
     var id = parent.find('.moderator-catalog__api-product-id').html();
     var text = parent.find('.moderator-catalog__cause textarea').val();
-    apiCall('PUT', '/product/'+id, {"status_text": text});
+    apiCall('PUT', '/product/'+id, {"status_text": text}).done(function () {
+      parent.find('.js-cause-message').hide();
+    });
   });
 
   var filters = {

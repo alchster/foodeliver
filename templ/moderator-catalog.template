@@ -199,7 +199,7 @@
 						<div class="moderator-catalog__cause js-cause-message">
 							<div class="moderator-catalog__cause-wrapp">
 								<div class="moderator-catalog__textarea-wrapp">
-									<textarea placeholder="Укажите причину"></textarea>
+                  <textarea placeholder="Укажите причину">{{.StatusText}}</textarea>
 								</div>
 								<div class="moderator-catalog__btn-wrapp js-save">
 									<button class="btn moderator-catalog__btn">сохранить</button>
