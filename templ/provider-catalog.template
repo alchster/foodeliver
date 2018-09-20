@@ -89,12 +89,12 @@
 	<div class="provider-catalog__wrapp js-tabs-wrapp">
 
 		<ul class="provider-catalog__tabs">
-			<li class="provider-catalog__item-tab js-tab active">
+			<li class="provider-catalog__item-tab js-tab active" data-category-filter="*">
 				<span class="provider-catalog__tab-text">Все категории</span>
 			</li>
 {{range .data.categories}}
-			<li class="provider-catalog__item-tab js-tab">
-        <a class="provider-catalog__tab-text" href="#cat_{{.ID}}">{{.Name}}</a>
+			<li class="provider-catalog__item-tab js-tab" data-category-filter="{{.ID}}">
+        <span class="provider-catalog__tab-text">{{.Name}}</span>
 			</li>
 {{end}}
 		</ul>
@@ -173,8 +173,8 @@
 {{$products := .data.products}}
 {{$categories := .data.categories}}
 {{range .data.categories}}
-			<div class="provider-catalog__item">
-        <div class="provider-catalog__item-head" id="cat_{{.ID}}">
+      <div class="provider-catalog__item" data-category="{{.ID}}">
+        <div class="provider-catalog__item-head">
 					<span class="provider-catalog__head-title">{{.Name}}</span>
 				</div>
 

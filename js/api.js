@@ -299,6 +299,18 @@ function catalog() {
     fileUpload(file, img);
   });
 
+  $('[data-category-filter]').click(function () {
+    var cat = $(this).attr('data-category-filter');
+    $('[data-category]').each(function(_, el) {
+      var $el = $(el);
+      if (cat === '*' || $el.attr('data-category') === cat) {
+        $el.show();
+      } else {
+        $el.hide();
+      }
+    });
+  });
+
   function fileUpload(file, img) {
     var data = new FormData();
     data.append('file', file);
