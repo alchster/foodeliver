@@ -11,5 +11,6 @@ func moderatorDataCatalog(moderatorId db.UUID) map[string]interface{} {
 	data := make(map[string]interface{})
 	data["suppliers"], data["products"],
 		data["categories"], data["stations"], data["statuses"], _ = db.ModeratorCatalog(moderatorId)
+	data["supStatuses"], _ = db.SupplierStatuses()
 	return data
 }

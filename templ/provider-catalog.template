@@ -7,6 +7,8 @@
     <!-- @if NODE_ENV='production' -->
     <link rel="stylesheet" href="css/main.css">
     <!-- @endif -->
+    <style>
+    </style>
 </head>
 <body class=" @@class ">
 <script>
@@ -92,7 +94,7 @@
 			</li>
 {{range .data.categories}}
 			<li class="provider-catalog__item-tab js-tab">
-        <span class="provider-catalog__tab-text">{{.Name}}</span>
+        <a class="provider-catalog__tab-text" href="#cat_{{.ID}}">{{.Name}}</a>
 			</li>
 {{end}}
 		</ul>
@@ -172,7 +174,7 @@
 {{$categories := .data.categories}}
 {{range .data.categories}}
 			<div class="provider-catalog__item">
-				<div class="provider-catalog__item-head">
+        <div class="provider-catalog__item-head" id="cat_{{.ID}}">
 					<span class="provider-catalog__head-title">{{.Name}}</span>
 				</div>
 
@@ -181,7 +183,38 @@
 {{if same $cat.ID .CategoryID}}
 
 				<div class="box-item provider-catalog__item-card js-catalog-card provider-catalog__api-item">
-					<span class="provider-catalog__product-id" style="display:none !important;">{{.ID}}</span>
+          <span class="provider-catalog__product-id" style="display:none !important;">{{.ID}}</span>
+					<div class="provider-catalog__delete-item" style="display:none;">
+						<div class="provider-catalog__delete-col provider-catalog__delete-col--left">
+							<div class="provider-catalog__delete-img">
+								<img src="{{.Image}}" alt="{{.Name.RU}}">
+
+								<span class="provider-catalog__btn-file provider-catalog__btn-file--edit">
+									<input type="file" id="input-file">
+									<label for="input-file">
+										Изменить фото
+									</label>
+								</span>
+
+							</div>
+							<span class="provider-catalog__delete-name-goods">{{.Name.RU}}</span>
+						</div>
+						<div class="provider-catalog__delete-col provider-catalog__delete-col--right">
+							<div class="provider-catalog__delete-text">
+								<span class="provider-catalog__delete-text-item">Вы уверены, что хотите удалить данный товар?</span>
+								<span class="provider-catalog__delete-text-item">Последующее востановление в случае ошибки невозможно!</span>
+							</div>
+							<div class="provider-catalog__delete-btn-wrapp">
+								<div class="provider-catalog__delete-btn">
+									<button class="btn provider-catalog__button-delete">Удалить</button>
+								</div>
+								<div class="provider-catalog__delete-btn">
+									<button class="btn btn--orange provider-catalog__button-cancel">Отменить</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<div class="provider-catalog__col provider-catalog__col--img">
 						<img class="provider-catalog__api-img" src="{{.Image}}" alt="">
 
@@ -219,7 +252,7 @@
 							</div>
 						</div>
 						<div class="provider-catalog__inner">
-            <!--
+{{if false}}
 							<span class="provider-catalog__title">Станции доставки</span>
 							<div class="provider-catalog__delivery-station">
 								<span class="provider-catalog__delivery-station-item">
@@ -253,7 +286,7 @@
 									<input type="text" class="input-bottom">
 								</span>
 							</div>
-            -->
+{{end}}
 						</div>
 						<div class="provider-catalog__save-catalog">
 							<button class="btn">Сохранить</button>
@@ -303,7 +336,7 @@
 						</div>
 						<div class="provider-catalog__inner">
 							<span class="provider-catalog__title">Дата добавления</span>
-              <span class="provider-catalog__date">{{datetime .UpdatedAt}}</span>
+              <span class="provider-catalog__date">{{if not (isnil .UpdatedAt)}}{{datetime .UpdatedAt}}{{end}}</span>
 						</div>
 					</div>
 				</div>
@@ -443,36 +476,6 @@
 				<div class="box-item provider-catalog__item-card active-delete-catalog js-catalog-card">
 
 
-					<div class="provider-catalog__delete-item">
-						<div class="provider-catalog__delete-col provider-catalog__delete-col--left">
-							<div class="provider-catalog__delete-img">
-								<img src="pic/products/product-01.jpg" alt="">
-
-								<span class="provider-catalog__btn-file provider-catalog__btn-file--edit">
-									<input type="file" id="input-file">
-									<label for="input-file">
-										Изменить фото
-									</label>
-								</span>
-
-							</div>
-							<span class="provider-catalog__delete-name-goods">Родео Чизбургер</span>
-						</div>
-						<div class="provider-catalog__delete-col provider-catalog__delete-col--right">
-							<div class="provider-catalog__delete-text">
-								<span class="provider-catalog__delete-text-item">Вы уверены, что хотите удалить данный товар?</span>
-								<span class="provider-catalog__delete-text-item">Последующее востановление в случае ошибки невозможно!</span>
-							</div>
-							<div class="provider-catalog__delete-btn-wrapp">
-								<div class="provider-catalog__delete-btn">
-									<button class="btn">Удалить</button>
-								</div>
-								<div class="provider-catalog__delete-btn">
-									<button class="btn btn--orange">Отменить</button>
-								</div>
-							</div>
-						</div>
-					</div>
 
 
 					<div class="provider-catalog__col provider-catalog__col--img">

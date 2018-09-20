@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -33,11 +34,25 @@ var templateConfig = gintemplate.TemplateConfig{
 			loc, _ := time.LoadLocation("Europe/Moscow")
 			return time.Time(t).In(loc).Format("15:04")
 		},
+		"date": func(t time.Time) string {
+			loc, _ := time.LoadLocation("Europe/Moscow")
+			return time.Time(t).In(loc).Format("2006/01/02")
+		},
 		"datetime": func(t time.Time) string {
 			return db.TimeResp(t).String()
 		},
 		"same": func(id1, id2 db.UUID) bool {
 			return id1 == id2
+		},
+		"isnil": func(t *time.Time) bool {
+			return t == nil
+		},
+		"strToId": func(s string) string {
+			return strings.Replace(s, " ", "_", -1)
+		},
+		"byKey": func(m map[string]db.StatusOrdersInfo, key string) db.StatusOrdersInfo {
+			val, _ := m[key]
+			return val
 		},
 	},
 }
@@ -62,6 +77,8 @@ func setupTemplates(router *gin.Engine, base string) error {
 	router.GET(base+"/delivery", authMiddleware.MiddlewareFunc(), supplierDelivery)
 	router.GET(base+"/moderator", authMiddleware.MiddlewareFunc(), moderatorSuppliers)
 	router.GET(base+"/moderator-catalog", authMiddleware.MiddlewareFunc(), moderatorCatalog)
+	router.GET(base+"/registry", authMiddleware.MiddlewareFunc(), adminSuppliers)
+	router.GET(base+"/statistics", authMiddleware.MiddlewareFunc(), adminStatistics)
 	router.GET(base, authMiddleware.MiddlewareFunc(), settings)
 	return nil
 }
@@ -161,6 +178,34 @@ func admin(c *gin.Context) {
 	})
 }
 
+func adminSuppliers(c *gin.Context) {
+	ui, ok := userInfo(c, "/registry")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "supplier-register.template", h{
+		"userInfo": ui,
+		"url":      "/registry",
+		"menu":     menuItems(ui.Role),
+		"data":     adminDataCatalog(ui.ID),
+	})
+}
+
+func adminStatistics(c *gin.Context) {
+	ui, ok := userInfo(c, "/statistics")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "statistic.template", h{
+		"userInfo": ui,
+		"url":      "/statistics",
+		"menu":     menuItems(ui.Role),
+		"data":     adminStats(ui.ID),
+	})
+}
+
 func supplierOrders(c *gin.Context) {
 	ui, ok := userInfo(c, "/orders")
 	if !ok {
@@ -229,4 +274,48 @@ func moderatorCatalog(c *gin.Context) {
 		"menu":     menuItems(ui.Role),
 		"data":     moderatorDataCatalog(ui.ID),
 	})
+}
+
+type date string
+
+func (d date) Time(lastNanosecond bool) (time.Time, error) {
+	now := time.Now()
+	tm, err := time.ParseInLocation("2006/01/02", string(d), now.Location())
+	if err != nil {
+		return time.Time{}, err
+	}
+	if lastNanosecond {
+		tm = tm.Add(time.Hour*24 - time.Nanosecond)
+	}
+	return tm, nil
+}
+
+func getStat(c *gin.Context) {
+	_, permErr := extractClaimsWithCheckPerm("getstat", READ, c)
+	if permErr != nil {
+		forbidden(permErr, c)
+		return
+	}
+
+	var q = new(struct {
+		Type  string `form:"type"`
+		Start date   `form:"start"`
+		End   date   `form:"end"`
+	})
+
+	if err := c.Bind(q); err != nil {
+		badRequest(err, c)
+		return
+	}
+
+	start, _ := q.Start.Time(false)
+	end, _ := q.End.Time(true)
+
+	data, err := db.GetStats(q.Type, start, end)
+	if err != nil {
+		unprocessable(err, c)
+		return
+	}
+
+	c.JSON(http.StatusOK, data)
 }

@@ -12,8 +12,8 @@ type ProductStatus struct {
 	Color string `json:"color" gorm:"-"`
 }
 
-func (ps *ProductStatus) AfterFind() {
-	db.Where("id = ?", ps.TextID).First(&ps.Status)
+func (t *TextReference) AfterFind() {
+	db.Where("id = ?", t.TextID).First(&t.Status)
 }
 
 type OrderStatus struct {
@@ -124,4 +124,23 @@ var productStatusColors = map[ProductStatusCode]string{
 	PRODUCT_STATUS_APPROVED:     "#7ed321",
 	PRODUCT_STATUS_UNAVAILABLE:  "#9b9b9b",
 	PRODUCT_STATUS_NOT_APPROVED: "#ff0033",
+}
+
+var supplierStatusColors = map[SupplierStatusCode]string{
+	SUPPLIER_STATUS_BLOCKED:  "#ff0033",
+	SUPPLIER_STATUS_INACTIVE: "#9b9b9b",
+	SUPPLIER_STATUS_ACTIVE:   "#7ed321",
+}
+
+func SupplierStatuses() (statuses []SupplierStatus, err error) {
+	err = db.Order("code").Find(&statuses).Error
+	for i, _ := range statuses {
+		statuses[i].Color = supplierStatusColors[statuses[i].Code]
+	}
+	return
+}
+
+func OrderStatuses() (statuses []OrderStatus, err error) {
+	err = db.Order("code").Find(&statuses).Error
+	return
 }

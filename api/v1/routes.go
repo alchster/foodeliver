@@ -37,6 +37,7 @@ func Setup(router *gin.Engine, baseUrl string, train string, store storage.Stora
 		v1.DELETE("/modsupplier", deleteModerSupplier)
 		v1.POST("/supstation", addSupplierStation)
 		v1.DELETE("/supstation", deleteSupplierStation)
+		v1.GET("/getstat", getStat)
 	} else {
 		var err error
 		trainID, err = db.TrainID(train)

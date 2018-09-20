@@ -105,9 +105,11 @@
 		</div>
 	</div>
 {{end}}
+{{if false}}
 	<div class="delivery-settings__btn-wrapp">
 		<a href="#" class="btn">Загрузить еще станции</a>
 	</div>
+{{end}}
 </div>
 			</div>
 

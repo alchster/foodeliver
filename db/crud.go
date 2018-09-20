@@ -12,6 +12,7 @@ const tagName = "crud"
 
 var crudEntities = map[string]reflect.Type{
 	"text":             reflect.TypeOf(Text{}),
+	"category":         reflect.TypeOf(Category{}),
 	"user":             reflect.TypeOf(User{}),
 	"supplier":         reflect.TypeOf(Supplier{}),
 	"station":          reflect.TypeOf(Station{}),
@@ -28,6 +29,7 @@ var crudEntities = map[string]reflect.Type{
 
 var EntitiesList = []string{
 	"text",
+	"category",
 	"user",
 	"supplier",
 	"station",

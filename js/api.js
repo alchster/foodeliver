@@ -12,10 +12,128 @@ $(function () {
   delivery();
   catalog();
   moder();
+  supList();
+  statistics();
 });
 
+
+function statusChangeUpdate(self) {
+  var status = self.find('select').val();
+  var opt = self.find('option[value='+status+']');
+  self.find('[data-status-total-place]').html(opt.attr('data-status-total'));
+  self.find('[data-status-at-period-place]').html(opt.attr('data-status-at-period'));
+}
+
+function statistics() {
+  $('.datepicker').each(function () {
+    var val = $(this).val();
+    $(this).datepicker('option', 'dateFormat', 'yy/mm/dd').datepicker('setDate', val);
+  });
+
+  var catProdCount = $('#category-counter');
+  var catSelect = catProdCount.find('select');
+  catProdCount.attr('data-num', catSelect.val());
+  catSelect.selectmenu({
+    change: function() {
+      self = $(this);
+      catProdCount.attr('data-num', self.val());
+    }
+  });
+
+  $('[data-sup-id]').each(function () {
+    statusChangeUpdate($(this));
+  });
+  $('[data-sup-id] select').selectmenu({
+    change: function () {
+      statusChangeUpdate($(this).closest('[data-sup-id]'));
+    }
+  });
+
+  var ordersStart = $('#orders-start');
+  var ordersEnd = $('#orders-end');
+  $('.datepicker').change(function () {
+    var self = $(this);
+    var item = self.closest('[data-type]');
+    var dates = item.find('.datepicker');
+    var data = {
+      type: item.attr('data-type'),
+      start: $(dates[0]).val(),
+      end: $(dates[1]).val()
+    };
+    apiCall('GET', '/getstat', data).done(function (resp) {
+      if (self.is(ordersStart) || self.is(ordersEnd)) {
+        $.each(resp.suppliers, function (_, s) {
+          var self = $('[data-sup-id='+s.id+']');
+          self.find('[data-total-place]').html(s.summary.total);
+          self.find('[data-at-period-place]').html(s.summary.at_period);
+          self.find('[data-sum-total-place]').html(s.sum_total);
+          self.find('[data-sum-at-period-place]').html(s.sum_at_period);
+          self.find('[data-charge-total-place]').html(s.charge_total);
+          self.find('[data-charge-at-period-place]').html(s.charge_at_period);
+          var c = 1;
+          $.each(s.by_status, function (id, d) {
+            c++;
+            var el = self.find('option[value='+id+']');
+            el.attr('data-status-total', d.stats.total);
+            el.attr('data-status-at-period', d.stats.at_period);
+          });
+          statusChangeUpdate(self);
+        });
+        return;
+      }
+      var els = item.find('.statistic__service-txt');
+      $(els[0]).html(resp.total);
+      $(els[1]).html(resp.at_period);
+    });
+  });
+}
+
+function supList() {
+  $('.suppliers-info__row--status select').selectmenu({
+    change: function (e, ui) {
+      var parent = $(ui.item.element).closest('.suppliers-info__item');
+      var id = parent.find('.suppliers-info__supplier-id').html();
+      apiCall('PUT', '/supplier/'+id, {status_code: parseInt(ui.item.value)}).done(function() {
+        if (ui.item.value == -1) {
+          parent.find('.suppliers-info__tools').show();
+        } else {
+          parent.find('.suppliers-info__tools').hide();
+        }
+      });
+    },
+  });
+  
+  $('.suppliers-info__item .suppliers-info__editing').click(function () {
+    var self = $(this); 
+    var itemBox = self.closest('.suppliers-info__item');
+    var id = itemBox.find('.suppliers-info__supplier-id').html();
+    itemBox.toggleClass('editing');
+    if (itemBox.hasClass('editing')) {
+      itemBox.find('input').removeAttr('disabled');
+      itemBox.find('.suppliers-info__bottom').show();
+    } else {
+      itemBox.find('input').attr('disabled', true);
+      itemBox.find('.suppliers-info__bottom').hide();
+    }
+    itemBox.find('.suppliers-info__btn').click(function () {
+      var data = {
+        description: itemBox.find('.suppliers-info__api-name').val() || undefined,
+        itn: itemBox.find('.suppliers-info__api-itn').val() || undefined,
+        phone: itemBox.find('.suppliers-info__api-phone').val() || undefined,
+        email: itemBox.find('.suppliers-info__api-email').val() || undefined,
+        address: itemBox.find('.suppliers-info__api-addr').val() || undefined,
+        login: itemBox.find('.suppliers-info__api-login').val() || undefined,
+        password: itemBox.find('.suppliers-info__api-pass').val() || undefined,
+      };
+      apiCall('PUT', '/supplier/'+id, data).then(function() {
+        self.click();
+      });
+    });
+  });
+}
+
 function moder() {
-	$('.custom-select-center').each(function() {
+	$('.moderator-catalog__status-select .custom-select-center').each(function() {
 		var self = $(this),
 		parent = self.closest('.select-center'),
 		color = parent.siblings('.js-color'),
@@ -158,6 +276,19 @@ function catalog() {
     });
   });
 
+  $('.js-delete-catalog, .provider-catalog__button-cancel').click(function () {
+    var parent = $(this).closest('.provider-catalog__item-card');
+    parent.children('.provider-catalog__delete-item').toggle();
+    parent.find('.js-edit-catalog').toggle();
+  });
+
+  $('.provider-catalog__button-delete').click(function () {
+    var id = $(this).closest('.provider-catalog__item-card').find('.provider-catalog__product-id').html(); 
+    apiCall('DELETE', '/product/'+id).done(function() {
+      window.location = window.location;
+    });
+  });
+  
   $('.provider-catalog__btn-file input:file').on('change', function (e) {
     var btn = $(e.target);
     var form = btn.parents('.provider-catalog__api-item');

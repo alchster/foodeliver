@@ -69,8 +69,11 @@ func createBanknotesMap() {
 }
 
 func createBaseService() {
-	db.Save(&Service{
-		Entity: Entity{ID: NewID()},
-		Name:   "Food delivery",
-	})
+	var count int
+	if db.Model(&Service{}).Count(&count); count < 1 {
+		db.Save(&Service{
+			Entity: Entity{ID: NewID()},
+			Name:   "Food delivery",
+		})
+	}
 }

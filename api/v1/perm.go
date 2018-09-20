@@ -24,6 +24,7 @@ var permissionsTable = map[string]entityPermissions{
 		"service":     FULL,
 		"order":       FULL,
 		"modsupplier": FULL,
+		"getstat":     FULL,
 	},
 	"moderator": entityPermissions{
 		"text":     UPDATE,
@@ -58,20 +59,20 @@ var pages = map[string]MenuItem{
 	"accounts":      {"/accounts", "icon-users", "#users", "Учетные записи"},
 	"settings":      {"/settings", "icon-nastroika", "#nastroika", "Настройки"},
 	"registry":      {"/registry", "icon-list", "#list", "Реестр поставщиков"},
-	"categories":    {"/categories", "icon-hamburger-2", "#hamburger-2", "Категории товаров"},
 	"catalog":       {"/catalog", "icon-hamburger-2", "#hamburger-2", "Каталог товаров"},
 	"moder":         {"/moderator", "icon-administrirov", "#administrirov", "Мои поставщики"},
 	"moder-catalog": {"/moderator-catalog", "icon-hamburger-2", "#hamburger-2", "Каталог товаров"},
 	"statistics":    {"/statistics", "icon-sale-statistics", "#sale-statistics", "Статистика"},
 	"orders":        {"/orders", "icon-cart", "#cart", "Заказы на доставку"},
 	"delivery":      {"/delivery", "icon-delivery", "#delivery", "Настройки доставки"},
+	"categories":    {"/categories", "icon-hamburger-2", "#hamburger-2", "Категории товаров"},
 }
 
 var rolePages = map[string][]string{
-	"administrator": {"admin", "accounts", "registry", "categories", "statistics", "settings"},
-	"moderator":     {"moder-catalog", "settings"},
-	//"moderator":     {"moder-catalog", "moder", "settings"},
-	"supplier": {"orders", "catalog", "delivery", "settings"},
+	"administrator": {"admin", "accounts", "registry", "statistics", "settings"},
+	"moderator":     {"moder-catalog", "moder", "settings"},
+	"supplier":      {"orders", "catalog", "delivery", "settings"},
+	//"administrator": {"admin", "accounts", "registry", "categories", "statistics", "settings"},
 }
 
 func indexForRole(role string) string {

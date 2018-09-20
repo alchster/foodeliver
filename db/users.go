@@ -46,6 +46,10 @@ func (u *User) AfterFind() {
 }
 
 func createAdmin() error {
+	var count int
+	if db.Model(&User{}).Where("login = 'admin'").Count(&count); count > 0 {
+		return nil
+	}
 	pass := pwgen.AlphaNum(16)
 	admin := User{
 		LoginUser: LoginUser{

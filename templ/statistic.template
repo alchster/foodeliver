@@ -58,152 +58,13 @@
 	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
  		
  	</div>
-<header class="header">
-	<a href="#" class="header__logo">
-		<svg class="icon-logo">
-			<use xlink:href="#logo"></use>
-		</svg>
-	</a>
-	<div class="header__ctrl">
-		<div class="header__ctrl-item header__user">
-			<div class="header__user-text">
-				
-					<span class="header__user-name">Константин</span>
-					<span class="header__user-surname">Константинопольский</span>
-				
-				
-			</div>
-			<div class="header__user-image">
-				<img src="pic/user.jpg" alt="user">
-			</div>
-		</div>
-		<div class="header__ctrl-item header__menu">
-			<ul class="header__menu-list">
-				<li class="header__menu-item">
-					<a href="#" class="header__menu-link header__message">
-						
-							<span class="header__message-num" data-num="3"></span>
-						
-						<svg class="icon-mail">
-							<use xlink:href="#mail"></use>
-						</svg>
-					</a>
-				</li>
-				<li class="header__menu-item">
-					<div class="header__menu-link header__search js-search-btn">
-						<svg class="icon-search">
-							<use xlink:href="#search"></use>
-						</svg>
-					</div>
-					<div class="header__search-more js-header-search">
-						<input type="text" class="header__search-input" placeholder="Искать">
-						<span class="header__search-close js-search-close"></span>
-					</div>
 
-				</li>
-			</ul>
-		</div>
-		<div class="header__ctrl-item header__logout">
-			<div class="header__menu-link">
-				<span class="header__logout-txt">Выход</span>
-				<div class="header__logout-icon">
-					<svg class="icon-turn-off">
-						<use xlink:href="#turn-off"></use>
-					</svg>
-				</div>
-			</div>
-		</div>
-	</div>
-</header>
-
+{{include "parts/header"}}
 
 	<div class="wrapper">
 
-			<aside class="custom-scroll">
-				<ul class="sidebar">
-	<li class="sidebar__item active">
-		<a href="#" class="sidebar__link">
-			<span class="sidebar__icon">
-				<svg class="icon-administrirov">
-					<use xlink:href="#administrirov"></use>
-				</svg>
-			</span>
-			<span class="sidebar__text">
-				Администри- рование
-			</span>
-		</a>
-	</li>
+{{include "parts/menu"}}
 	
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-users">
-						<use xlink:href="#users"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Учетные записи
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-nastroika">
-						<use xlink:href="#nastroika"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Настройки
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-list">
-						<use xlink:href="#list"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Реест поставщиков
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-hamburger-2">
-						<use xlink:href="#hamburger-2"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Категории товаров
-				</span>
-			</a>
-		</li>
-	
-		<li class="sidebar__item">
-			<a href="#" class="sidebar__link">
-				<span class="sidebar__icon">
-					<svg class="icon-sale-statistics">
-						<use xlink:href="#sale-statistics"></use>
-					</svg>
-				</span>
-				<span class="sidebar__text">
-					Статистика
-				</span>
-			</a>
-		</li>
-	
-	
-</ul>
-			</aside>
-
 			<div class="content">
 				<h1 class="statistic__caption">Статистика</h1>
 				<div class="head-search head-search--statistic">
@@ -224,25 +85,25 @@
 </div>
 
 				<div class="statistic">
-
+{{range .data.suppliers}}
 		<div class="statistic__provider box-item js-statistic-item">
 		<div class="statistic__row">
 			<div class="statistic__provider-item js-statistic-more">	
 				<div class="statistic__col statistic__col--provider">
 					<span class="statistic__provider-subtitle">Поставщик</span>
-					<span class="statistic__provider-name">Макдональдс</span>
+          <span class="statistic__provider-name">{{.Description}}</span>
 				</div>
 				<div class="statistic__col statistic__col--station">
 					<span class="statistic__provider-subtitle">кол-во обслужи–ваемых станций</span>
-					<span class="statistic__provider-txt">40</span>
+					<span class="statistic__provider-txt">{{.StationsCount}}</span>
 				</div>
 				<div class="statistic__col statistic__col--date">
 					<span class="statistic__provider-subtitle">Дата добавления первого товара</span>
-					<span class="statistic__provider-txt">21 марта 2018 года, 14:00</span>
+          <span class="statistic__provider-txt">{{datetime .FirstProductDate}}</span>
 				</div>
 				<div class="statistic__col statistic__col--date">
 					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt">1 января 2018 года, 14:00</span>
+          <span class="statistic__provider-txt">{{datetime .CreatedAt}}</span>
 				</div>
 			</div>
 		</div>
@@ -251,33 +112,34 @@
 				<div class="statistic__col statistic__col--media">
 					<span class="statistic__provider-subtitle">Наименование</span>
 					<span class="statistic__provider-name statistic__provider-txt--content">
-						Макдональдс
+            {{.Description}}
 					</span>
 					<span class="statistic__provider-subtitle">ИНН</span>
 					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
+            {{.ITN}}
 					</span>
 					<span class="statistic__provider-subtitle">Дата регистрации</span>
 					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
+            {{datetime .CreatedAt}}
 					</span>
 				</div>
 				<div class="statistic__col statistic__col--info">
 					<span class="statistic__provider-subtitle">Контактные данные</span>
 					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
+            {{.Phone}}
 					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
+          <a href="mailto:{{.Email}}" class="statistic__provider-link">
+            {{.Email}}
 					</a>
 					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
+            {{.Address}}
 					</span>
 				</div>
 				<div class="statistic__col statistic__col--enter">
 					<span class="statistic__provider-subtitle">Логин</span>
 
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
+					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="{{.Login}}" disabled>
+{{if false}}
 					<span class="statistic__provider-subtitle">Пароль</span>
 					<div class="statistic__provider-password">
 						<div class="statistic__provider-password-icon">
@@ -289,424 +151,41 @@
 							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
 						</div>
 					</div>
-					
+{{end}}					
 				</div>
 				<div class="statistic__col statistic__col--status">
 					<span class="statistic__provider-subtitle">Статус поставщика</span>
 					<div class="statistic__provider-status">
 						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
+            <span class="statistic__provider-status-icon{{if eq .StatusCode -1}} blocked{{end}}{{if eq .StatusCode 0}} not-active{{end}}{{if eq .StatusCode 1}} active{{end}}"></span>
 							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
+                <span>{{.Status.Status.RU}}</span>
 							</span>
 						</div>
 
 						<!-- tooltipe -->
 						<div class="statistic__provider-tooltip">
 							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
+								причина блокировки
 							</span>
 							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
+                {{.StatusText}}
 							</div>
 						</div>
 					<!-- tooltipe  -->
 					</div>
 					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
+						Дата последнего изменения
 					</span>
 					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>	<div class="statistic__provider box-item js-statistic-item">
-		<div class="statistic__row">
-			<div class="statistic__provider-item js-statistic-more">	
-				<div class="statistic__col statistic__col--provider">
-					<span class="statistic__provider-subtitle">Поставщик</span>
-					<span class="statistic__provider-name">Якитория</span>
-				</div>
-				<div class="statistic__col statistic__col--station">
-					<span class="statistic__provider-subtitle">кол-во обслужи–ваемых станций</span>
-					<span class="statistic__provider-txt">15</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата добавления первого товара</span>
-					<span class="statistic__provider-txt">21 марта 2018 года, 14:00</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt">1 января 2018 года, 14:00</span>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content ">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Якитория
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-           		<svg class="icon-eye">
-           		  <use xlink:href="#eye"></use>
-           		</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-					
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon active"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-					<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>	<div class="statistic__provider box-item js-statistic-item">
-		<div class="statistic__row">
-			<div class="statistic__provider-item js-statistic-more">	
-				<div class="statistic__col statistic__col--provider">
-					<span class="statistic__provider-subtitle">Поставщик</span>
-					<span class="statistic__provider-name">KFC</span>
-				</div>
-				<div class="statistic__col statistic__col--station">
-					<span class="statistic__provider-subtitle">кол-во обслужи–ваемых станций</span>
-					<span class="statistic__provider-txt">32</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата добавления первого товара</span>
-					<span class="statistic__provider-txt">21 марта 2018 года, 14:00</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt">1 января 2018 года, 14:00</span>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content ">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						KFC
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-           		<svg class="icon-eye">
-           		  <use xlink:href="#eye"></use>
-           		</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-					
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon not-active"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-					<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>	<div class="statistic__provider box-item js-statistic-item">
-		<div class="statistic__row">
-			<div class="statistic__provider-item js-statistic-more">	
-				<div class="statistic__col statistic__col--provider">
-					<span class="statistic__provider-subtitle">Поставщик</span>
-					<span class="statistic__provider-name">Додо пицца</span>
-				</div>
-				<div class="statistic__col statistic__col--station">
-					<span class="statistic__provider-subtitle">кол-во обслужи–ваемых станций</span>
-					<span class="statistic__provider-txt">12</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата добавления первого товара</span>
-					<span class="statistic__provider-txt">21 марта 2018 года, 14:00</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt">1 января 2018 года, 14:00</span>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content active">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Додо пицца
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-           		<svg class="icon-eye">
-           		  <use xlink:href="#eye"></use>
-           		</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-					
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-					<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>	<div class="statistic__provider box-item js-statistic-item">
-		<div class="statistic__row">
-			<div class="statistic__provider-item js-statistic-more">	
-				<div class="statistic__col statistic__col--provider">
-					<span class="statistic__provider-subtitle">Поставщик</span>
-					<span class="statistic__provider-name">Тануки</span>
-				</div>
-				<div class="statistic__col statistic__col--station">
-					<span class="statistic__provider-subtitle">кол-во обслужи–ваемых станций</span>
-					<span class="statistic__provider-txt">5</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата добавления первого товара</span>
-					<span class="statistic__provider-txt">21 марта 2018 года, 14:00</span>
-				</div>
-				<div class="statistic__col statistic__col--date">
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt">1 января 2018 года, 14:00</span>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content ">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Тануки
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-           		<svg class="icon-eye">
-           		  <use xlink:href="#eye"></use>
-           		</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-					
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon active"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-					<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
+            {{if not (isnil .UpdatedAt)}}{{datetime .UpdatedAt}}{{end}}
 					</span>
 				</div>
 			</div>
 		</div>
 	</div>
-
+{{end}}
+{{if false}}
 	<div class="pagination ">
 	<ul class="pagination__list">
 		<li class="pagination__item">
@@ -735,28 +214,25 @@
 		</li>
 	</ul>
 </div>
+{{end}}
 	
 	<div class="statistic__service">
 	<div class="statistic__row">
 		<div class="statistic__col statistic__col--service">
 			<span class="statistic__service-title">Товары</span>
-			<div class="statistic__service-holder box-item">
-
+			<div class="statistic__service-holder box-item statistic__api-products">
 				<div class="statistic__service-item statistic__service-item--large">
 					<span class="statistic__service-subtitle">всего товаров</span>
-					<span class="statistic__service-txt">1 509</span>
+          <span class="statistic__service-txt">{{.data.stats.products.total}}</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--large">
 					<span class="statistic__service-subtitle">товаров в категории</span>
-					<div class="statistic__service-select" data-num="118">
+          <div id="category-counter" class="statistic__service-select" data-num="">
 						<div class="select-wrapp select-checkbox">
-							<select name="Select" id="" class="custom-select-checkbox">
-								<option value="">Гамбургеры</option>
-								<option value="">Напитки</option>
-								<option value="">Гамбургеры из курицы</option>
-								<option value="">Закуски</option>
-								<option value="">Мороженое</option>
-								<option value="">Горячие блюда</option>
+							<select name="Select" class="custom-select-checkbox">
+              {{range .data.stats.products.categories}}
+                <option value="{{.Count}}">{{.Category}}</option>
+              {{end}}
 							</select>
 						</div>
 					</div>
@@ -767,21 +243,21 @@
 			<span class="statistic__service-title">
 				Пассажиры, использовавшие сервис
 			</span>
-			<div class="statistic__service-holder box-item">
+			<div class="statistic__service-holder box-item" data-type="passengers">
 				<div class="statistic__service-item statistic__service-item--large">
 					<span class="statistic__service-subtitle">всего пассажиров</span>
-					<span class="statistic__service-txt">12 695</span>
+          <span class="statistic__service-txt">{{.data.stats.passengers.Total}}</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--small">
 					<span class="statistic__service-subtitle">за период</span>
-					<span class="statistic__service-txt">9 789</span>
+					<span class="statistic__service-txt">{{.data.stats.passengers.AtPeriod}}</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--medium">
 					<div class="statistic__service-date">
-						<input type="text" class="datepicker" value="01.01.2018">
+						<input type="text" class="datepicker" value="{{date .data.stats.passengers.Period.Start}}">
 					</div>
 					<div class="statistic__service-date">
-						<input type="text" class="datepicker" value="16.05.2018">
+						<input type="text" class="datepicker" value="{{date .data.stats.passengers.Period.End}}">
 					</div>
 				</div>
 			</div>
@@ -792,44 +268,44 @@
 			<span class="statistic__service-title">
 				Работоспособность ресурса в поездах
 			</span>
-			<div class="statistic__service-holder box-item">
+			<div class="statistic__service-holder box-item" data-type="oktrains">
 				<div class="statistic__service-item statistic__service-item--large">
 					<span class="statistic__service-subtitle">Работает</span>
-					<span class="statistic__service-txt">810</span>
+          <span class="statistic__service-txt">{{.data.stats.trains.ok.Total}}</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--small">
 					<span class="statistic__service-subtitle">за период</span>
-					<span class="statistic__service-txt">789</span>
+          <span class="statistic__service-txt">{{.data.stats.trains.ok.AtPeriod}}</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--medium">
 					<div class="statistic__service-date">
-						<input type="text" class="datepicker" value="01.01.2018">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.ok.Period.Start}}">
 					</div>
 					<div class="statistic__service-date">
-						<input type="text" class="datepicker" value="16.05.2018">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.ok.Period.End}}">
 					</div>
 				</div>
-				<div class="statistic__service-inner">
+				<div class="statistic__service-inner" data-type="natrains">
 					<div class="statistic__service-item statistic__service-item--large">
 						<span class="statistic__service-subtitle">Не работает</span>
-						<span class="statistic__service-txt">23</span>
+            <span class="statistic__service-txt">{{.data.stats.trains.na.Total}}</span>
 					</div>
 					<div class="statistic__service-item statistic__service-item--small">
 						<span class="statistic__service-subtitle">за период</span>
-						<span class="statistic__service-txt">789</span>
+            <span class="statistic__service-txt">{{.data.stats.trains.na.AtPeriod}}</span>
 					</div>
 					<div class="statistic__service-item statistic__service-item--medium">
 						<div class="statistic__service-date">
-							<input type="text" class="datepicker" value="01.01.2018">
+						  <input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.Start}}">
 						</div>
 						<div class="statistic__service-date">
-							<input type="text" class="datepicker" value="16.05.2018">
+						  <input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.End}}">
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	
+
 		<div class="statistic__col statistic__col--service">
 			<span class="statistic__service-title">
 				Среднее время на сервисе
@@ -837,18 +313,18 @@
 			<div class="statistic__service-holder box-item">
 				<div class="statistic__service-item statistic__service-item--large">
 					<span class="statistic__service-subtitle">среднее время</span>
-					<span class="statistic__service-txt">3:12</span>
+					<span class="statistic__service-txt">0</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--small">
 					<span class="statistic__service-subtitle">за период</span>
-					<span class="statistic__service-txt">2:54</span>
+					<span class="statistic__service-txt">0</span>
 				</div>
 				<div class="statistic__service-item statistic__service-item--medium">
 					<div class="statistic__service-date">
-						<input type="text" class="datepicker" value="01.01.2018">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.Start}}">
 					</div>
 					<div class="statistic__service-date">
-						<input type="text" class="datepicker" value="16.05.2018">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.End}}">
 					</div>
 				</div>
 			</div>
@@ -866,15 +342,16 @@
 			<span class="order__caption">Заказы</span>
 		</div>
 		<div class="order__head-right">
-			<div class="order__period">
+			<div class="order__period" data-type="orders">
 				<span class="order__period-text">за период:</span>
 				<div class="order__period-calendar">
-					<input type="text" class="datepicker">
+          <input id="orders-start" type="text" class="datepicker" value="{{date .data.stats.orders.Summary.Period.Start}}">
 				</div>
 				<div class="order__period-calendar">
-					<input type="text" class="datepicker">
+					<input id="orders-end" type="text" class="datepicker" value="{{date .data.stats.orders.Summary.Period.End}}">
 				</div>
 			</div>
+{{if false}}
 			<div class="order__search">
 				<label class="input-icon-label">
 					<span>
@@ -885,33 +362,38 @@
 					<input type="text" name="input-icon" class="input-icon" placeholder="Найти поставщика">
 				</label>
 			</div>
+{{end}}
 		</div>
 	</div>
-
-	<div class="box-item order__card js-statistic-item">
+{{$ordStatuses := .data.orderStatuses}}
+{{range .data.stats.orders.Suppliers}}
+  <div class="box-item order__card js-statistic-item" data-sup-id="{{.ID}}">
 		<div class="order__card-top js-statistic-more">
 			<div class="order__col order__col--name">
 				<span class="order__title">Поставщик</span>
-				<span class="order__text order__text--name">Макдональдс</span>
+        <span class="order__text order__text--name">{{.Name}}</span>
 			</div>
 			<div class="order__col order__col--number">
 				<div class="order__col-item">
 					<span class="order__title">Всего заказов</span>
-					<span class="order__text">150</span>
+					<span class="order__text" data-total-place="true">{{.Summary.Total}}</span>
 				</div>
 				<div class="order__col-item">
 					<span class="order__title">за период</span>
-					<span class="order__text">120</span>
+					<span class="order__text" data-at-period-place="true">{{.Summary.AtPeriod}}</span>
 				</div>
 			</div>
 			<div class="order__col order__col--status">
 				<span class="order__title">Статус заказа</span>
 				<div class="order__select-status">
 					<div class="select-wrapp select-checkbox">
-						<select name="Select" id="" class="custom-select-checkbox">
-							<option value="">Оплачен</option>
-							<option value="">Ожидает оплаты</option>
-							<option value="">Не оплачен</option>
+						<select name="Select" class="custom-select-checkbox">
+              {{$byStatus := .ByStatus}}
+              {{range $ordStatuses}}
+                {{$id := strToId .Status.EN}}
+                {{$osi := byKey $byStatus $id}}
+              <option value="{{$id}}" data-status-total="{{$osi.Stats.Total}}" data-status-at-period="{{$osi.Stats.AtPeriod}}">{{$osi.Text}}</option>
+              {{end}}
 						</select>
 					</div>
 				</div>
@@ -919,25 +401,24 @@
 			<div class="order__col order__col--number order__col--number-last">
 				<div class="order__col-item">
 					<span class="order__title">Всего заказов</span>
-					<span class="order__text">131</span>
+					<span class="order__text" data-status-total-place="true">0</span>
 				</div>
 				<div class="order__col-item">
 					<span class="order__title">за период</span>
-					<span class="order__text">108</span>
+					<span class="order__text" data-status-at-period-place="true">0</span>
 				</div>
 			</div>
 
 			<div class="order__value-wrapp">
 				<div class="order__value-item">
-					<span class="order__value-caption">сумма проданых заказов (с сс/без сс)</span>
+					<span class="order__value-caption">сумма проданых заказов</span>
 
 					<div class="order__value-group">
 						<div class="order__value-col">
 							<div class="order__value-inner">
 								<span class="order__title">Всего</span>
 								<div class="order__value-number">
-									<span class="order__value-number-text">4 млн. 567 тыс. 981 <span class="rub">o</span>/</span> 
-									<span class="order__value-number-text">4 млн. 151 тыс. 981 <span class="rub">o</span></span>
+                  <span class="order__value-number-text" data-sum-total-place="true">{{.SumTotal}} <span class="rub">o</span></span> 
 								</div>
 							</div>
 						</div>
@@ -946,8 +427,7 @@
 							<div class="order__value-inner">
 								<span class="order__title">за период</span>
 								<div class="order__value-number">
-									<span class="order__value-number-text">2 млн. 865 тыс. 090 <span class="rub">o</span>/</span>
-									<span class="order__value-number-text">2 млн. 765 тыс. 432 <span class="rub">o</span></span>
+                  <span class="order__value-number-text" data-sum-at-period-place="true">{{.SumAtPeriod}} <span class="rub">o</span></span> 
 								</div>
 							</div>
 						</div>
@@ -962,8 +442,7 @@
 							<div class="order__value-inner">
 								<span class="order__title">Всего</span>
 								<div class="order__value-number">
-									<span class="order__value-number-text">978 тыс. 239 <span class="rub">o</span> </span> 
-									
+                  <span class="order__value-number-text" data-charge-total-place="true">{{.ChargeTotal}} <span class="rub">o</span></span> 
 								</div>
 							</div>
 						</div>
@@ -972,7 +451,7 @@
 							<div class="order__value-inner">
 								<span class="order__title">за период</span>
 								<div class="order__value-number">
-									<span class="order__value-number-text">879 тыс. 534 <span class="rub">o</span> </span> 
+                  <span class="order__value-number-text" data-charge-at-period-place="true">{{.ChargeAtPeriod}} <span class="rub">o</span></span> 
 								</div>
 							</div>
 						</div>
@@ -985,40 +464,35 @@
 				<div class="statistic__col statistic__col--media">
 					<span class="statistic__provider-subtitle">Наименование</span>
 					<span class="statistic__provider-name statistic__provider-txt--content">
-						Макдональдс
+            {{.Name}}
 					</span>
 					<span class="statistic__provider-subtitle">ИНН</span>
 					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
+            {{.SupplierInfo.ITN}}
 					</span>
 					<span class="statistic__provider-subtitle">Дата регистрации</span>
 					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
+            {{datetime .SupplierInfo.CreatedAt}}
 					</span>
 				</div>
 				<div class="statistic__col statistic__col--info">
 					<span class="statistic__provider-subtitle">Контактные данные</span>
 					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
+            {{.SupplierInfo.Phone}}
 					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
+					<a href="mailto:{{.SupplierInfo.Email}}" class="statistic__provider-link">
+            {{.SupplierInfo.Email}}
 					</a>
 					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
+            {{.SupplierInfo.Address}}
 					</span>
 				</div>
 				<div class="statistic__col statistic__col--enter">
 					<span class="statistic__provider-subtitle">Логин</span>
 
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
+					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="{{.SupplierInfo.Login}}" disabled>
 					<span class="statistic__provider-subtitle">Пароль</span>
 					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-							<svg class="icon-eye">
-								<use xlink:href="#eye"></use>
-							</svg>
-						</div>
 						<div class="statistic__provider-password-txt">
 							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
 						</div>
@@ -1029,710 +503,38 @@
 					<span class="statistic__provider-subtitle">Статус поставщика</span>
 					<div class="statistic__provider-status">
 						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
+							<span class="statistic__provider-status-icon{{if eq .SupplierInfo.Status.Code -1}} blocked{{end}}{{if eq .SupplierInfo.Status.Code 0}} not-active{{end}}{{if eq .SupplierInfo.Status.Code 1}} active{{end}}"></span>
 							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
+                <span>{{.SupplierInfo.Status.Status.RU}}</span>
 							</span>
 						</div>
 
+            {{if eq .SupplierInfo.Status.Code -1}}
 						<!-- tooltipe -->
 						<div class="statistic__provider-tooltip">
 							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
+								причина блокировки
 							</span>
 							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
+                {{.SupplierInfo.StatusText}}
 							</div>
 						</div>
 						<!-- tooltipe  -->
+            {{end}}
 					</div>
 					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
+						Дата последнего изменения
 					</span>
 					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
+            {{if not (isnil .SupplierInfo.UpdatedAt)}}{{datetime .SupplierInfo.UpdatedAt}}{{end}}
 					</span>
 				</div>
 			</div>
 		</div>
 	</div>
+{{end}}
 
-	<div class="box-item order__card js-statistic-item">
-		<div class="order__card-top js-statistic-more">
-			<div class="order__col order__col--name">
-				<span class="order__title">Поставщик</span>
-				<span class="order__text order__text--name">Макдональдс</span>
-			</div>
-			<div class="order__col order__col--number">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">150</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">120</span>
-				</div>
-			</div>
-			<div class="order__col order__col--status">
-				<span class="order__title">Статус заказа</span>
-				<div class="order__select-status">
-					<div class="select-wrapp select-checkbox">
-						<select name="Select" id="" class="custom-select-checkbox">
-							<option value="">Оплачен</option>
-							<option value="">Ожидает оплаты</option>
-							<option value="">Не оплачен</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="order__col order__col--number order__col--number-last">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">131</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">108</span>
-				</div>
-			</div>
-
-			<div class="order__value-wrapp">
-				<div class="order__value-item">
-					<span class="order__value-caption">сумма проданых заказов (с сс/без сс)</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">4 млн. 567 тыс. 981 <span class="rub">o</span>/</span> 
-									<span class="order__value-number-text">4 млн. 151 тыс. 981 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">2 млн. 865 тыс. 090 <span class="rub">o</span>/</span>
-									<span class="order__value-number-text">2 млн. 765 тыс. 432 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="order__value-item">
-					<span class="order__value-caption">Сумма агенсткого вознаграждения</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">978 тыс. 239 <span class="rub">o</span> </span> 
-									
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">879 тыс. 534 <span class="rub">o</span> </span> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Макдональдс
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-							<svg class="icon-eye">
-								<use xlink:href="#eye"></use>
-							</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-						<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="box-item order__card js-statistic-item">
-		<div class="order__card-top js-statistic-more">
-			<div class="order__col order__col--name">
-				<span class="order__title">Поставщик</span>
-				<span class="order__text order__text--name">Макдональдс</span>
-			</div>
-			<div class="order__col order__col--number">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">150</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">120</span>
-				</div>
-			</div>
-			<div class="order__col order__col--status">
-				<span class="order__title">Статус заказа</span>
-				<div class="order__select-status">
-					<div class="select-wrapp select-checkbox">
-						<select name="Select" id="" class="custom-select-checkbox">
-							<option value="">Оплачен</option>
-							<option value="">Ожидает оплаты</option>
-							<option value="">Не оплачен</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="order__col order__col--number order__col--number-last">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">131</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">108</span>
-				</div>
-			</div>
-
-			<div class="order__value-wrapp">
-				<div class="order__value-item">
-					<span class="order__value-caption">сумма проданых заказов (с сс/без сс)</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">4 млн. 567 тыс. 981 <span class="rub">o</span>/</span> 
-									<span class="order__value-number-text">4 млн. 151 тыс. 981 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">2 млн. 865 тыс. 090 <span class="rub">o</span>/</span>
-									<span class="order__value-number-text">2 млн. 765 тыс. 432 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="order__value-item">
-					<span class="order__value-caption">Сумма агенсткого вознаграждения</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">978 тыс. 239 <span class="rub">o</span> </span> 
-									
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">879 тыс. 534 <span class="rub">o</span> </span> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Макдональдс
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-							<svg class="icon-eye">
-								<use xlink:href="#eye"></use>
-							</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-						<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="box-item order__card js-statistic-item">
-		<div class="order__card-top js-statistic-more">
-			<div class="order__col order__col--name">
-				<span class="order__title">Поставщик</span>
-				<span class="order__text order__text--name">Макдональдс</span>
-			</div>
-			<div class="order__col order__col--number">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">150</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">120</span>
-				</div>
-			</div>
-			<div class="order__col order__col--status">
-				<span class="order__title">Статус заказа</span>
-				<div class="order__select-status">
-					<div class="select-wrapp select-checkbox">
-						<select name="Select" id="" class="custom-select-checkbox">
-							<option value="">Оплачен</option>
-							<option value="">Ожидает оплаты</option>
-							<option value="">Не оплачен</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="order__col order__col--number order__col--number-last">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">131</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">108</span>
-				</div>
-			</div>
-
-			<div class="order__value-wrapp">
-				<div class="order__value-item">
-					<span class="order__value-caption">сумма проданых заказов (с сс/без сс)</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">4 млн. 567 тыс. 981 <span class="rub">o</span>/</span> 
-									<span class="order__value-number-text">4 млн. 151 тыс. 981 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">2 млн. 865 тыс. 090 <span class="rub">o</span>/</span>
-									<span class="order__value-number-text">2 млн. 765 тыс. 432 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="order__value-item">
-					<span class="order__value-caption">Сумма агенсткого вознаграждения</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">978 тыс. 239 <span class="rub">o</span> </span> 
-									
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">879 тыс. 534 <span class="rub">o</span> </span> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Макдональдс
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-							<svg class="icon-eye">
-								<use xlink:href="#eye"></use>
-							</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-						<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="box-item order__card js-statistic-item">
-		<div class="order__card-top js-statistic-more">
-			<div class="order__col order__col--name">
-				<span class="order__title">Поставщик</span>
-				<span class="order__text order__text--name">Макдональдс</span>
-			</div>
-			<div class="order__col order__col--number">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">150</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">120</span>
-				</div>
-			</div>
-			<div class="order__col order__col--status">
-				<span class="order__title">Статус заказа</span>
-				<div class="order__select-status">
-					<div class="select-wrapp select-checkbox">
-						<select name="Select" id="" class="custom-select-checkbox">
-							<option value="">Оплачен</option>
-							<option value="">Ожидает оплаты</option>
-							<option value="">Не оплачен</option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<div class="order__col order__col--number order__col--number-last">
-				<div class="order__col-item">
-					<span class="order__title">Всего заказов</span>
-					<span class="order__text">131</span>
-				</div>
-				<div class="order__col-item">
-					<span class="order__title">за период</span>
-					<span class="order__text">108</span>
-				</div>
-			</div>
-
-			<div class="order__value-wrapp">
-				<div class="order__value-item">
-					<span class="order__value-caption">сумма проданых заказов (с сс/без сс)</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">4 млн. 567 тыс. 981 <span class="rub">o</span>/</span> 
-									<span class="order__value-number-text">4 млн. 151 тыс. 981 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">2 млн. 865 тыс. 090 <span class="rub">o</span>/</span>
-									<span class="order__value-number-text">2 млн. 765 тыс. 432 <span class="rub">o</span></span>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="order__value-item">
-					<span class="order__value-caption">Сумма агенсткого вознаграждения</span>
-
-					<div class="order__value-group">
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">Всего</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">978 тыс. 239 <span class="rub">o</span> </span> 
-									
-								</div>
-							</div>
-						</div>
-
-						<div class="order__value-col">
-							<div class="order__value-inner">
-								<span class="order__title">за период</span>
-								<div class="order__value-number">
-									<span class="order__value-number-text">879 тыс. 534 <span class="rub">o</span> </span> 
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="statistic__provider-content js-statistic-content">
-			<div class="statistic__row">
-				<div class="statistic__col statistic__col--media">
-					<span class="statistic__provider-subtitle">Наименование</span>
-					<span class="statistic__provider-name statistic__provider-txt--content">
-						Макдональдс
-					</span>
-					<span class="statistic__provider-subtitle">ИНН</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content">
-						672098235782
-					</span>
-					<span class="statistic__provider-subtitle">Дата регистрации</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						1 января 2018 года, 14:00
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--info">
-					<span class="statistic__provider-subtitle">Контактные данные</span>
-					<span class="statistic__provider-txt statistic__provider-txt--mod">
-						8 (800) 707–44–99
-					</span>
-					<a href="mailto:info@dodo.ru" class="statistic__provider-link">
-						info@dodo.ru
-					</a>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
-						115054, Москва, ул. Валовая, 26, бизнес центр «Лайт Хаус».
-					</span>
-				</div>
-				<div class="statistic__col statistic__col--enter">
-					<span class="statistic__provider-subtitle">Логин</span>
-
-					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="Dodo-45892" disabled>
-					<span class="statistic__provider-subtitle">Пароль</span>
-					<div class="statistic__provider-password">
-						<div class="statistic__provider-password-icon">
-							<svg class="icon-eye">
-								<use xlink:href="#eye"></use>
-							</svg>
-						</div>
-						<div class="statistic__provider-password-txt">
-							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
-						</div>
-					</div>
-
-				</div>
-				<div class="statistic__col statistic__col--status">
-					<span class="statistic__provider-subtitle">Статус поставщика</span>
-					<div class="statistic__provider-status">
-						<div class="statistic__provider-status-head">
-							<span class="statistic__provider-status-icon blocked"></span>
-							<span class="statistic__provider-status-txt">
-								<span>Заблоки&shy;рован</span>
-							</span>
-						</div>
-
-						<!-- tooltipe -->
-						<div class="statistic__provider-tooltip">
-							<span class="statistic__provider-tooltip-link">
-								причина блокировки?
-							</span>
-							<div class="statistic__provider-tooltip-info">
-								Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore, quidem.
-							</div>
-						</div>
-						<!-- tooltipe  -->
-					</div>
-					<span class="statistic__provider-subtitle">
-						Дата последней смены статуса
-					</span>
-					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
-						21 апреля 2018 года, 15:32
-					</span>
-				</div>
-			</div>
-		</div>
-	</div>
-
+{{if false}}
 	<div class="pagination ">
 	<ul class="pagination__list">
 		<li class="pagination__item">
@@ -1761,7 +563,7 @@
 		</li>
 	</ul>
 </div>
-
+{{end}}
 </div>
 			</div>
 
@@ -1774,6 +576,7 @@
 
     <script src="js/vendor.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
 
 </body>
 </html>

@@ -15,12 +15,14 @@ var InvalidDeliveryTime = errors.New("Invalid delivery time")
 
 type Supplier struct {
 	LoginUser
-	ITN        string             `json:"itn"`
-	Phone      string             `json:"phone"`
-	Address    string             `json:"address"`
-	Status     SupplierStatus     `json:"status" gorm:"foreignkey:StatusCode; association_foreignkey:Code"`
-	StatusCode SupplierStatusCode `json:"status_code" sql:"type:smallint REFERENCES supplier_statuses(code)"`
-	StatusText string             `json:"status_text"`
+	ITN              string             `json:"itn"`
+	Phone            string             `json:"phone"`
+	Address          string             `json:"address"`
+	Status           SupplierStatus     `json:"status" gorm:"foreignkey:StatusCode; association_foreignkey:Code"`
+	StatusCode       SupplierStatusCode `json:"status_code" sql:"type:smallint REFERENCES supplier_statuses(code)"`
+	StatusText       string             `json:"status_text"`
+	StationsCount    string             `json:"-" gorm:"-"`
+	FirstProductDate time.Time          `json:"-" gorm:"-"`
 }
 
 type SupplierStation struct {
@@ -42,14 +44,20 @@ func (s *Supplier) BeforeSave() error {
 }
 
 func (s *Supplier) AfterSave() error {
-	db.Joins("JOIN texts on text_id = texts.id").Preload("Status").Find(&s.Status, "code = ?", s.StatusCode)
+	db.Joins("JOIN texts ON text_id = texts.id").Preload("Status").Find(&s.Status, "code = ?", s.StatusCode)
 	return nil
 }
 
 func (s *Supplier) AfterFind() error {
-	db.Joins("JOIN texts on text_id = texts.id").Preload("Status").Find(&s.Status, "code = ?", s.StatusCode)
+	db.Joins("JOIN texts ON text_id = texts.id").Preload("Status").Find(&s.Status, "code = ?", s.StatusCode)
 	//FIXME: remove it after picture storage be ready
 	s.Photo = "/pic/new/n1.jpg"
+	db.Model(&SupplierStation{}).Where("supplier_id = ?", s.ID).Count(&s.StationsCount)
+	var t []time.Time
+	db.Model(&Product{}).Where("supplier_id = ?", s.ID).Order("created_at").Limit(1).Pluck("created_at", &t)
+	if len(t) == 1 {
+		(*s).FirstProductDate = t[0]
+	}
 	return nil
 }
 

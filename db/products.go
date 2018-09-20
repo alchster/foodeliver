@@ -50,23 +50,9 @@ func (p *Product) AfterFind() error {
 	return nil
 }
 
-type Category struct {
-	ID   UUID   `json:"id"`
-	Name string `json:"name"`
-}
-
-func SupplierCategories(supId UUID) ([]Category, error) {
-	rows, _ := db.Table("products").Joins("JOIN texts on category_id = texts.id").Order("ru").
-		Where("supplier_id = ?", supId).Select("DISTINCT(category_id), ru").Rows()
-	defer rows.Close()
-	cats := make([]Category, 0)
-	for rows.Next() {
-		var id UUID
-		var txt string
-		rows.Scan(&id, &txt)
-		cats = append(cats, Category{id, txt})
-	}
-	return cats, nil
+func SupplierCategories(supId UUID) (cats []Category, err error) {
+	err = db.Joins("JOIN texts ON categories.id = texts.id").Order("ru").Find(&cats).Error
+	return
 }
 
 func SupplierCatalogProducts(supId UUID) ([]Product, error) {
@@ -77,12 +63,19 @@ func SupplierCatalogProducts(supId UUID) ([]Product, error) {
 	return prods, nil
 }
 
-func ModeratorSuppliers(modId UUID) ([]Supplier, error) {
+func UserSuppliers(modId UUID) ([]Supplier, error) {
 	var u User
 	if err := db.Preload("AllowedSuppliers").Where("id = ?", modId).First(&u).Error; err != nil {
 		return nil, err
 	}
-	sups := u.AllowedSuppliers
+	var sups []Supplier
+	if u.Admin {
+		if err := db.Find(&sups).Error; err != nil {
+			return nil, err
+		}
+	} else {
+		sups = u.AllowedSuppliers
+	}
 	sort.Slice(sups[:], func(i, j int) bool {
 		return sups[i].Description < sups[j].Description
 	})
@@ -95,7 +88,7 @@ func ModeratorCatalog(modId UUID) (sups []Supplier, prods []Product, cats []Text
 	for i, _ := range statuses {
 		statuses[i].Color = productStatusColors[statuses[i].Code]
 	}
-	sups, err = ModeratorSuppliers(modId)
+	sups, err = UserSuppliers(modId)
 	if err != nil {
 		return
 	}

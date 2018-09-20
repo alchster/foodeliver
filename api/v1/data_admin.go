@@ -21,6 +21,22 @@ func adminIndexInfo(userId string) map[string]interface{} {
 	return result
 }
 
+func adminDataCatalog(userId db.UUID) map[string]interface{} {
+	data := make(map[string]interface{})
+	data["suppliers"], _ = db.ReadAll("supplier", userId.String())
+	data["supStatuses"], _ = db.SupplierStatuses()
+	return data
+}
+
+func adminStats(userId db.UUID) map[string]interface{} {
+	data := make(map[string]interface{})
+	data["orderStatuses"], _ = db.OrderStatuses()
+	data["suppliers"], _ = db.ReadAll("supplier", userId.String())
+	data["supStatuses"], _ = db.SupplierStatuses()
+	data["stats"] = db.Stats()
+	return data
+}
+
 func addModerSupplier(c *gin.Context) {
 	_, permErr := extractClaimsWithCheckPerm("modsupplier", CREATE, c)
 	if permErr != nil {
