@@ -1,0 +1,28 @@
+{
+  "debug": false,
+  "storage": "",
+  "listen": "0.0.0.0:8000",
+  "prefix": "/api",
+  "database": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dbname": "",
+    "user": "",
+    "password": "",
+    "options": [
+      "sslmode=disable"
+    ]
+  },
+  "mailer": {
+	"templates": "templ/mail",
+    "server": "",
+    "user": "",
+    "password": "",
+    "from": "Сервис доставки еды",
+	"url": "",
+    "options": [
+      "starttls",
+      "plain"
+    ]
+  }
+}
