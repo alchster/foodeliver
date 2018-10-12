@@ -70,7 +70,8 @@
 	<h1 class="delivery-settings__caption">Настройки доставки</h1>
 	<span class="delivery-settings__station-title">Станции</span>
 
-{{ range .data }}
+{{ $tmList := .data.timeList}}
+{{ range .data.stations }}
 	<div class="box-item delivery-settings__item">
     <span class="delivery-settings__station-id" style="display:none !important;">{{.StationID}}</span>
 		<div class="delivery-settings__col delivery-settings__col--station">
@@ -81,6 +82,21 @@
 		</div>
 		<div class="delivery-settings__col delivery-settings__col--terminal">
 			
+<span class="delivery-settings__title">Время работы</span>
+{{$wf := .WorkingFrom}}
+{{$wt := .WorkingTo}}
+<select class="delivery-settings__col delivery-settings__api-time-from" style="width:40%;margin:0;">
+{{range $tmList}}
+  <option value="{{.}}"{{if eq . (str $wf)}} selected{{end}}>{{.}}</option>
+{{end}}
+</select>
+&ndash;
+<select class="delivery-settings__col delivery-settings__api-time-to" style="width:40%;margin:0;">
+{{range $tmList}}
+  <option value="{{.}}"{{if eq . (str $wt)}} selected{{end}}>{{.}}</option>
+{{end}}
+</select>
+
 		</div>
 		<div class="delivery-settings__col delivery-settings__time">
 			<span class="delivery-settings__title">Время доставки</span>

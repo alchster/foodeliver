@@ -70,12 +70,34 @@ func getSupplierOrderStatuses() []OrderStatus {
 	return os
 }
 
+func (o *Order) BeforeCreate() {
+	if o.ID.IsZero() {
+		o.ID = NewID()
+	}
+}
+
 func (o *Order) AfterFind() {
 	db.Where("id = ?", o.TrainID).First(&o.Train)
 	db.Where("id = ?", o.StationID).First(&o.Station)
 	o.TrainNumber = o.Train.Number
 	db.Model(&OrderProduct{}).Where("order_id = ?", o.ID).Find(&o.Products)
 	o.StatusesList = supplierOrderStatuses
+}
+
+func (o *Order) AfterCreate() {
+	if err := db.Where("id = ?", o.SupplierID).First(&o.Supplier).Error; err != nil {
+		return
+	}
+	html, err := mailer.MakeHTML("new_order.template", map[string]interface{}{
+		"name":  o.Supplier.Description,
+		"order": o.Number,
+		"link":  "/orders",
+	})
+	if err != nil {
+		return
+	}
+	go mailer.Send(o.Supplier.Description, o.Supplier.Email, "Создан заказ №"+o.Number, html)
+
 }
 
 var orderStatusesFilter = []OrderStatusCode{

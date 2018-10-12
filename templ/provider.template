@@ -97,7 +97,7 @@
 	 filter end -->
 {{range .data}}
 	<div class="provider__item box-item">
-	<span class="provider__item-order-id">{{.ID}}</span>
+  <span class="provider__item-order-id" style="display:none !important">{{.ID}}</span>
 	<div class="provider__row">
 		<div class="provider__col provider__col--order">
 			<span class="provider__item-subtitle">Номер заказа</span>
@@ -156,6 +156,9 @@
 
 				<span class="provider__item-subtitle">Номер вагона</span>
 				<span class="provider__item-text">{{.CarNumber}}</span>
+
+				<span class="provider__item-subtitle">Номер места</span>
+				<span class="provider__item-text">{{.Seat}}</span>
 
 				<span class="provider__item-subtitle">Статус заказа</span>
 				<div class="provider__item-status">

@@ -7,21 +7,22 @@ import (
 	"github.com/heetch/confita/backend/file"
 	"github.com/heetch/confita/backend/flags"
 	"strings"
-	//"time"
 )
 
 type Mailer struct {
-	Server   string   `config:"server,backend=json"`
-	User     string   `config:"user,backend=json"`
-	Password string   `config:"password,backend=json"`
-	Options  []string `config:"options,backend=json"`
-	From     string   `config:"from,backend=json"`
+	Server    string   `config:"server,backend=json"`
+	User      string   `config:"user,backend=json"`
+	Password  string   `config:"password,backend=json"`
+	Options   []string `config:"options,backend=json"`
+	From      string   `config:"from,backend=json"`
+	Templates string   `config:"templates,backend=json"`
+	URL       string   `config:"url,backend=json"`
 }
 
 type Database struct {
 	Host     string   `config:"host,backend=json"`
 	Port     uint16   `config:"port,backend=json"`
-	DBName   string   `config:"name,backend=json"`
+	DBName   string   `config:"dbname,backend=json"`
 	User     string   `config:"user,backend=json"`
 	Password string   `config:"password,backend=json"`
 	Options  []string `config:"options,backend=json"`
@@ -33,9 +34,10 @@ type Config struct {
 	Prefix   string   `config:"prefix"`
 	Migrate  bool     `config:"migrate,backend=flags"`
 	TrainID  string   `config:"train-id,backend=flags"`
+	NodeID   string   `config:"node-id,backend=flags"`
 	Database Database `config:"database,required,backend=json"`
 	Mailer   Mailer   `config:"mailer,backend=json"`
-	Storage  string   `config:"storage,required"`
+	Storage  string   `config:"storage,required,backend=json"`
 }
 
 func loadConfig() (*Config, error) {
@@ -43,6 +45,7 @@ func loadConfig() (*Config, error) {
 		ListenOn: DEFAULT_LISTENON,
 		Debug:    DEBUG,
 		Prefix:   "/api",
+		NodeID:   "001",
 		Database: Database{
 			Host:   "127.0.0.1",
 			Port:   5432,
@@ -74,7 +77,7 @@ func (c *Config) String() string {
 
 func (d Database) String() string {
 	s := fmt.Sprintf("postgres://%s:%s@%s:%d/%s",
-		d.User, d.Password, d.Host, d.Port, d.DBName)
+		d.User, "******", d.Host, d.Port, d.DBName)
 	if len(d.Options) > 0 {
 		s = fmt.Sprintf("%s?%s", s, strings.Join(d.Options, "&"))
 	}
@@ -82,10 +85,10 @@ func (d Database) String() string {
 }
 
 func (m Mailer) String() string {
-	s := fmt.Sprintf("\n    URI: smtp://%s:%s@%s", m.User, m.Password, m.Server)
+	s := fmt.Sprintf("\n    URI: smtp://%s:%s@%s", m.User, "******", m.Server)
 	if len(m.Options) > 0 {
 		s = fmt.Sprintf("%s?%s", s, strings.Join(m.Options, "&"))
 	}
-	s = fmt.Sprintf("%s\n    From: %s", s, m.From)
+	s = fmt.Sprintf("%s\n    From: %s\n    Templates path: %s\n    URL: %s", s, m.From, m.Templates, m.URL)
 	return s
 }

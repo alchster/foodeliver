@@ -36,6 +36,7 @@ var permissionsTable = map[string]entityPermissions{
 		"text":       UPDATE,
 		"product":    FULL,
 		"supstation": FULL,
+		"order":      UPDATE,
 	},
 }
 

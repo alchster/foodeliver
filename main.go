@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	api_v1 "github.com/alchster/foodeliver/api/v1"
 	"github.com/alchster/foodeliver/db"
 	"github.com/alchster/foodeliver/i18n"
@@ -29,7 +30,16 @@ func main() {
 		log.Fatal("Storage error:", err)
 	}
 
-	if err = db.Open(config.Database.String(), config.Debug, store); err != nil {
+	var mailer *mail.Mailer
+	if config.Mailer.Server != "" {
+		c := config.Mailer
+		if mailer = mail.NewMailer(c.Server, c.User, c.Password, c.From, c.Templates, c.URL, c.Options,
+			config.Debug); mailer == nil {
+			log.Fatal("Mailer error:", errors.New("Unable to configure mailer"))
+		}
+	}
+
+	if err = db.Open(config.Database.String(), config.Debug, store, mailer); err != nil {
 		log.Fatal("Database error:", err)
 	}
 	defer db.Close()
@@ -40,12 +50,6 @@ func main() {
 		log.Print("Migration succeeded")
 		os.Exit(0)
 	}
-	if config.Mailer.Server != "" {
-		c := config.Mailer
-		if err := mail.Init(c.User, c.Password, c.Server, c.Options, c.From); err != nil {
-			log.Fatal("Mailer error:", err)
-		}
-	}
 
 	i18n.LoadLanguage("en")
 	i18n.LoadLanguage("ru")
@@ -54,7 +58,7 @@ func main() {
 	//router.Use(gin.Logger())
 	router.Use(gin.Recovery())
 
-	err = api_v1.Setup(router, config.Prefix, config.TrainID, store)
+	err = api_v1.Setup(router, config.Prefix, config.TrainID, config.NodeID, store)
 	if err != nil {
 		log.Print(err)
 		return

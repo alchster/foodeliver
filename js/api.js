@@ -15,8 +15,19 @@ $(function () {
   supList();
   statistics();
   categories();
+  orders();
 });
 
+
+function orders() {
+  $('.provider__item-status select').selectmenu({
+    change: function () {
+      var self = $(this);
+      var id = self.closest('.provider__item').find('.provider__item-order-id').html();
+      apiCall('PUT', '/order/'+id, {status_code: parseInt(self.val())});
+    }
+  });
+}
 
 function categories() {
   $('.btn.catalog__create-new').click(function () {
@@ -386,10 +397,14 @@ function delivery() {
     var stid = parent.find('.delivery-settings__station-id').html();
     var minAmount = parseFloat(parent.find('.delivery-settings__min-amount input').val());
     var time = parseInt(parent.find('.delivery-settings__time input').val());
+    var workingFrom = parent.find('.delivery-settings__api-time-from').val();
+    var workingTo = parent.find('.delivery-settings__api-time-to').val();
     var data = {
       "station_id": stid,
       "min_amount": minAmount,
-      "delivery_time": time
+      "delivery_time": time,
+      "working_from": workingFrom,
+      "working_to": workingTo
     };
     if (chkbox.checked) {
       apiCall('POST', '/supstation', data).fail(function(e) {
@@ -400,6 +415,22 @@ function delivery() {
         chkbox.checked = !chkbox.checked;
       });
     }
+  });
+  $('.delivery-settings__item select').change(function() {
+    var parent = $(this).closest('.delivery-settings__item');
+    var stid = parent.find('.delivery-settings__station-id').html();
+    var minAmount = parseFloat(parent.find('.delivery-settings__min-amount input').val());
+    var time = parseInt(parent.find('.delivery-settings__time input').val());
+    var workingFrom = parent.find('.delivery-settings__api-time-from').val();
+    var workingTo = parent.find('.delivery-settings__api-time-to').val();
+    var data = {
+      "station_id": stid,
+      "min_amount": minAmount,
+      "delivery_time": time,
+      "working_from": workingFrom,
+      "working_to": workingTo
+    };
+    apiCall('POST', '/supstation', data);
   });
 }
 

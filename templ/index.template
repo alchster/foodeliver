@@ -112,10 +112,11 @@
 	</div>
 </div>
 {{end}}
-
+{{if false}}
 								<div class="admin__btn-wrap">
 									<a href="#" class="btn admin__btn">Еще станции</a>
 								</div>
+{{end}}
 							</div>
 							<div class="admin__col admin____trains">
 								<div class="head-search head-search--main">
@@ -170,10 +171,11 @@
 	</div>
 </div>
 {{end}}
-
+{{if false}}
 <div class="admin__btn-wrap">
 									<a href="#" class="btn admin__btn">Еще поезда</a>
 								</div>
+{{end}}
 							</div>
 						</div>
 

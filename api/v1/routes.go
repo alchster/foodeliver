@@ -7,8 +7,9 @@ import (
 )
 
 var trainID db.UUID
+var nodeID string
 
-func Setup(router *gin.Engine, baseUrl string, train string, store storage.Storage) error {
+func Setup(router *gin.Engine, baseUrl string, train string, node string, store storage.Storage) error {
 	v1 := router.Group(baseUrl)
 	if train == "" {
 		authMiddleware = newAuthMiddlware("hello")
@@ -44,6 +45,7 @@ func Setup(router *gin.Engine, baseUrl string, train string, store storage.Stora
 		if err != nil {
 			return err
 		}
+		nodeID = node
 		v1.POST("/service/start_time", setStartTime)
 		v1.GET("/stations", stationsList)
 		v1.GET("/suppliers", suppliersList)

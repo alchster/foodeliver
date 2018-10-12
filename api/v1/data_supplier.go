@@ -1,6 +1,7 @@
 package api_v1
 
 import (
+	"fmt"
 	"github.com/alchster/foodeliver/db"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -22,12 +23,16 @@ func supplierDataProducts(supplierId db.UUID) map[string]interface{} {
 	return data
 }
 
-func supplierDataDelivery(supplierId db.UUID) []db.StationDeliveryResp {
+func supplierDataDelivery(supplierId db.UUID) map[string]interface{} {
 	stations, err := db.GetSupplierStations(supplierId)
 	if err != nil {
 		stations = make([]db.StationDeliveryResp, 0)
 	}
-	return stations
+	data := make(map[string]interface{})
+	data["stations"] = stations
+	log.Print(stations)
+	data["timeList"] = timeList()
+	return data
 }
 
 func addSupplierStation(c *gin.Context) {
@@ -75,4 +80,14 @@ func deleteSupplierStation(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, h{"status": "ok"})
+}
+
+func timeList() []string {
+	l := make([]string, 0, 49)
+	for i := 0; i <= 48; i++ {
+		h := i / 2
+		m := 30 * (i & 1)
+		l = append(l, fmt.Sprintf("%02d:%02d", h, m))
+	}
+	return l
 }

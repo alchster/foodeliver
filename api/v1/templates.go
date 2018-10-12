@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/alchster/foodeliver/db"
 	"github.com/appleboy/gin-jwt"
 	"github.com/foolin/gin-template"
@@ -53,6 +54,9 @@ var templateConfig = gintemplate.TemplateConfig{
 		"byKey": func(m map[string]db.StatusOrdersInfo, key string) db.StatusOrdersInfo {
 			val, _ := m[key]
 			return val
+		},
+		"str": func(s fmt.Stringer) string {
+			return s.String()
 		},
 	},
 }

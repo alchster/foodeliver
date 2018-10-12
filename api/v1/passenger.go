@@ -135,7 +135,7 @@ func setStartTime(c *gin.Context) {
 		badRequest(err, c)
 		return
 	}
-	if err := db.SetStart(j.Time, trainID); err != nil {
+	if err := db.SetStart(j.Time, trainID, nodeID); err != nil {
 		unprocessable(err, c)
 	}
 	c.JSON(http.StatusOK, h{"result": "ok"})

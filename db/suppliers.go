@@ -31,6 +31,8 @@ type SupplierStation struct {
 	Station      Station         `gorm:"foreignkey:StationID; association_foreignkey:ID"`
 	MinAmount    decimal.Decimal `gorm:"type:numeric"`
 	DeliveryTime time.Duration   `gorm:"notnull"`
+	WorkingFrom  Time            `json:"working_from" gorm:"type:time"`
+	WorkingTo    Time            `json:"working_to" gorm:"type:time"`
 }
 
 func (s *Supplier) BeforeSave() error {
@@ -242,19 +244,20 @@ func SupplierProducts(suppId string) (*SupplierCategoriesItem, error) {
 				Description: p.Description,
 				Cost:        p.Cost,
 			})
+			catmap[p.CategoryID] = c
 		} else {
+			prods := make([]SupplierProductResp, 0, 1)
+			prods = append(prods, SupplierProductResp{
+				ID:          p.ID,
+				Image:       p.Image,
+				Name:        p.Name,
+				Description: p.Description,
+				Cost:        p.Cost,
+			})
 			catmap[p.CategoryID] = CategoryProductsItem{
 				ID:       p.CategoryID,
 				Category: p.Category,
-				Products: []SupplierProductResp{
-					{
-						ID:          p.ID,
-						Image:       p.Image,
-						Name:        p.Name,
-						Description: p.Description,
-						Cost:        p.Cost,
-					},
-				},
+				Products: prods,
 			}
 		}
 	}
@@ -314,12 +317,15 @@ type StationDeliveryResp struct {
 	Name            string          `json:"station_name"`
 	DeliveryMinutes Minutes         `json:"delivery_time"`
 	MinAmount       decimal.Decimal `json:"min_amount"`
+	WorkingFrom     Time            `json:"working_from"`
+	WorkingTo       Time            `json:"working_to"`
 	Active          bool            `json:"enable,omitempty"`
 }
 
 func GetSupplierStations(spid UUID) ([]StationDeliveryResp, error) {
 	stations := make([]StationDeliveryResp, 0)
-	columns := fmt.Sprintf("station_id, texts.ru as station_name, delivery_time/%d, "+
+	columns := fmt.Sprintf("station_id, texts.ru as station_name, delivery_time/%d as dt, "+
+		"supplier_stations.working_from, supplier_stations.working_to, "+
 		"supplier_stations.min_amount", time.Minute)
 	rows, err := db.Table("supplier_stations").Select(columns).
 		Joins("LEFT JOIN stations on station_id = stations.id").
@@ -332,20 +338,27 @@ func GetSupplierStations(spid UUID) ([]StationDeliveryResp, error) {
 	ids := make([]UUID, 0)
 	for rows.Next() {
 		var (
-			id   UUID
-			name string
-			dt   Minutes
-			ma   decimal.Decimal
+			id     UUID
+			name   string
+			dt     Minutes
+			ma     decimal.Decimal
+			wf, wt Time
 		)
-		rows.Scan(&id, &name, &dt, &ma)
+		rows.Scan(&id, &name, &dt, &wf, &wt, &ma)
 		ids = append(ids, id)
-		stations = append(stations, StationDeliveryResp{id, name, dt, ma, true})
+
+		stations = append(stations, StationDeliveryResp{id, name, dt, ma, wf, wt, true})
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
 	}
 
 	var ss []Station
-	err = db.Joins("LEFT JOIN texts on text_id = texts.id").Order("texts.ru").
-		Where("stations.id not in (?)", ids).Find(&ss).Error
-	if err != nil {
+	tmp := db.Joins("LEFT JOIN texts on text_id = texts.id").Order("texts.ru")
+	if len(ids) > 0 {
+		tmp = tmp.Where("stations.id not in (?)", ids)
+	}
+	if err := tmp.Find(&ss).Error; err != nil {
 		return nil, err
 	}
 	for _, s := range ss {
@@ -354,6 +367,8 @@ func GetSupplierStations(spid UUID) ([]StationDeliveryResp, error) {
 			*s.Name.RU,
 			Minutes(0),
 			decimal.Decimal{},
+			NewTime(0, 0),
+			NewTime(24, 0),
 			false,
 		})
 	}
@@ -372,6 +387,8 @@ func AddSupplierStation(suppId UUID, sd *StationDeliveryResp) error {
 		SupplierID:   suppId,
 		StationID:    sd.StationID,
 		DeliveryTime: sd.DeliveryMinutes.Duration(),
+		WorkingFrom:  sd.WorkingFrom,
+		WorkingTo:    sd.WorkingTo,
 		MinAmount:    sd.MinAmount,
 	}).Error
 }

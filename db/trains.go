@@ -2,6 +2,8 @@ package db
 
 import (
 	"errors"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -13,6 +15,8 @@ var stationsList []StationsListItem
 var stationsMap map[UUID]int
 var stationsIds []UUID
 var service Service
+
+var InvalidNode = errors.New("Invalid node ID")
 
 type Train struct {
 	Entity
@@ -79,7 +83,11 @@ func (sli *StationsListItem) AfterFind() error {
 	return nil
 }
 
-func SetStart(start string, tid UUID) error {
+func SetStart(start string, tid UUID, node string) error {
+	node = strings.TrimSpace(node)
+	if node == "" || len(node) < 3 {
+		return InvalidNode
+	}
 	trainID = tid
 	tm, err := time.Parse(time.RFC3339, start)
 	if err != nil {
@@ -104,7 +112,16 @@ func SetStart(start string, tid UUID) error {
 		stationsMap[si.StationID] = i
 		stationsIds[i] = si.StationID
 	}
-	tmpOrders.Init("001", 0) // TODO: fix this with right values
+	var lastNumbers []string
+	initNum := 0
+	if err := db.Model(&Order{}).Where("number LIKE ?", node+"%").Order("number desc").
+		Limit(1).Pluck("number", &lastNumbers).Error; err == nil && len(lastNumbers) > 0 {
+		tmp := strings.SplitN(lastNumbers[0], "-", 2)
+		if initNum, err = strconv.Atoi(tmp[1]); err != nil {
+			return err
+		}
+	}
+	tmpOrders.Init(node, initNum)
 	return nil
 }
 
