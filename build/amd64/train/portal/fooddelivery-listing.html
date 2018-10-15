@@ -1,0 +1,1642 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Food delivery Listing</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body>
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+
+<div class="wrapper">
+    <header class="header ">
+    <div class="container">
+        <a href="#" class="header__logo" data-text="Поездной">
+            <img src="pic/logo/logo.svg" alt="logo">
+        </a>
+        <div class="header__ctrl">
+            <div class="header__ctrl-item header__service">
+                <ul class="header__service-list">
+                    <li>
+                        <a data-fancybox data-src="#popup__call" href="javascript:;" class="header__service-link js-popup">
+                            <svg class="icon-ring">
+                                <use xlink:href="#ring"></use>
+                            </svg>
+                            <div class="header__drop header__drop--tooltip">
+                                <div class="header__drop-inner">Вызвать проводника</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="header__service-link">
+                            <svg class="icon-location">
+                                <use xlink:href="#location"></use>
+                            </svg>
+                            <div class="header__drop header__drop--tooltip">
+                                <div class="header__drop-inner">Поезд на карте</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="header__service-link">
+                            <svg class="icon-food">
+                                <use xlink:href="#food"></use>
+                            </svg>
+                            <div class="header__drop header__drop--tooltip">
+                                <div class="header__drop-inner">Еда</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="header__service-link">
+                            <svg class="icon-fun">
+                                <use xlink:href="#fun"></use>
+                            </svg>
+                            <div class="header__drop header__drop--tooltip">
+                                <div class="header__drop-inner">Кино</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="header__service-link">
+                            <svg class="icon-service">
+                                <use xlink:href="#service"></use>
+                            </svg>
+                            <div class="header__drop header__drop--tooltip">
+                                <div class="header__drop-inner">Аудиокниги</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="header__service-link">
+                            <svg class="icon-wifi">
+                                <use xlink:href="#wifi"></use>
+                            </svg>
+                            <div class="header__drop header__drop--tooltip">
+                                <div class="header__drop-inner">Доступ в интернет</div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="header__ctrl-item header__menu">
+                <ul class="header__menu-list">
+                    <li>
+                        <a href="#" class="header__menu-link header__basket">
+                            <span class="header__basket-num">11</span>
+                            <svg class="icon-card">
+                                <use xlink:href="#card"></use>
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="header__menu-link">
+                            <svg class="icon-user">
+                                <use xlink:href="#user"></use>
+                            </svg>
+                            <div class="header__drop header__drop--menu">
+                                <div class="header__drop-inner">
+                                    <ul class="header__drop-list">
+                                        <li><a href="#">История заказов</a></li>
+                                        <li><a href="#">Выход</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="header__menu-link">
+                            <svg class="icon-search">
+                                <use xlink:href="#search"></use>
+                            </svg>
+                            <div class="header__drop header__drop--search">
+                                <div class="header__drop-inner">
+                                    <div class="header__search">
+                                        <div class="header__search-cross js-clear-search">
+                                            <svg>
+                                                <use xlink:href="#close"></use>
+                                            </svg>
+                                        </div>
+                                        <form action="#">
+                                            <input type="text" class="header__search-input" placeholder="Введите слово для поиска">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="header__ctrl-item header__lang">
+                <div class="header__lang-chevron">
+                    <svg>
+                        <use xlink:href="#chevrone"></use>
+                    </svg>
+                </div>
+                <div class="header__lang-title">
+                    <div class="header__lang-icon">
+                        <img src="pic/lang/ru.png" alt="language">
+                    </div>
+                </div>
+                <div class="header__drop header__drop--lang">
+                    <div class="header__drop-inner">
+                        <ul class="header__drop-list">
+                            <li class="active">
+                                <a href="#" class="header__lang-title">
+                                    <div class="header__lang-icon">
+                                        <img src="pic/lang/ru.png" alt="language">
+                                    </div>
+                                    <div class="header__lang-txt">RUS</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="header__lang-title">
+                                    <div class="header__lang-icon">
+                                        <img src="pic/lang/cn.png" alt="language">
+                                    </div>
+                                    <div class="header__lang-txt">CN</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="header__lang-title">
+                                    <div class="header__lang-icon">
+                                        <img src="pic/lang/de.png" alt="language">
+                                    </div>
+                                    <div class="header__lang-txt">DE</div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="header__lang-title">
+                                    <div class="header__lang-icon">
+                                        <img src="pic/lang/jp.png" alt="language">
+                                    </div>
+                                    <div class="header__lang-txt">jp</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <div class="container">
+        <div class="banner " style="background-image: url(pic/banner/food-b.jpg);">
+	<span class="banner__title ">Доставка еды</span>
+</div>
+        <div class="f-delivery f-delivery--listing">
+    <div class="f-delivery__top">
+        <div class="f-delivery__top-left">
+            <div class="f-delivery__top-title">Выберите станцию для доставки:</div>
+            <div class="f-delivery__top-select">
+                <select class="js-select custom-select f-delivery-select" data-placeholder="Ближайшая станция">
+                    <option></option>
+                    <option value="0">Владимир</option>
+                    <option value="1">Нижний Новгород</option>
+                    <option value="2">Шахунья</option>
+                    <option value="0">Котельнич-1</option>
+                    <option value="1">Киров Пасс</option>
+                    <option value="2">Глазов</option>
+                    <option value="0">Билезино</option>
+                    <option value="1">Пермь-2</option>
+                    <option value="2">Шахунья</option>
+                    <option value="0">Котельнич-1</option>
+                    <option value="1">Киров Пасс</option>
+                    <option value="2">Глазов</option>
+                    <option value="0">Билезино</option>
+                    <option value="1">Пермь-2</option>
+                    <option value="2">Шахунья</option>
+                    <option value="0">Котельнич-1</option>
+                    <option value="1">Киров Пасс</option>
+                    <option value="2">Глазов</option>
+                    <option value="0">Билезино</option>
+                    <option value="1">Пермь-2</option>
+                </select>
+            </div>
+        </div>
+        <div class="f-delivery__top-right">
+            <div class="f-delivery__top-status">
+                <div class="f-delivery__top-status-item">
+					<span class="f-delivery__top-status-desc">
+						До прибытия на станцию:
+					</span>
+                    <div data-expired="2018/08/23 17:00:00"
+                         class="js-timer f-delivery__top-status-time f-delivery__top-status-time--blue">
+                    </div>
+                </div>
+                <div class="f-delivery__top-status-item">
+					<span class="f-delivery__top-status-desc">
+						Время остановки
+					</span>
+                    <div class="f-delivery__top-status-time f-delivery__top-status-time--blue">
+                        15 минут
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="f-delivery__top-left">
+            <div class="f-delivery__top-filter">
+                
+
+
+<form class="filter" style="display: none;">
+    <div class="filter__item filter__title">Фильтры:</div>
+    <div class="filter__item">
+        <div class="filter-item">
+    <div class="filter-item__caption js-show-filter">
+        <div class="filter-item__caption-title">По поставщикам</div>
+        <div class="filter-item__caption-arrow">
+            <svg>
+                <use xlink:href="#arrow-r"></use>
+            </svg>
+        </div>
+    </div>
+    <div class="filter-item__drop">
+        <ul class="filter-item__list">
+            
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>Чек 1</span>
+                </label>
+            </li>
+            
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>Чек 2</span>
+                </label>
+            </li>
+            
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>Чек 3</span>
+                </label>
+            </li>
+            
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>Чек 4</span>
+                </label>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+    </div>
+    <div class="filter__item">
+        <div class="filter-item">
+    <div class="filter-item__caption js-show-filter">
+        <div class="filter-item__caption-title">По цене</div>
+        <div class="filter-item__caption-arrow">
+            <svg>
+                <use xlink:href="#arrow-r"></use>
+            </svg>
+        </div>
+    </div>
+    <div class="filter-item__drop">
+        <ul class="filter-item__list">
+            
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>По возрастанию</span>
+                </label>
+            </li>
+            
+            <li>
+                <label class="checkbox">
+                    <input type="checkbox">
+                    <span>По убыванию</span>
+                </label>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+
+    </div>
+</form>
+
+
+            </div>
+        </div>
+        <div class="f-delivery__top-right">
+            <div class="f-delivery__top-search">
+                <div class="search js-search">
+    <a href="#" class="search__icon">
+        <svg>
+            <use xlink:href="#search"></use>
+        </svg>
+    </a>
+    <input type="text" class="search__input js-search-form" placeholder="Введите название блюда или поставщика">
+    <div class="search__drop js-scroll">
+        <ul class="search__drop-list js-search-list">
+            <li class="search__drop-item">Гарри Поттер и философский камень</li>
+            <li class="search__drop-item">Гарри Поттер и тайная комната</li>
+            <li class="search__drop-item">Гарри Поттер и узник Азкабана</li>
+            <li class="search__drop-item">a b</li>
+            <li class="search__drop-item">a bc</li>
+            <li class="search__drop-item">some result</li>
+            <li class="search__drop-item">one-more-result a</li>
+            <li class="search__drop-item">one-more-result 1</li>
+            <li class="search__drop-item">one-more-result 2</li>
+            <li class="search__drop-item">qwerty 1</li>
+        </ul>
+    </div>
+</div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="no-goods">По выбранным параметрам нет товаров</div>
+
+    <div class="js-timer-status">
+        <div class="f-delivery__comp-row">
+            <ul class="f-delivery__comp-list">
+                <li class="f-delivery__comp-list-item">
+                    <a href="#" class="basket__item basket__item--delivery basket__item--wide ">
+    <div class="basket__item-img">
+        <img src="pic/new/n1.jpg" alt="item">
+    </div>
+    
+    <div class="basket__item-body">
+
+
+
+        <span class="basket__item-warning">Внимание!</span>
+
+        <span class="basket__item-timmer-desc">
+            Время на оформление заказа:
+        </span>
+        <span class="basket__item-timmer-desc basket__item-timmer-desc--timeout">
+            Время для заказа вышло, удалите заказ из корзины или выберите другую станцию для доставки
+        </span>
+        <div class="basket__item-timmer-time basket__item-timmer-time--blue js-timer" data-expired="2018/07/25 00:00">
+            @@time
+        </div>
+    </div>
+</a>
+
+                </li>
+                <li class="f-delivery__comp-list-item">
+                    <a href="#" class="f-delivery__more">
+                        <div class="f-delivery__more-title">Гамбургеры</div>
+                        <div class="f-delivery__more-body">
+                            <span>Минимальная сумма заказа у данного поставщака 1 000 <i class="rubl">i</i></span>
+                        </div>
+                    </a>
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/shop/shop-1.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Стейк Хаус</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/shop/shop-2.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Стейк Хаус</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/shop/shop-3.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Стейк Хаус</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/shop/shop-4.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Стейк Хаус</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+            </ul>
+        </div>
+        <div class="f-delivery__comp-row">
+            <ul class="f-delivery__comp-list">
+                <li class="f-delivery__comp-list-item">
+                    <a href="#" class="f-delivery__more f-delivery__more--full">
+                        <div class="f-delivery__more-title">Пахлава</div>
+                    </a>
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-1.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-2.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-3.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-4.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-5.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-6.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-7.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+            </ul>
+        </div>
+        <div class="f-delivery__comp-row">
+            <ul class="f-delivery__comp-list">
+                <li class="f-delivery__comp-list-item">
+                    <a href="#" class="f-delivery__more f-delivery__more--full">
+                        <div class="f-delivery__more-title">Закуски</div>
+                    </a>
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-1.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-2.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+            </ul>
+        </div>
+        <div class="f-delivery__comp-row">
+            <ul class="f-delivery__comp-list">
+                <li class="f-delivery__comp-list-item">
+                    <a href="#" class="f-delivery__more f-delivery__more--full">
+                        <div class="f-delivery__more-title">Булочки</div>
+                    </a>
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-1.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-2.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-3.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-4.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-5.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-6.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-7.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-8.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+                <li class="f-delivery__comp-list-item">
+                    
+
+
+<div class="restaurant-item goods">
+    <div class="restaurant-item__img js-goods-img">
+        <div class="restaurant-item__img-holder">
+            <img src="pic/food/food-9.png" alt="background">
+        </div>
+    </div>
+
+    <div class="restaurant-item__body js-goods-body">
+        <div class="restaurant-item__title">Клубничный ринг донат</div>
+        <div class="restaurant-item__cost">
+            <div class="restaurant-item__cost-price">150 <span class="rubl">i</span></div>
+            <div class="restaurant-item__cost-order js-item-add" data-basket-link="http://link-to-the-basket-from-changed-button">
+                <svg><use xlink:href="#card"></use></svg>
+                <span class="js-txt-change">Заказать</span>
+            </div>
+        </div>
+    </div>
+    <div class="restaurant-item__drop">
+        <div class="restaurant-item__drop-txt">Сувенирные игрушки - проводники, которые подарят хорошее настроение вашим деткам в поездке</div>
+    </div>
+</div>
+
+
+
+
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+    <div class="pagination">
+	<ul class="pagination__list">
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link pagination__list-link--active">1</a>
+		</li>
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link">2</a>
+		</li>
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link">3</a>
+		</li>
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link">4</a>
+		</li>
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link">...</a>
+		</li>
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link">11</a>
+		</li>
+		<li class="pagination__list-item">
+			<a href="#" class="pagination__list-link">12</a>
+		</li>
+	</ul>
+	<div class="pagination__arrow">
+		<span class="pagination__arrow-left">
+			<a href="#">
+				<svg class="icon-arrow-dark-r">
+					<use xlink:href="#arrow-dark-r"></use>
+				</svg>
+			</a>
+		</span>
+		<span class="pagination__arrow-right">
+			<a href="#">
+				<svg class="icon-arrow-dark-r">
+					<use xlink:href="#arrow-dark-r"></use>
+				</svg>
+			</a>
+		</span>
+	</div>
+</div>
+</div>
+
+    </div>
+
+</div>
+
+
+<footer class="footer js-footer">
+    <div class="container">
+        <div class="footer__nav">
+            <ul class="footer__nav-list">
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Связь с проводником</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Погода</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">ЧМ–2018</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Маршрут следования</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Курс валют</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Билеты РЖД</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Развлечения</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Фильмы</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Такси</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Услуги на борту</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Музыка</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Публикации</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Доступ в интернет</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Пресса</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Russia.Travel</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Услуги РЖД</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Аудиокниги</a></li>
+                <li class="footer__nav-item"><a href="#" class="footer__nav-link">Памятка и телефоны<br>для туристов</a></li>
+            </ul>
+        </div>
+        <div class="footer__info">
+            <div class="footer__info-title">Контактные данные</div>
+            <div class="footer__info-tel">
+                <a href="tel:88005559730" class="footer__info-tel-link"><span>8 800 555–97–30</span></a>
+            </div>
+            <div class="footer__info-tel">
+                <a href="tel:74999638484" class="footer__info-tel-link"><span>7 499 963–84–84</span></a>
+            </div>
+            <div class="footer__info-call">звонок по России бесплатный</div>
+            <a href="mailto:info@poputchik.ru" class="footer__info-email">info@poputchik.ru</a>
+            <div class="footer__info-address">Россия,  г. Москва, ул. Краснознаменка 18, корп 1, офисы 1-15</div>
+        </div>
+    </div>
+    <div class="container footer__bot">
+        <div class="footer__nav">
+            <ul class="footer__copy">
+                <li class="footer__copy-item"><span>&copy; 2017 ООО «РДЛ-ТЕЛЕКОМ»</span></li>
+                <li class="footer__copy-item"><a href="#" class="footer__copy-link">Пользовательское соглашение</a></li>
+                <li class="footer__copy-item"><a href="#" class="footer__copy-link">Защита персональных данных</a></li>
+            </ul>
+        </div>
+        <div class="footer__info">
+            <div class="footer__logo">
+                <a href="#" class="footer__logo-rt">
+                    <img src="pic/logo/logo-russiatravel.svg" alt="logo">
+                </a>
+                <a href="#" class="footer__logo-bonus">
+                    <svg><use xlink:href="#logo_rgd"></use></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<div class="popup popup__call" id="popup__call">
+    <div class="popup__title">
+        <div class="popup__title-sup">Связь с проводником</div>
+        <div class="popup__title-sub">C помощью данной формы вы можете обратиться к проводнику поезда по любому
+            интересующему вас вопросу.
+        </div>
+        <div data-fancybox-close class="popup__close"></div>
+    </div>
+    <div class="popup__body">
+        <form action="#" class="popup__form js-validator">
+            <div class="popup__form-row">
+                <input type="text" class="input" placeholder="Ваше имя"
+                       data-error-placeholder="Введите ваше имя"
+                       data-parsley-required data-parsley-errors-messages-disabled>
+            </div>
+            <div class="popup__form-row">
+                <div class="popup__form-item">
+                    <select class="js-select custom-select" data-placeholder="Номер вагона"
+                            data-error-placeholder="Введите номер вагона"
+                            data-parsley-required data-parsley-errors-messages-disabled>
+                        <option></option>
+                        
+                        <option value="1">1</option>
+                        
+                        <option value="2">2</option>
+                        
+                        <option value="3">3</option>
+                        
+                        <option value="4">4</option>
+                        
+                        <option value="5">5</option>
+                        
+                        <option value="6">6</option>
+                        
+                        <option value="7">7</option>
+                        
+                        <option value="8">8</option>
+                        
+                        <option value="9">9</option>
+                        
+                        <option value="10">10</option>
+                        
+                        <option value="11">11</option>
+                        
+                        <option value="12">12</option>
+                        
+                        <option value="13">13</option>
+                        
+                        <option value="14">14</option>
+                        
+                    </select>
+                </div>
+                <div class="popup__form-item">
+                    <select class="js-select custom-select" data-placeholder="Номер места"
+                            data-error-placeholder="Введите номер места"
+                            data-parsley-required data-parsley-errors-messages-disabled>
+                        <option></option>
+                        
+                        <option value="1">1</option>
+                        
+                        <option value="2">2</option>
+                        
+                        <option value="3">3</option>
+                        
+                        <option value="4">4</option>
+                        
+                        <option value="5">5</option>
+                        
+                        <option value="6">6</option>
+                        
+                        <option value="7">7</option>
+                        
+                        <option value="8">8</option>
+                        
+                        <option value="9">9</option>
+                        
+                        <option value="10">10</option>
+                        
+                        <option value="11">11</option>
+                        
+                        <option value="12">12</option>
+                        
+                        <option value="13">13</option>
+                        
+                        <option value="14">14</option>
+                        
+                    </select>
+                </div>
+            </div>
+            <div class="popup__form-row">
+                <textarea class="textarea" placeholder="Ваш вопрос проводнику"
+                          data-error-placeholder="Задайте вопрос"
+                          data-parsley-required data-parsley-errors-messages-disabled></textarea>
+            </div>
+            <div class="popup__form-btn">
+                <button class="btn" type="submit">Вызвать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="popup popup__callback" id="popup__callback">
+    <div class="popup__title">
+        <div class="popup__title-sup">Обратная связь</div>
+        <div class="popup__title-sub">C помощью данной формы вы можете обратиться к руководству портала (РЖД) для
+            решения различных вопросов, оставить жалобу или пожелание.
+        </div>
+        <div data-fancybox-close class="popup__close"></div>
+    </div>
+    <div class="popup__body">
+        <form action="#" class="popup__form js-validator">
+            <div class="popup__form-row">
+                <input type="text" class="input" placeholder="Ваше имя"
+                       data-error-placeholder="Введите ваше имя"
+                       data-parsley-required data-parsley-errors-messages-disabled>
+            </div>
+            <div class="popup__form-row">
+                <div class="popup__form-item js-parent select-tel--lg">
+                    <div class="js-flag-style"></div>
+                    <select class="select-city js-select-city">
+                        <!--js append-->
+                    </select>
+                    <input type="text" class="input input--tel" placeholder="Номер телефона"
+                           data-error-placeholder="Введите номер телефона"
+                           data-parsley-required data-parsley-errors-messages-disabled>
+                </div>
+                <div class="popup__form-item">
+                    <input type="text" class="input" placeholder="Эл. почта"
+                           data-parsley-type="email"
+                           data-error-placeholder="Введите Эл. почту"
+                           data-parsley-required data-parsley-errors-messages-disabled>
+                </div>
+            </div>
+            <div class="popup__form-row">
+                <textarea class="textarea" placeholder="Ваше обращение"
+                          data-error-placeholder="Введите текст обращения"
+                          data-parsley-required data-parsley-errors-messages-disabled></textarea>
+            </div>
+            <div class="popup__form-btn">
+                <button class="btn" type="submit">Вызвать</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="popup popup__txt" id="popup__sent">
+    <div data-fancybox-close class="popup__close"></div>
+    <div class="popup__title">
+        <div class="popup__title-sup">Ваше обращение отправлено</div>
+        <div class="popup__title-sub">В ближайшее время к Вам подойдет проводник. Если Вас не обслужили в течение 15
+            минут, просим Вас отнестись с пониманием к высокой загруженности проводника и обратиться самостоятельно.
+            Спасибо!
+        </div>
+
+    </div>
+</div>
+
+<div class="popup popup__txt" id="popup__error">
+    <div data-fancybox-close class="popup__close"></div>
+    <div class="popup__title">
+        <div class="popup__title-sup">Ошибка отправки</div>
+        <div class="popup__title-sub">Извините, во время отправки вашего сообщения произошла ошибка. Вернитесь на
+            предыдущую страницу и попытайтесь снова.
+        </div>
+
+        <ul class="popup__txt-links">
+            <li><a href="#">Главная страница</a></li>
+            <li><a href="#">Вызов проводника</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="popup popup__txt" id="popup__error-2">
+    <div data-fancybox-close class="popup__close"></div>
+    <div class="popup__title">
+        <div class="popup__title-sup">Ошибка отправки</div>
+        <div class="popup__title-sub">Извините, во время отправки вашего сообщения произошла ошибка. Вернитесь на
+            предыдущую страницу и попытайтесь снова.
+        </div>
+
+        <ul class="popup__txt-links">
+            <li><a href="#">Главная страница</a></li>
+            <li><a href="#">Обратная связь</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="popup popup__callback" id="popup__callback-disput">
+    <div class="popup__title">
+        <div class="popup__title-sup">Открыть диспут <br> по заказу №975843</div>
+        <div class="popup__title-sub">Если вы недовольны качеством вашего заказа, укажите причины в форме ниже.
+            Мы проверим данное событие и вынесем решение
+        </div>
+        <div data-fancybox-close class="popup__close"></div>
+    </div>
+    <div class="popup__body">
+        <form action="#" class="popup__form js-validator">
+            <div class="popup__form-row">
+                <input type="text" class="input" placeholder="Ваше имя"
+                       data-error-placeholder="Введите ваше имя"
+                       data-parsley-required data-parsley-errors-messages-disabled>
+            </div>
+            <div class="popup__form-row">
+                <div class="popup__form-item js-parent select-tel--lg">
+                    <div class="js-flag-style"></div>
+                    <select class="select-city js-select-city">
+                        <!--js append-->
+                    </select>
+                    <input type="text" class="input input--tel" placeholder="Номер телефона"
+                           data-error-placeholder="Введите номер телефона"
+                           data-parsley-required data-parsley-errors-messages-disabled>
+                </div>
+                <div class="popup__form-item">
+                    <input type="text" class="input" placeholder="Эл. почта"
+                           data-parsley-type="email"
+                           data-error-placeholder="Введите Эл. почту"
+                           data-parsley-required data-parsley-errors-messages-disabled>
+                </div>
+            </div>
+            <div class="popup__form-row">
+                <textarea class="textarea" placeholder="Комментарий"
+                          data-error-placeholder="Введите текст обращения"
+                          data-parsley-required data-parsley-errors-messages-disabled></textarea>
+            </div>
+            <div class="popup__form-btn">
+                <button class="btn" type="submit">Отправить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="popup popup__txt" id="popup__ofert">
+    <div data-fancybox-close class="popup__close"></div>
+    <div class="popup__title">
+        <div class="popup__title-sup popup__title-sup--lg">Условия согласия и оферты</div>
+        <div class="popup-ofert js-scroll">
+            <p class="popup-ofert__text">ТЕРМИНЫ И ОПРЕДЕЛЕНИЯ</p>
+            <p class="popup-ofert__text">В настоящей оферте, если из контекста не следует иное, нижеприведенные термины имеют следующие значения и являются её составной неотъемлемой частью:</p>
+            <p class="popup-ofert__text">
+                <strong>Продавец, Оператор</strong> — юридическое лицо, Общество с ограниченной ответственностью &quot;Альфа групп&quot; (ИНН 6234150316 , ОГРН 1156234019700), местонахождение по адресу: 390000, г. Рязань, ул. Полевая, д. 1, созданное в соответствии c законодательством Российской Федерации и осуществляющее предпринимательскую деятельность по продаже Товаров, в том числе дистанционным способом.
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Покупатель, Пользователь</strong> — любое физическое лицо, принявшее (акцептировавшее) настоящую оферту на нижеуказанных условиях и предоставившее Продавцу свои персональные данные посредством регистрации на Сайте, которые могут быть использованы Продавцом для оформления Заказа Покупателя.
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Продавец, Оператор</strong> — юридическое лицо, разместившее публичную оферту и осуществляющее обработку персональных данных физических лиц (Покупателей, Пользователей), прошедших регистрацию на Сайте, в целях реализации условий настоящей оферты.
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Сайт</strong> — официальная веб-страница Продавца на сайте taynavkusa.ru.
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Интернет-магазин</strong> — официальный интернет-магазин Продавца по продаже Товаров, размещенных на Сайте.
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Товары</strong> — перечень продукции Продавца, представленный на Сайте (в т. ч. сувенирная продукция Продавца).
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Заказ</strong> — оформленный Покупателем в Интернет-магазине запрос на покупку и доставку Товаров, выбранных Покупателем в Интернет-магазине, и предоставленный Продавцу посредством сети Интернет (электронная форма, размещенная на Сайте) или оформленный Покупателем по телефону.
+            </p>
+            <p class="popup-ofert__text">
+                <strong>Курьерская служба</strong> — лица, оказывающие в интересах Продавца услуги по доставке заказанных Покупателем Товаров.
+            </p>
+            <p class="popup-ofert__text">Для целей настоящей оферты термины и определения в единственном числе относятся также и к терминам и определениям во множественном числе и наоборот.
+            </p>
+            <p class="popup-ofert__text">1. Общие положения</p>
+            <p class="popup-ofert__text">1.1. В соответствии со статьей 437 Гражданского Кодекса Российской Федерации (далее по тексту настоящей оферты — ГК РФ) данный документ является публичной офертой, адресованной физическим лицам, и в случае принятия изложенных ниже условий, физическое лицо обязуется произвести оплату Товара на условиях, изложенных в настоящей оферте. В соответствии с пунктом 3 статьи 438 ГК РФ, момент окончательного подтверждения Заказа Покупателем является акцептом оферты Продавца, что является равносильным заключению Договора розничной купли-продажи (далее по тексту настоящей оферты — «Договор») Товара на условиях, установленных в настоящей оферте и на Сайте.</p>
+            <p class="popup-ofert__text">1.2. Продавец и Покупатель гарантируют, что обладают необходимой право- и дееспособностью, а также всеми правами и полномочиями, необходимыми и достаточными для заключения и исполнения Договора розничной купли-продажи Товара.
+                В соответствии с федеральным Законом от 22.11.1995 г. № 171-ФЗ «О государственном регулировании производства и оборота этилового спирта, алкогольной и спиртосодержащей продукции» лицам, не достигшим возраста 18 лет продажа алкогольной продукции запрещена. Работники Курьерской службы имеют право потребовать предъявить паспорт, либо иной документ, удостоверяющий возраст Покупателя. Перечень таких документов устанавливается Постановлением Правительства Российской Федерации № 243 от 6 апреля 2011 года и на данный момент регулируется Приказом Министерства промышленности и торговли Российской Федерации (Минпромторг России) от 15 апреля 2011 года № 524.</p>
+            <p class="popup-ofert__text">1.3. Заказывая Товары через Интернет-магазин, Покупатель безоговорочно принимает условия настоящей оферты и соглашается с условиями политики конфиденциальности Продавца. Оформленный Покупателем на сайте Заказ Товара является подтверждением заключенного между Продавцом и Покупателем Договора.</p>
+            <p class="popup-ofert__text">1.4. Предложение Продавца/Оператора о продаже товара через Интернет-магазин является публичной офертой. Покупатель, акцептируя указанную оферту, тем самым осуществляет конклюдентные действия, выражающие его волю и согласие на обработку его персональных данных, предоставленных при регистрации им учетной записи (логина) в Интернет-магазине и совершении Заказа на Сайте Продавца на покупку Товаров.</p>
+            <p class="popup-ofert__text">1.5. Согласие Покупателя на обработку его персональных данных, полученное в результате совершения действий по регистрации учетной записи (логина) на Сайте, приравнивается собственноручному согласию, и (или) согласию, подтвержденному документом ЭЦП.</p>
+            <p class="popup-ofert__text">1.6. К отношениям между Покупателем и Продавцом применяются положения ГК РФ (в т. ч. положение о розничной купле-продаже (глава 30, § 2), закон РФ «О защите прав потребителей» от 07.02.1992 г. № 2300-1 и иные нормативно-правовые акты действующего законодательства Российской Федерации (далее по тексту настоящей оферты — РФ).</p>
+            <p class="popup-ofert__text">1.7. Продавец оставляет за собой право вносить изменения в настоящую оферту, в связи с чем Покупатель обязуется самостоятельно контролировать наличие изменений в настоящей оферте, размещенной на Сайте. Уведомление об изменении настоящей оферты Продавец обязан разместить на Сайте в виде информационного сообщения не позднее, чем за 3 (три) рабочих дня до даты их вступления в силу.</p>
+            <p class="popup-ofert__text">1.8. Соглашаясь с настоящей офертой, Покупатель автоматически принимает условия публичных оферт других лиц на Сайте, реализующих Товары в рамках франчайзинговой сети на основании договора коммерческой концессии под единой торговой маркой «Додо Пицца».</p>
+            <p class="popup-ofert__text">2. Предмет Договора</p>
+            <p class="popup-ofert__text">2.1. Продавец передает, продает Товары по ценам, представленным на Сайте Продавца, а Покупатель производит оплату и принимает Товары в соответствии с условиями настоящей оферты.</p>
+            <p class="popup-ofert__text">2.2. Право собственности на Товары переходит к Покупателю в момент приемки Товаров Покупателем и оплаты последним полной стоимости принятых Товаров. Риск случайной гибели или повреждения Товаров переходит к Покупателю с момента приемки Товаров Покупателем.</p>
+            <p class="popup-ofert__text">3. Права и обязанности Сторон</p>
+            <p class="popup-ofert__text">3.1. Продавец обязуется:</p>
+            <p class="popup-ofert__text">3.1.1. С момента принятия настоящей оферты обеспечить исполнение своих обязательств перед Покупателем на условиях, установленных настоящей офертой и в соответствии с требованиями действующего законодательства РФ. Продавец оставляет за собой право отказаться от исполнения своих обязательств в случае возникновения обстоятельств непреодолимой силы («форс-мажор») в соответствии с Разделом 9 настоящей оферты.</p>
+            <p class="popup-ofert__text">3.1.2. Обрабатывать и хранить персональные данные Покупателя, предоставленные Продавцу, обеспечивать их конфиденциальность и не предоставлять доступ к этой информации третьим лицам, за исключением случаев, предусмотренных действующим законодательством РФ. Принимая (акцептируя) настоящую оферту, Покупатель подтверждает свое согласие и разрешает Оператору обрабатывать свои персональные данные, в том числе: фамилию, имя, отчество, адрес доставки, телефон. Под обработкой персональных данных в настоящей оферте понимается: сбор вышеуказанных данных, их систематизация, накопление, хранение, уточнение (обновление, изменение), использование, блокирование, уничтожение.</p>
+            <p class="popup-ofert__text">3.1.2.1. Оператор имеет право на передачу персональных данных Покупателя Курьерской службе с целью доставки Покупателю заказанных последним Товаров.</p>
+            <p class="popup-ofert__text">3.1.2.2. Оператор имеет право на передачу персональных данных Покупателя операторам Контакт-центра, осуществляющих прием заказов на Товар, размещенный на Сайте.</p>
+            <p class="popup-ofert__text">3.1.2.3. Оператор имеет право назначить лицо, ответственное за организацию обработки персональных данных Покупателя, в целях реализации положений настоящей оферты.</p>
+            <p class="popup-ofert__text">3.1.2.4. Покупатель выражает согласие и разрешает Оператору и его службам обрабатывать персональные данные Покупателя с помощью автоматизированных систем управления базами данных, а также иных программных и технических средств. Работа с такими системами осуществляется по вышеуказанному в пункте 3.1.2 алгоритму (сбор, систематизация, накопление, хранение, уточнение, использование, блокирование, уничтожение).</p>
+            <p class="popup-ofert__text">3.1.2.5. Оператор вправе самостоятельно определять используемые способы обработки персональных данных Покупателя (включая, но, не ограничиваясь: автоматическая сверка почтовых кодов с базой кодов/индексов, автоматическая проверка написания названий улиц/населенных пунктов, сегментация базы данных по заданным критериям и т. д.).</p>
+            <p class="popup-ofert__text">3.1.2.6. Оператор обеспечивает конфиденциальность предоставленных Покупателем персональных данных, их защиту от копирования, распространения. В любой момент Покупатель вправе запросить перечень своих персональных данных и/или потребовать изменить, уничтожить свои персональные данные, позвонив Оператору по телефону, указав имя, отчество, фамилию и адрес доставки.</p>
+            <p class="popup-ofert__text">3.1.2.7. В соответствии с пунктом 4 статьи 16 федерального закона от 27 июля 2006 г. № 149-ФЗ «Об информации, информационных технологиях и о защите информации» Продавец обязуется предотвращать попытки несанкционированного доступа к персональным данным Покупателя, предоставленных Продавцу, своевременно обнаруживать и пресекать такие попытки.</p>
+            <p class="popup-ofert__text">3.2. Продавец имеет право изменять условия настоящей оферты, цены на Товары, указанные в Интернет-магазине, условия оплаты и доставки Товаров, способы, сроки и территорию доставки Товаров, а также иные условия, указанные в настоящей оферте и на Сайте.</p>
+            <p class="popup-ofert__text">3.3. Покупатель обязуется:</p>
+            <p class="popup-ofert__text">3.3.1. До момента оформления Заказа на Сайте — ознакомиться с содержанием и условиями, установленными в настоящей оферте, а также с иными условиями, указанными на Сайте, в том числе с ценами на Товары, установленными в Интернет-магазине, зоной доставки Товаров и минимальной стоимостью Заказа, который необходимо сделать, чтобы он был доставлен Покупателю.</p>
+            <p class="popup-ofert__text">3.3.2. Предоставить достоверные персональные данные, необходимые для идентификации Покупателя и достаточные для совершения сделки с Продавцом и доставки Покупателю заказанных им Товаров.</p>
+            <p class="popup-ofert__text">3.3.3. Проверить комплектность, состав и внешний вид, а также оплатить заказанные Товары на условиях настоящей оферты.</p>
+            <p class="popup-ofert__text">3.3.4. Не использовать Товары, заказанные в Интернет-магазине, в предпринимательских целях.</p>
+            <p class="popup-ofert__text">3.3.5. Соблюдать условия, установленные в настоящей оферте, а также иные условия, указанные на Сайте.</p>
+            <p class="popup-ofert__text">3.4. Покупатель имеет право:</p>
+            <p class="popup-ofert__text">3.4.1. Использовать Интернет-магазин после регистрации учетной записи Пользователя. Данные учетной записи являются исключительными и непередаваемыми. В случае передачи Покупателем данных учетной записи третьему лицу, Покупатель в полном объеме несет ответственность за действия, совершенные такими третьими лицами, а также за убытки, причиненные такими третьими лицами Продавцу.</p>
+            <p class="popup-ofert__text">3.4.2. На получение информации (рекламных сообщений, рассылку) о проводимых акциях в виде смс-сообщений по сетям подвижной радиотелефонной связи на указанный при регистрации абонентский номер телефона, при условии получения от Покупателя согласия на получение информации (рекламы) о проводимых акциях Продавца. Пользователь имеет возможность в любой момент отписаться от рассылки, а так же подписаться на рассылку вновь.</p>
+            <p class="popup-ofert__text">4. Регистрация в Интернет-магазине</p>
+            <p class="popup-ofert__text">4.1. Для получения права использования Интернет-магазина Покупатель обязуется осуществить регистрацию учетной записи Пользователя на Сайте.</p>
+            <p class="popup-ofert__text">4.2. Регистрация Пользователя осуществляется следующим образом: <br>
+                а) ввести в форму абонентский номер телефона в федеральном формате (+ХХХХХХХХХХХ), указанный Пользователем при регистрации абонентский номер телефона будет использоваться в качестве имени Пользователя (логин) при использовании Интернет-магазина; <br>
+                б) ввести пароль, предоставляемый Покупателю Оператором, путем получения его в виде смс-сообщения на указанный абонентский номер; <br>
+                в) принять настоящую оферту, согласившись с ее условиями; <br>
+                г) при желании дать свое согласие на получение информации (рекламы) о проводимых акциях Продавца в соответствии с пунктом 3.4.2 настоящей Оферты.
+            </p>
+            <p class="popup-ofert__text">4.3. Регистрация будет считаться завершенной после корректного ввода Пользователем пароля, полученного им от Оператора в смс-сообщении.</p>
+            <p class="popup-ofert__text">4.4. Совершая действия по регистрации учетной записи Пользователя в Интернет-магазине, Пользователь принимает условия настоящей оферты, в полном объеме и без каких-либо изъятий.</p>
+            <p class="popup-ofert__text">4.5. Регистрация Покупателя позволяет избежать несанкционированных действий третьих лиц от имени Покупателя и открывает последнему доступ к дополнительным сервисам Интернет-магазина. Передача Покупателем логина и пароля третьим лицам не допускается. В случае передачи Покупателем своего логина и/или пароля третьему лицу, он несет ответственность за действия третьего лица, как за свои собственные.</p>
+            <p class="popup-ofert__text">4.6. Заказ Товара осуществляется Покупателем на Сайте. Оформить Заказ могут только зарегистрированные Покупатели (Пользователи).</p>
+            <p class="popup-ofert__text">4.7. Продавец не несет ответственности за точность и правильность информации, предоставленной Покупателем при регистрации.</p>
+            <p class="popup-ofert__text">5. Оформление и сроки выполнения заказа</p>
+            <p class="popup-ofert__text">5.1. Заказ Покупателя может быть оформлен по телефону и/или посредством заполнения электронной формы Заказа на Сайте.</p>
+            <p class="popup-ofert__text">5.1.1. При оформлении Заказа по телефону или посредством электронной формы на Сайте, Покупатель тем самым подтверждает, что он ознакомлен с условиями настоящей оферты и обязуется предоставить Продавцу всю информацию, необходимую для надлежащего оформления и исполнения Заказа.</p>
+            <p class="popup-ofert__text">5.1.2. При оформлении Заказа через Сайт Покупатель заполняет электронную форму Заказа и отправляет сформированный Заказ Продавцу путем подтверждения Заказа в электронной форме.</p>
+            <p class="popup-ofert__text">5.2. Если на складе Продавца отсутствует необходимое количество или ассортимент заказанных Покупателем Товаров, Продавец информирует об этом Покупателя по телефону в течение 30 минут после получения Заказа от Покупателя. Покупатель вправе согласиться принять Товары в ином количестве или ассортименте, либо аннулировать свой Заказ. В случае неполучения ответа Покупателя Продавец вправе аннулировать Заказ Покупателя в полном объеме.</p>
+            <p class="popup-ofert__text">5.3. Покупатель не имеет право изменить состав Заказа.</p>
+            <p class="popup-ofert__text">5.4. В случае возникновения у Покупателя дополнительных вопросов, касающихся свойств и характеристик Товаров, перед оформлением Заказа, Покупатель должен обратиться к Продавцу по телефону 8 800 333-00-60 для получения необходимой информации, в соответствии с режимом работы, указанным на Сайте.</p>
+            <p class="popup-ofert__text">5.5. Приобретение Покупателем сувенирной продукции Продавца возможно только после того, как Покупатель сделает Заказ основного Товара («Пиццы», «Закуски», «Напитки») на сумму минимального заказа, согласно п. 6.3 настоящей оферты.</p>
+            <p class="popup-ofert__text">6. Доставка Товаров</p>
+            <p class="popup-ofert__text">6.1. В случае если Товары не были переданы Покупателю по вине последнего, отказа Покупателя от приемки и/или оплаты заказного им Товара, ложного вызова, Продавец вправе заблокировать логин (абонентский номер телефона) Покупателя и не принимать от него Заказы.</p>
+            <p class="popup-ofert__text">6.2. Доставка Товаров осуществляется Курьерской службой по фактическому адресу, указанному Покупателем при оформлении Заказа на Интернет-сайте.</p>
+            <p class="popup-ofert__text">6.2.1. Доставка Товаров в пределах зоны доставки (зона доставки указана на Сайте или может быть уточнена по телефону) осуществляется в соответствии с режимом работы, указанным на Сайте.</p>
+            <p class="popup-ofert__text">6.2.2. Доставка Товаров по адресам, не входящим в зону доставки не осуществляется.</p>
+            <p class="popup-ofert__text">6.2.3. Срок доставки Заказа — 60 минут. Продавец приложит все усилия для соблюдения сроков доставки Товаров, установленных в настоящей оферте и/или на Сайте. Однако задержки в доставке Товаров возможны ввиду непредвиденных обстоятельств, в этом случае применяются условия указанные в пункте 3.4.3 настоящей оферты. При этом под непредвиденными обстоятельствами понимаются обстоятельства непреодолимой силы.</p>
+            <p class="popup-ofert__text">6.3. Доставка осуществляется при условии, что Покупатель сделает Заказ на сумму минимального заказа. Сумма минимального заказа определяется Продавцом в одностороннем порядке и указывается на Сайте </p>
+            <p class="popup-ofert__text">7. Оплата Товаров</p>
+            <p class="popup-ofert__text">7.1. Цены на Товары определяются Продавцом в одностороннем порядке и указываются на Сайте в российских рублях. Цена Товаров может быть изменена Продавцом в одностороннем порядке. При этом цена на заказанный Покупателем Товар изменению не подлежит.</p>
+            <p class="popup-ofert__text">7.2. Покупатель может заказать только те Товары, которые есть в наличии на складе в момент оформления Заказа.</p>
+            <p class="popup-ofert__text">7.3. Оплата Товаров Покупателем производится в рублях Российской Федерации одним из следующих способов:</p>
+            <p class="popup-ofert__text">7.3.1. Наличными денежными средствами:</p>
+            <p class="popup-ofert__text">7.3.1.1. Оплата осуществляется по факту получения Товаров, подтверждением которой является предоставленный работником Курьерской службы кассовый или товарный чек.</p>
+            <p class="popup-ofert__text">7.3.1.2. Оплата наличными денежными средствами ограничена максимальной суммой. Максимальная сумма заказа определяется Продавцом в одностороннем порядке и указывается на Сайте Продавца. Заказ, превышающий размер максимальной суммы, оплачивается в соответствии с п. 7.3.2 настоящей Оферты.</p>
+            <p class="popup-ofert__text">7.4. Продавец оставляет за собой право потребовать предоплату по своему усмотрению</p>
+            <p class="popup-ofert__text">8. Возврат и обмен Товаров</p>
+            <p class="popup-ofert__text">8.1. Продавец обязан передать Покупателю Товары, которые полностью соответствуют его Заказу, качество которых соответствует информации, представленной Покупателю при заключении Договора, а также информации, доведенной до его сведения при передаче Товаров (на этикетке или вкладыше, прикрепленных к Товарам или их упаковке, либо другими способами, предусмотренными для отдельных видов Товаров).</p>
+            <p class="popup-ofert__text">8.2. При получении Товаров Покупатель проверяет соответствие полученных Товаров Заказу, комплектность и отсутствие претензий к внешнему виду доставленного Товаров. В случае получения некачественных, некомплектных Товаров либо несоответствия полученных Товаров заказанному, Покупатель вправе потребовать замены таких Товаров Товарами надлежащего качества сразу в момент получения, либо в течение 5 (пяти) минут после получения Товаров. В данной ситуации применимы условия, указанные в пункте 3.4.3 настоящей оферты.</p>
+            <p class="popup-ofert__text">8.3. В случае невыполнения условий п. 8.2 настоящей оферты, претензии Покупателя по внешнему виду Товаров и их комплектности не принимаются.</p>
+            <p class="popup-ofert__text">9. Форс-мажор <br>
+                Любая из Сторон освобождается от ответственности за полное или частичное неисполнение своих обязательств по настоящей оферте, если это неисполнение было вызвано обстоятельствами непреодолимой силы. Обстоятельства непреодолимой силы означают чрезвычайные события и обстоятельства, которые Стороны не могли ни предвидеть, ни предотвратить разумными средствами. Такие чрезвычайные события или обстоятельства включают в себя, в частности: забастовки, наводнения, пожары, землетрясения и иные стихийные бедствия, войны, военные действия и т. д.</p>
+            <p class="popup-ofert__text">10. Ответственность сторон</p>
+            <p class="popup-ofert__text">10.1. За неисполнение или ненадлежащее исполнение условий настоящей оферты (акцептованной Покупателем оферты Продавца) Стороны несут ответственность в соответствии с законодательством РФ.</p>
+            <p class="popup-ofert__text">10.2. Вся текстовая информация и графические изображения, размещенные в Интернет-магазине и на Сайте имеют законного правообладателя. Незаконное использование указанной информации и изображений преследуется в соответствии с действующим законодательством РФ. В случае размещения информации и/или изображения, взятого с ресурса www.taynavkusa.ru, размещение ссылки на ресурс www.taynavkusa.ru является обязательным.</p>
+            <p class="popup-ofert__text">10.3. Продавец не несет ответственности за ущерб, причиненный Покупателю вследствие ненадлежащего использования им Товаров, приобретённых в Интернет-магазине.</p>
+            <p class="popup-ofert__text">10.4. Продавец не отвечает за убытки Покупателя, возникшие в результате неправильного заполнения Заказа, в том числе неправильного указания персональных данных.</p>
+            <p class="popup-ofert__text">10.5. Покупатель несёт полную ответственность за достоверность сведений и персональных данных, указанных им при регистрации в Интернет-магазине.</p>
+            <p class="popup-ofert__text">10.6. Пользователь гарантирует, что не будет использовать Интернет-магазин и Сайт в иных целях, нежели указанных в настоящей оферте.</p>
+            <p class="popup-ofert__text">10.7. В случае нарушения Пользователем условий настоящей оферты Продавец вправе заблокировать доступ Покупателя к использованию Интернет-магазина, путем блокировки логина (абонентского номера телефона) Покупателя.</p>
+            <p class="popup-ofert__text">11. Прочие условия</p>
+            <p class="popup-ofert__text">11.1. Настоящая оферта вступает в силу с момента совершения Покупателем действий, направленных на регистрацию учетной записи (логина) на Сайте.</p>
+            <p class="popup-ofert__text">11.2. Согласие Покупателя на обработку его персональных данных действует со дня его регистрации на Сайте до дня отзыва согласия, посредством обращения субъекта (Пользователя/Покупателя) к Оператору по телефону, с указанием при этом своего имени, отчества, фамилии, адреса доставки и контактного телефона.</p>
+            <p class="popup-ofert__text">11.3. Все споры, связанные с неисполнением или ненадлежащим исполнением своих обязательств по настоящему Договору, Стороны будут стараться решить путем переговоров./p>
+            <p class="popup-ofert__text">11.4. В случае не достижения согласия в ходе переговоров, споры будут разрешаться в судебном порядке в соответствии с действующим законодательством РФ.</p>
+
+        </div>
+
+    </div>
+</div>
+<script src="js/vendor.js"></script>
+<script src="js/main.js"></script>
+<script src="js/api.js"></script>
+<script>
+    $(function() {
+        $().initApp( $().getUserDeliveryList );
+        $().fillProductsPage();
+    });
+</script>
+</body>
+</html>
