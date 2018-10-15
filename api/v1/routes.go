@@ -47,6 +47,7 @@ func Setup(router *gin.Engine, baseUrl string, train string, node string, store 
 		}
 		nodeID = node
 		v1.POST("/service/start_time", setStartTime)
+		v1.GET("/service/start", startTrain)
 		v1.GET("/stations", stationsList)
 		v1.GET("/suppliers", suppliersList)
 		v1.GET("/products", supplierProducts)

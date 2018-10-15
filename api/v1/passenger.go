@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"time"
 )
 
 type QueryParams struct {
@@ -136,6 +137,14 @@ func setStartTime(c *gin.Context) {
 		return
 	}
 	if err := db.SetStart(j.Time, trainID, nodeID); err != nil {
+		unprocessable(err, c)
+	}
+	c.JSON(http.StatusOK, h{"result": "ok"})
+}
+
+func startTrain(c *gin.Context) {
+	tm := time.Now()
+	if err := db.SetStart(tm.Format(time.RFC3339), trainID, nodeID); err != nil {
 		unprocessable(err, c)
 	}
 	c.JSON(http.StatusOK, h{"result": "ok"})
