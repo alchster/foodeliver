@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тестовая оплата заказов</title>
+</head>
+<body>
+  <form action="{{.base}}/pay" method="post">
+    {{range .data}}
+    <input type="text" name="orders" value="{{.ID}}" style="display:none !important">
+    <input type="text" value="{{.Number}}" disabled><br/>
+    {{end}}
+    <input type="submit" value="Оплатить">
+  </form>
+</body>
+</html>

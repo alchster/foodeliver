@@ -8,9 +8,11 @@ import (
 
 var trainID db.UUID
 var nodeID string
+var baseURL string
 
 func Setup(router *gin.Engine, baseUrl string, train string, node string, store storage.Storage) error {
 	v1 := router.Group(baseUrl)
+	baseURL = baseUrl
 	if train == "" {
 		authMiddleware = newAuthMiddlware("hello")
 		if err := setupTemplates(router, "/"); err != nil {
@@ -46,6 +48,7 @@ func Setup(router *gin.Engine, baseUrl string, train string, node string, store 
 			return err
 		}
 		nodeID = node
+		router.LoadHTMLFiles("templ/payment.template")
 		v1.POST("/service/start_time", setStartTime)
 		v1.GET("/service/start", startTrain)
 		v1.GET("/stations", stationsList)
@@ -63,6 +66,8 @@ func Setup(router *gin.Engine, baseUrl string, train string, node string, store 
 		v1.GET("/payment_methods", paymentMethods)
 		v1.GET("/validate_orders", validateOrders)
 		v1.POST("/create_orders", createOrders)
+		v1.GET("/payment/:id", payment)
+		v1.POST("/pay", pay)
 	}
 	router.NoRoute(func(c *gin.Context) {
 		notFound(nil, c)

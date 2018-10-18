@@ -2,6 +2,7 @@ package db
 
 import (
 	"github.com/shopspring/decimal"
+	"log"
 	"time"
 )
 
@@ -114,4 +115,27 @@ func SupplierOrders(supId UUID) ([]Order, error) {
 		return nil, err
 	}
 	return orders, nil
+}
+
+func UnpaidOrders(passId string) []Order {
+	var orders []Order
+	pid, err := GetUUID(passId)
+	if err != nil {
+		log.Print("UnpaidOrders: Invalid ID")
+		return make([]Order, 0, 0)
+	}
+	err = db.Where("passenger_id = ? and status_code = ?", pid, ORDER_STATUS_NEW).Find(&orders).Error
+	if err != nil {
+		log.Print("UnpaidOrders: Invalid ID")
+	}
+
+	return orders
+}
+
+func OrderSetPaid(ordId string) error {
+	oid, err := GetUUID(ordId)
+	if err != nil {
+		return err
+	}
+	return db.Model(&Order{}).Where("id = ?", oid).Update("status_code", ORDER_STATUS_PAID).Error
 }
