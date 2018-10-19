@@ -11,8 +11,9 @@ func payment(c *gin.Context) {
 	orders := db.UnpaidOrders(passId)
 
 	c.HTML(http.StatusOK, "payment.template", h{
-		"base": baseURL,
-		"data": orders,
+		"base":      baseURL,
+		"data":      orders,
+		"passenger": passId,
 	})
 }
 
@@ -22,6 +23,9 @@ func pay(c *gin.Context) {
 		for _, o := range orders {
 			db.OrderSetPaid(o)
 		}
+		if passId, ok := c.Request.PostForm["passenger"]; ok {
+			db.ClearPassengerTmpOrders(passId[0])
+		}
 	}
-	c.Redirect(http.StatusFound, "/basket?orders_paid=yes")
+	c.Redirect(http.StatusFound, "/basket.html?orders_paid=yes")
 }

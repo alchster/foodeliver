@@ -251,8 +251,9 @@ func createOrders(c *gin.Context) {
 			"result": "error",
 			"error":  err.Error(),
 		})
+		return
 	}
-	url := baseURL + "/pay/" + q.PassengerID
+	url := baseURL + "/payment/" + q.PassengerID
 	c.JSON(http.StatusOK, h{
 		"result":      "ok",
 		"payment_url": url,

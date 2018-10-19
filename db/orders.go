@@ -139,3 +139,9 @@ func OrderSetPaid(ordId string) error {
 	}
 	return db.Model(&Order{}).Where("id = ?", oid).Update("status_code", ORDER_STATUS_PAID).Error
 }
+
+func ClearPassengerTmpOrders(passId string) {
+	if psid, err := GetUUID(passId); err == nil {
+		tmpOrders.DeleteAll(psid)
+	}
+}

@@ -50,7 +50,7 @@ func (t *Time) Scan(value interface{}) error {
 
 func (t Time) Value() (driver.Value, error) {
 	tm := t.String()
-	if tm == "24:00" {
+	if strings.HasPrefix(tm, "24:00") {
 		tm = "23:59"
 	}
 	return t.String(), nil

@@ -325,7 +325,7 @@ func CreateOrders(passId, fingerprint string, params *OrderParameters) error {
 		if !service.Cash {
 			return UnavailablePaymentMethod
 		}
-		if _, ok := banknotes[params.ChangeBanknote]; !ok {
+		if _, ok := banknotes[params.ChangeBanknote]; params.ChangeBanknote != 0 && !ok {
 			return InvalidChange
 		}
 		pm = CASH
@@ -375,5 +375,5 @@ func CreateOrders(passId, fingerprint string, params *OrderParameters) error {
 		}
 	}
 
-	return tmpOrders.DeleteAll(psid)
+	return nil
 }

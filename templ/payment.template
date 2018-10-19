@@ -6,6 +6,7 @@
 </head>
 <body>
   <form action="{{.base}}/pay" method="post">
+    <input type="text" name="passenger" value="{{.passenger}}" style="display:none !important">
     {{range .data}}
     <input type="text" name="orders" value="{{.ID}}" style="display:none !important">
     <input type="text" value="{{.Number}}" disabled><br/>
