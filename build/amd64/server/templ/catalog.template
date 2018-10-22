@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Каталог</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+				<div class="head-search ">
+	<div class="head-search__holder">
+		<span class="head-search__title">Категории товаров </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Название категории">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+
+				<div class="catalog">
+	<div class="catalog__add js-add-category">
+		<form action="">
+			<div class="catalog__add-head js-btn-category">
+				<span class="catalog__add-icon"></span>
+				<span class="catalog__add-text">Добавить новую категорию</span>
+			</div>
+			<div class="catalog__category">
+				<div class="catalog__category-input-wrapp">
+					<input type="text" class="input-bottom">
+				</div>
+				<div class="catalog__category-btns-wrapp">
+					<div class="catalog__category-btn">
+						<a class="btn catalog__create-new">Создать</a>
+					</div>
+					<div class="catalog__category-btn">
+						<button type="reset" class="btn btn--orange js-category-cancel">Отменить</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+{{range .data.categories}}
+  <div class="box-item catalog__item" data-cat-id={{.ID}}>
+    <span class="catalog__number catalog__category-id">{{.ID}}</span>
+		<div class="catalog__bottom">
+			<div class="catalog__category-name">
+        <input type="text" class="input-bottom catalog__input-name" value="{{.Name}}" disabled>
+			</div>
+			<div class="catalog__control">
+				<div class="catalog__control-btn-icon">
+					<span class="catalog__control-icon catalog catalog__btn-edit">
+						<svg class="icon-edit">
+							<use xlink:href="#edit"></use>
+						</svg>
+					</span>
+					<span class="catalog__control-icon catalog__btn-delete">
+						<svg class="icon-close">
+							<use xlink:href="#close"></use>
+						</svg>
+					</span>
+				</div>
+				<div class="catalog__control-btn-wrapp">
+					<button class="btn catalog__btn-save">Сохранить</button>
+				</div>
+
+				<div class="catalog__control-btn-delete">
+					<div class="catalog__btn-inner">
+						<button class="btn catalog__btn-delete-accept">Удалить</button>
+					</div>
+					<div class="catalog__btn-inner">
+						<button class="btn btn--orange catalog__btn-delete-cancel">Отменить</button>
+					</div>
+				</div>
+				<div class="catalog__message">
+          <span class="catalog__message-text">Вы уверены, что хотите удалить категорию &laquo;{{.Name}}&raquo;?</span>
+				</div>
+			</div>
+		</div>
+	</div>
+{{end}}
+</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>
+

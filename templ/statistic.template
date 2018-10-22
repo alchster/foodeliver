@@ -411,7 +411,7 @@
 
 			<div class="order__value-wrapp">
 				<div class="order__value-item">
-					<span class="order__value-caption">сумма проданых заказов</span>
+					<span class="order__value-caption">сумма проданных заказов</span>
 
 					<div class="order__value-group">
 						<div class="order__value-col">

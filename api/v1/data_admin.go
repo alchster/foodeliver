@@ -39,7 +39,7 @@ func adminStats(userId db.UUID) map[string]interface{} {
 	data["orderStatuses"], _ = db.OrderStatuses()
 	data["suppliers"], _ = db.ReadAll("supplier", userId.String())
 	data["supStatuses"], _ = db.SupplierStatuses()
-	data["stats"] = db.Stats()
+	data["stats"] = db.Stats(nil)
 	return data
 }
 

@@ -83,6 +83,7 @@ func setupTemplates(router *gin.Engine, base string) error {
 	router.GET(base+"/moderator-catalog", authMiddleware.MiddlewareFunc(), moderatorCatalog)
 	router.GET(base+"/registry", authMiddleware.MiddlewareFunc(), adminSuppliers)
 	router.GET(base+"/statistics", authMiddleware.MiddlewareFunc(), adminStatistics)
+	router.GET(base+"/supplier-statistics", authMiddleware.MiddlewareFunc(), supplierStatistics)
 	router.GET(base+"/categories", authMiddleware.MiddlewareFunc(), adminCategories)
 	router.GET(base, authMiddleware.MiddlewareFunc(), settings)
 	return nil
@@ -225,6 +226,20 @@ func adminStatistics(c *gin.Context) {
 	})
 }
 
+func supplierStatistics(c *gin.Context) {
+	ui, ok := userInfo(c, "/supplier-statistics")
+	if !ok {
+		return
+	}
+
+	c.HTML(http.StatusOK, "supplier-statistic.template", h{
+		"userInfo": ui,
+		"url":      "/supplier-statistics",
+		"menu":     menuItems(ui.Role),
+		"data":     supplierStats(ui.ID),
+	})
+}
+
 func supplierOrders(c *gin.Context) {
 	ui, ok := userInfo(c, "/orders")
 	if !ok {
@@ -320,6 +335,7 @@ func getStat(c *gin.Context) {
 		Type  string `form:"type"`
 		Start date   `form:"start"`
 		End   date   `form:"end"`
+		SupID string `form:"supplier"`
 	})
 
 	if err := c.Bind(q); err != nil {
@@ -330,7 +346,7 @@ func getStat(c *gin.Context) {
 	start, _ := q.Start.Time(false)
 	end, _ := q.End.Time(true)
 
-	data, err := db.GetStats(q.Type, start, end)
+	data, err := db.GetStats(q.Type, start, end, q.SupID)
 	if err != nil {
 		unprocessable(err, c)
 		return

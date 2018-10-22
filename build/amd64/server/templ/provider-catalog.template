@@ -1,0 +1,326 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Каталог</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+{{include "parts/header"}}
+
+<div class="wrapper">
+
+{{include "parts/menu"}}
+
+	<div class="content">
+		<div class="head-search head-search--catalog">
+    	<div class="head-search__holder">
+    		<span class="head-search__title">Каталог </span>		
+    		<div class="head-search__box">
+    			<label class="input-icon-label">
+    				<span>
+    					<svg class="icon-search">
+    						<use xlink:href="#search"></use>
+    					</svg>
+    				</span>
+    				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти товар">
+    			</label>
+    		</div>
+    	</div>
+    </div>
+
+<div class="provider-catalog">
+	<div class="provider-catalog__wrapp js-tabs-wrapp">
+
+		<ul class="provider-catalog__tabs">
+			<li class="provider-catalog__item-tab js-tab active" data-category-filter="*">
+				<span class="provider-catalog__tab-text">Все категории</span>
+			</li>
+{{range .data.categories}}
+			<li class="provider-catalog__item-tab js-tab" data-category-filter="{{.ID}}">
+        <span class="provider-catalog__tab-text">{{.Name}}</span>
+			</li>
+{{end}}
+		</ul>
+
+		<div class="provider-catalog__add js-add-category">
+			<form action="">
+				<div class="provider-catalog__add-head js-btn-category">
+					<span class="provider-catalog__add-icon"></span>
+					<span class="provider-catalog__add-text">Добавить новый товар</span>
+				</div>
+				<div class="provider-catalog__goods provider-catalog__api-item">
+					<div class="provider-catalog__col-add provider-catalog__col-add--photo">
+						<span class="provider-catalog__icon-photo">
+							<img class="provider-catalog__api-img" src="pic/no-pic.png" alt="">
+						</span>
+						<span class="provider-catalog__btn-file">
+							<input type="file" id="input-file">
+							<label for="input-file">
+								Загрузить фото
+							</label>
+						</span>
+					</div>
+					<div class="provider-catalog__col-add provider-catalog__col-add--info-center">
+						<div class="provider-catalog__col-inner provider-catalog__col-inner--name">
+							<span class="provider-catalog__col-title">Наименование</span>
+							<div class="provider-catalog__col-input">
+								<input type="text" class="input-bottom provider-catalog__input" placeholder="Введите название">
+							</div>
+							<div class="provider-catalog__col-select">
+								<div class="select-wrapp select-filter">
+									<select name="Select" id="" class="custom-select-filter">
+                  {{range .data.categories}}
+              			<option value="{{.ID}}">{{.Name}}</option>
+                  {{end}}
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="provider-catalog__col-inner">
+							<span class="provider-catalog__col-title provider-catalog__col-title--textarea">Описание</span>
+							<div class="provider-catalog__col-textarea">
+								<textarea placeholder="Состав продукта"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="provider-catalog__col-add provider-catalog__col-add--info-right">
+						<div class="provider-catalog__col-inner">
+							<span class="provider-catalog__col-title">Цена</span>
+							<div class="provider-catalog__col-input">
+								<input type="text" class="input-bottom" placeholder="0">
+							</div>
+						</div>
+						<div class="provider-catalog__col-inner">
+						</div>
+					</div>
+					<div class="provider-catalog__save-btn">
+						<button class="btn">Сохранить</button>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div class="provider-catalog__content js-tab-content active">
+{{$products := .data.products}}
+{{$categories := .data.categories}}
+{{range .data.categories}}
+      <div class="provider-catalog__item" data-category="{{.ID}}">
+        <div class="provider-catalog__item-head">
+					<span class="provider-catalog__head-title">{{.Name}}</span>
+				</div>
+
+{{$cat := .}}
+{{range $products}}
+{{if same $cat.ID .CategoryID}}
+
+				<div class="box-item provider-catalog__item-card js-catalog-card provider-catalog__api-item">
+          <span class="provider-catalog__product-id" style="display:none !important;">{{.ID}}</span>
+					<div class="provider-catalog__delete-item" style="display:none;">
+						<div class="provider-catalog__delete-col provider-catalog__delete-col--left">
+							<div class="provider-catalog__delete-img">
+								<img src="{{.Image}}" alt="{{.Name.RU}}">
+
+								<span class="provider-catalog__btn-file provider-catalog__btn-file--edit">
+									<input type="file" id="input-file">
+									<label for="input-file">
+										Изменить фото
+									</label>
+								</span>
+
+							</div>
+							<span class="provider-catalog__delete-name-goods">{{.Name.RU}}</span>
+						</div>
+						<div class="provider-catalog__delete-col provider-catalog__delete-col--right">
+							<div class="provider-catalog__delete-text">
+								<span class="provider-catalog__delete-text-item">Вы уверены, что хотите удалить данный товар?</span>
+								<span class="provider-catalog__delete-text-item">Последующее востановление в случае ошибки невозможно!</span>
+							</div>
+							<div class="provider-catalog__delete-btn-wrapp">
+								<div class="provider-catalog__delete-btn">
+									<button class="btn provider-catalog__button-delete">Удалить</button>
+								</div>
+								<div class="provider-catalog__delete-btn">
+									<button class="btn btn--orange provider-catalog__button-cancel">Отменить</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="provider-catalog__col provider-catalog__col--img">
+						<img class="provider-catalog__api-img" src="{{.Image}}" alt="">
+
+						<span class="provider-catalog__btn-file provider-catalog__btn-file--edit">
+							<input type="file" id="input-file-{{.ID}}">
+							<label for="input-file-{{.ID}}">
+								Изменить фото
+							</label>
+						</span>
+
+					</div>
+					<div class="provider-catalog__col provider-catalog__col--info-center">
+						<div class="provider-catalog__inner">
+							<span class="provider-catalog__title">Наименование</span>
+							<div class="provider-catalog__name-goods">
+							  <span class="provider-catalog__name-id" style="display:none !important">{{.Name.ID}}</span>
+								<input type="text" class="input-bottom js-catalog-input" value="{{.Name.RU}}" disabled>
+							</div>
+              <span class="provider-catalog__category">{{.Category.RU}}</span>
+							<div class="provider-catalog__category-select">
+								<div class="select-wrapp select-filter">
+									<select name="Select" id="" class="custom-select-filter">
+                  {{range $categories}}
+										<option value="{{.ID}}"{{if same $cat.ID .ID}} selected{{end}}>{{.Name}}</option>
+                  {{end}}
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="provider-catalog__inner">
+							<span class="provider-catalog__title">Описание</span>
+							<div class="provider-catalog__descr">
+							  <span class="provider-catalog__descr-id" style="display:none !important">{{.Description.ID}}</span>
+								<div contenteditable="false" class="editor disabled">{{.Description.RU}}</div>
+							</div>
+						</div>
+						<div class="provider-catalog__inner">
+						</div>
+						<div class="provider-catalog__save-catalog">
+							<button class="btn">Сохранить</button>
+						</div>
+					</div>
+					<div class="provider-catalog__col provider-catalog__col--info-right">
+						<div class="provider-catalog__inner">
+							<div class="provider-catalog__control-btn-icon">
+								<span class="provider-catalog__control-icon provider-catalog__control-icon--edit js-edit-catalog">
+									<svg class="icon-edit">
+										<use xlink:href="#edit"></use>
+									</svg>
+								</span>
+								<span class="provider-catalog__control-icon js-delete-catalog">
+									<svg class="icon-close">
+										<use xlink:href="#close"></use>
+									</svg>
+								</span>
+							</div>
+						</div>
+
+						<div class="provider-catalog__inner">
+							<span class="provider-catalog__title">Цена</span>
+							<div class="provider-catalog__price">
+								<span class="provider-catalog__price-input">
+									<input type="text" disabled class="input-bottom js-catalog-input" value="{{.Cost}}">
+								</span>
+							</div>
+						</div>
+						<div class="provider-catalog__inner provider-catalog__inner--status">
+							<span class="provider-catalog__title">Статус товара</span>
+							<div class="provider-catalog__status-select">
+                <span class="provider-catalog__status-color{{if eq .Status.Code 2}} approved{{end}}{{if eq .Status.Code 3}} not-approved{{end}}{{if eq .Status.Code 1}} not-available{{end}}"></span>
+                <span class="provider-catalog__status-result">{{.Status.Status.RU}}</span>
+							</div>
+						</div>
+{{if eq .Status.Code 3}}
+						<div class="provider-catalog__inner--blocked">
+							<div class="provider-catalog__blocked">
+								<span class="provider-catalog__blocked-text">причина блокировки</span>
+								<span class="provider-catalog__blocked-info">
+                  {{.StatusText}}
+								</span>
+							</div>
+						</div>
+{{end}}
+						<div class="provider-catalog__inner provider-catalog__inner--date">
+							<span class="provider-catalog__title">Заблокировать возможность заказать</span>
+							<div class="provider-catalog__date-not-available">
+								<div class="provider-catalog__date-input">
+									<input type="text" value="" class="input-bottom datetimepicker">
+								</div>
+								<div class="provider-catalog__date-input">
+									<input type="text" value="" class="input-bottom datetimepicker">
+								</div>
+							</div>
+						</div>
+						<div class="provider-catalog__inner">
+							<span class="provider-catalog__title">Дата добавления</span>
+              <span class="provider-catalog__date">{{if not (isnil .UpdatedAt)}}{{datetime .UpdatedAt}}{{end}}</span>
+						</div>
+					</div>
+				</div>
+{{end}}
+{{end}}
+      </div>
+{{end}}
+		</div>
+	</div>
+</div>
+
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>
+

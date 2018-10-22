@@ -1,0 +1,61 @@
+<header class="header">
+	<a href="#" class="header__logo">
+		<svg class="icon-logo">
+			<use xlink:href="#logo"></use>
+		</svg>
+	</a>
+	<div class="header__ctrl">
+		<div class="header__ctrl-item header__user">
+			<div class="header__user-text">
+				
+        <span class="header__user-id" style="display: none !important;">{{.userInfo.ID}}</span>
+        <span class="header__user-login" style="display: none !important;">{{.userInfo.Login}}</span>
+        <span class="header__user-type" style="display: none !important;">{{.userInfo.Type}}</span>
+
+        <span class="header__user-name">{{.userInfo.FirstName}}</span>
+        <span class="header__user-surname">{{.userInfo.LastName}}</span>
+				
+			</div>
+			<div class="header__user-image">
+				<img src="{{.userInfo.Photo}}" alt="user">
+			</div>
+		</div>
+		<div class="header__ctrl-item header__menu">
+			<ul class="header__menu-list">
+				<li class="header__menu-item">
+					<a href="#" class="header__menu-link header__message">
+						
+            <span class="header__message-num" data-num="{{.userInfo.NewMail}}"></span>
+						
+						<svg class="icon-mail">
+							<use xlink:href="#mail"></use>
+						</svg>
+					</a>
+				</li>
+      <!--
+				<li class="header__menu-item">
+					<div class="header__menu-link header__search js-search-btn">
+						<svg class="icon-search">
+							<use xlink:href="#search"></use>
+						</svg>
+					</div>
+					<div class="header__search-more js-header-search">
+						<input type="text" class="header__search-input" placeholder="Искать">
+						<span class="header__search-close js-search-close"></span>
+					</div>
+				</li>
+      -->
+			</ul>
+		</div>
+		<div class="header__ctrl-item header__logout">
+			<div class="header__menu-link">
+				<span class="header__logout-txt">Выход</span>
+				<div class="header__logout-icon">
+					<svg class="icon-turn-off">
+						<use xlink:href="#turn-off"></use>
+					</svg>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>

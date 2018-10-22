@@ -37,6 +37,7 @@ var permissionsTable = map[string]entityPermissions{
 		"product":    FULL,
 		"supstation": FULL,
 		"order":      UPDATE,
+		"getstat":    READ,
 	},
 }
 
@@ -57,23 +58,24 @@ type MenuItem struct {
 }
 
 var pages = map[string]MenuItem{
-	"admin":         {"/admin", "icon-administrirov", "#administrirov", "Администри- рование"},
-	"accounts":      {"/accounts", "icon-users", "#users", "Учетные записи"},
-	"settings":      {"/settings", "icon-nastroika", "#nastroika", "Настройки"},
-	"registry":      {"/registry", "icon-list", "#list", "Реестр поставщиков"},
-	"catalog":       {"/catalog", "icon-hamburger-2", "#hamburger-2", "Каталог товаров"},
-	"moder":         {"/moderator", "icon-administrirov", "#administrirov", "Мои поставщики"},
-	"moder-catalog": {"/moderator-catalog", "icon-hamburger-2", "#hamburger-2", "Каталог товаров"},
-	"statistics":    {"/statistics", "icon-sale-statistics", "#sale-statistics", "Статистика"},
-	"orders":        {"/orders", "icon-cart", "#cart", "Заказы на доставку"},
-	"delivery":      {"/delivery", "icon-delivery", "#delivery", "Настройки доставки"},
-	"categories":    {"/categories", "icon-hamburger-2", "#hamburger-2", "Категории товаров"},
+	"admin":          {"/admin", "icon-administrirov", "#administrirov", "Администри- рование"},
+	"accounts":       {"/accounts", "icon-users", "#users", "Учетные записи"},
+	"settings":       {"/settings", "icon-nastroika", "#nastroika", "Настройки"},
+	"registry":       {"/registry", "icon-list", "#list", "Реестр поставщиков"},
+	"catalog":        {"/catalog", "icon-hamburger-2", "#hamburger-2", "Каталог товаров"},
+	"moder":          {"/moderator", "icon-administrirov", "#administrirov", "Мои поставщики"},
+	"moder-catalog":  {"/moderator-catalog", "icon-hamburger-2", "#hamburger-2", "Каталог товаров"},
+	"statistics":     {"/statistics", "icon-sale-statistics", "#sale-statistics", "Статистика"},
+	"sup-statistics": {"/supplier-statistics", "icon-sale-statistics", "#sale-statistics", "Статистика"},
+	"orders":         {"/orders", "icon-cart", "#cart", "Заказы на доставку"},
+	"delivery":       {"/delivery", "icon-delivery", "#delivery", "Настройки доставки"},
+	"categories":     {"/categories", "icon-hamburger-2", "#hamburger-2", "Категории товаров"},
 }
 
 var rolePages = map[string][]string{
 	"administrator": {"admin", "accounts", "registry", "categories", "statistics", "settings"},
 	"moderator":     {"moder-catalog", "moder", "settings"},
-	"supplier":      {"orders", "catalog", "delivery", "settings"},
+	"supplier":      {"orders", "catalog", "delivery", "sup-statistics", "settings"},
 }
 
 func indexForRole(role string) string {

@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Заказы на доставку</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+				<div class="provider">
+	<h1 class="provider__caption">Заказы на доставку</h1>
+<!-- filter 
+	<div class="provider__filter">
+		<span class="provider__filter-text">Фильтры:</span>
+		<div class="provider__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По станции</option>
+					<option value="">Станция 1</option>
+					<option value="">Станция 2</option>
+					<option value="">Станция 3</option>
+					<option value="">Станция 4</option>
+				</select>
+			</div>
+		</div>
+		<div class="provider__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По статусу</option>
+					<option value="">Статус 1</option>
+					<option value="">Статус 2</option>
+					<option value="">Статус 3</option>
+					<option value="">Статус 4</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	 filter end -->
+{{range .data}}
+	<div class="provider__item box-item">
+  <span class="provider__item-order-id" style="display:none !important">{{.ID}}</span>
+	<div class="provider__row">
+		<div class="provider__col provider__col--order">
+			<span class="provider__item-subtitle">Номер заказа</span>
+			<span class="provider__item-num">{{.Number}}</span>
+
+			<div class="provider__order">
+				<span class="provider__item-subtitle">Состав заказа</span>
+				<ul class="provider__order-list">
+				
+        {{range .Products}}
+						<li class="provider__order-item">
+							<span class="provider__order-name provider__order-elem">
+								{{.Product.Name.RU}}
+							</span>
+							<span class="provider__order-quantity provider__order-elem">
+								{{.Count}} шт
+							</span>
+							<span class="provideqqr__order-price provider__order-elem">
+                {{.Product.Cost}}
+								<span class="rubl">i</span>
+							</span>
+						</li>
+        {{end}}
+					
+				</ul>
+				<div class="provider__order-total">
+					<span>Итого: {{.Total}} <span class="rubl">i</span></span>
+				</div>
+			</div>
+		</div>
+		<div class="provider__col provider__col--delivery">
+			<div class="provider__item-head">
+				<span class="provider__item-subtitle">Город доставки и станция</span>
+
+        <span class="provider__item-text">{{.Station.Name.RU}}</span>
+			</div>
+
+			<div class="provider__col-inner">
+				<span class="provider__item-subtitle provider__item-subtitle--mod">
+					Время прибытия поезда
+				</span>
+				<span class="provider__item-text">{{time .Arrival}}</span>
+
+				<span class="provider__item-subtitle">Номер поезда</span>
+				<span class="provider__item-text">{{.TrainNumber}}</span>
+
+				<span class="provider__item-subtitle">Дата и время доставки</span>
+				<span class="provider__item-text">{{datetime .DeliverUntil}}</span>
+
+			</div>
+			<div class="provider__col-inner">
+				<span class="provider__item-subtitle provider__item-subtitle--mod">
+					Время отправления поезда
+				</span>
+				<span class="provider__item-text">{{time .Departure}}</span>
+
+				<span class="provider__item-subtitle">Номер вагона</span>
+				<span class="provider__item-text">{{.CarNumber}}</span>
+
+				<span class="provider__item-subtitle">Номер места</span>
+				<span class="provider__item-text">{{.Seat}}</span>
+
+				<span class="provider__item-subtitle">Статус заказа</span>
+				<div class="provider__item-status">
+					<span class="provider__item-status-color js-color"></span>
+					<div class="select-wrapp select-center">
+						<select name="Select" id="" class="custom-select-center">
+            {{$statusCode := .StatusCode}}
+            {{range .StatusesList}}
+							<option value="{{.Code}}" data-color="{{.Color}}" data-status=""{{if eq $statusCode .Code}} selected{{end}}>{{.Status.RU}}</option>
+            {{end}}
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+{{end}}
+<!--
+	<div class="pagination ">
+	<ul class="pagination__list">
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link active">1</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">2</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">3</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">4</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">5</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">6</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">...</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">16</a>
+		</li>
+	</ul>
+</div>
+-->
+</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>
+

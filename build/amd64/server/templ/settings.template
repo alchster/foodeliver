@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Настройки</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div> 
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+				<div class="settings">
+	<h1 class="settings__caption">Настройки</h1>
+	<div class="settings__wrapp">
+		<div class="settings__item settings__item--info">
+			<div class="settings__info-img">
+				<div class="settings__img-wrapp">
+          <img src="{{.userInfo.Photo}}" alt="">
+				</div>
+				<div class="settings__btn-wrapp">
+					<a href="#" class="btn">Изменить фото</a>
+				</div>
+			</div>
+			<div class="settings__info-descr">
+				<ul class="settings__info-list">
+					<li class="settings__info-item">
+						<span class="settings__info-title">Статус пользователя</span>
+            <span class="settings__info-text">{{.userInfo.RoleRU}}</span>
+					</li>
+					<li class="settings__info-item">
+						<span class="settings__info-title">Логин</span>
+            <span class="settings__info-text">{{.userInfo.Login}}</span>
+					</li>
+					<li class="settings__info-item">
+						<span class="settings__info-title">Пароль</span>
+						<span class="settings__info-text">********</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="settings__item settings__item--pass">
+			<h2 class="settings__title">Изменить пароль</h2>
+			<form action="">
+				<ul class="settings__form">
+					<li class="settings__form-item">
+						<label class="settings__label">
+							<span>
+								<svg class="icon-pass-dark">
+									<use xlink:href="#pass-dark"></use>
+								</svg>
+							</span>
+							<input type="password" name="old-pass" class="settings__input" placeholder="Текущий пароль">
+						</label>
+					</li>
+					<li class="settings__form-item">
+						<label class="settings__label">
+							<span>
+								<svg class="icon-pass-dark">
+									<use xlink:href="#pass-dark"></use>
+								</svg>
+							</span>
+							<input type="password" name="new-pass" class="settings__input" placeholder="Новый пароль">
+						</label>
+					</li>
+					<li class="settings__form-item">
+						<label class="settings__label">
+							<span>
+								<svg class="icon-pass-dark">
+									<use xlink:href="#pass-dark"></use>
+								</svg>
+							</span>
+							<input type="password" name="new-pass-rep" class="settings__input" placeholder="Повторить новый пароль">
+						</label>
+					</li>
+				</ul>
+				<div class="settings__form-btn">
+					<button class="btn settings__change-pass">Изменить</button>
+				</div>
+				<div class="settings__res-wrapp">
+					<span class="settings__res-text settings__err-old-pass">Неверный текущий пароль.</span>
+					<span class="settings__res-text settings__err-new-pass">Новый пароль не совпадает.</span>
+					<span class="settings__res-text">Забыли пароль? Напишите <a href="#" class="settings__admin-link">администратору</a>, для восстановления пароля.</span>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>

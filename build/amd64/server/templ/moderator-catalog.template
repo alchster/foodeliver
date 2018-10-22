@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Каталог товаров</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+				<div class="head-search ">
+	<div class="head-search__holder">
+		<span class="head-search__title">Каталог товаров </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Поиск по каталогу">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+				<div class="moderator-catalog">
+	<div class="moderator-catalog__filter">
+		<span class="moderator-catalog__filter-text">Фильтры:</span>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="filter-supplier" class="custom-select-filter">
+					<option value="none" selected>По поставщику</option>
+          {{range .data.suppliers}}
+					<option value="{{.ID}}">{{.Description}}</option>
+          {{end}}
+				</select>
+			</div>
+		</div>
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="filter-category" class="custom-select-filter">
+					<option value="none" selected>По категории</option>
+          {{range .data.categories}}
+					<option value="{{.RU}}">{{.RU}}</option>
+          {{end}}
+				</select>
+			</div>
+		</div>
+    <!--
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="filter-station" class="custom-select-filter">
+					<option disabled selected>По станции</option>
+          {{range .data.stations}}
+					<option value="{{.ID}}">{{.Name.RU}}</option>
+          {{end}}
+				</select>
+			</div>
+		</div>
+    -->
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="filter-status" class="custom-select-filter">
+					<option value="none" selected>По статусу</option>
+          {{range .data.statuses}}
+					<option value="{{.Code}}">{{.Status.RU}}</option>
+          {{end}}
+				</select>
+			</div>
+		</div>
+    <!--
+		<div class="moderator-catalog__select">
+			<div class="select-wrapp select-filter">
+				<select name="Select" id="" class="custom-select-filter">
+					<option disabled selected>По дате добавления</option>
+					<option value="asc">Старые</option>
+					<option value="desc">Новые</option>
+					<option value="curr">Текущие</option>
+				</select>
+			</div>
+		</div>
+    -->
+	</div>
+  
+  {{$statuses := .data.statuses}}
+  {{range .data.products}}
+	<div class="moderator-catalog__item">
+  <!--
+		<div class="moderator-catalog__item-head">
+			<span class="moderator-catalog__head-title">На одобрение</span>
+			<span class="moderator-catalog__number-approval">+3</span>
+		</div>
+  -->
+		<div class="box-item moderator-catalog__item-card">
+			<div class="moderator-catalog__col moderator-catalog__col--img">
+				<img src="{{.Image}}" alt="">
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-center">
+				<div class="moderator-catalog__inner">
+          <span class="moderator-catalog__api-product-id" style="display:none !important;">{{.ID}}</span>
+					<span class="moderator-catalog__title">Наименование</span>
+					<span class="moderator-catalog__name-goods">{{.Name.RU}}</span>
+          <span class="moderator-catalog__api-category-id" style="display:none !important;">{{.Category.RU}}</span>
+					<span class="moderator-catalog__category">{{.Category.RU}}</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Описание</span>
+					<span class="moderator-catalog__descr">{{.Description.RU}}</span>
+				</div>
+				<div class="moderator-catalog__inner">
+        <!--
+					<span class="moderator-catalog__title">Станции доставки</span>
+					<span class="moderator-catalog__delivery-station">Москва, Тула, Курск, Воронеж, Краснодар, Туапсе, Сочи</span>
+        -->
+				</div>
+			</div>
+			<div class="moderator-catalog__col moderator-catalog__col--info-right">
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Поставщик</span>
+          <span class="moderator-catalog__api-supplier-id" style="display:none !important;">{{.SupplierID}}</span>
+					<span class="moderator-catalog__name-provider">{{.Supplier.Description}}</span>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Цена</span>
+					<span class="moderator-catalog__price">{{.Cost}} <span class="rub">o</span></span>
+				</div>
+				<div class="moderator-catalog__inner moderator-catalog__inner--status">
+					<span class="moderator-catalog__title">Статус товара</span>
+					<div class="moderator-catalog__status-select">
+						<span class="moderator-catalog__status-color js-color"></span>
+						<div class="select-wrapp select-center">
+							<select name="Select" class="custom-select-center">
+              {{$code := .StatusCode}}
+              {{range $statuses}}
+								<option value="{{.Code}}" data-color="{{.Color}}" data-status="{{if eq .Code 0}}new{{end}}{{if eq .Code 1}}not-available{{end}}{{if eq .Code 2}}approved{{end}}{{if eq .Code 3}}not-approved{{end}}"{{if eq .Code $code}} selected{{end}}{{if and (eq .Code 1) (ne $code 1)}} disabled{{end}}{{if eq $code 1}} disabled{{end}}>{{.Status.RU}}</option>
+              {{end}}
+							</select>
+						</div>
+						<div class="moderator-catalog__cause js-cause-message">
+							<div class="moderator-catalog__cause-wrapp">
+								<div class="moderator-catalog__textarea-wrapp">
+                  <textarea placeholder="Укажите причину">{{.StatusText}}</textarea>
+								</div>
+								<div class="moderator-catalog__btn-wrapp js-save">
+									<button class="btn moderator-catalog__btn">сохранить</button>
+								</div>
+							</div>
+						</div>
+						<div class="moderator-catalog__date-not-available js-date-not-available">
+							<span class="moderator-catalog__date-text">{{if eq $code 1}}{{datetime .UnavailableFrom}} — {{datetime .UnavailableTo}}{{end}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="moderator-catalog__inner">
+					<span class="moderator-catalog__title">Дата добавления</span>
+					<span class="moderator-catalog__date">{{datetime .CreatedAt}}</span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+  {{end}}
+<!--</div> -->
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>
+

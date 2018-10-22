@@ -11,17 +11,17 @@ func monthStart(tm time.Time) time.Time {
 	return time.Date(y, m, 1, 0, 0, 0, 0, tm.Location())
 }
 
-func Stats() map[string]interface{} {
+func Stats(sid *UUID) map[string]interface{} {
 	now := time.Now()
 	tp := TimePeriod{monthStart(now), now}
 	stats := map[string]interface{}{
-		"products":   productsStats(),
+		"products":   productsStats(sid),
 		"passengers": passengersStats(tp),
 		"trains": map[string]interface{}{
 			"ok": trainsAvailStats(tp),
 			"na": trainsNAStats(tp),
 		},
-		"orders": ordersStats(tp),
+		"orders": ordersStats(tp, sid),
 	}
 	return stats
 }
@@ -32,12 +32,21 @@ type CategoryStats struct {
 	Count    int
 }
 
-func productsStats() map[string]interface{} {
+func productsStats(sid *UUID) map[string]interface{} {
 	var total int
-	db.Model(&Product{}).Count(&total)
+	q := db.Model(&Product{})
+	if sid != nil {
+		q = q.Where("supplier_id = ?", *sid)
+	}
+	q.Count(&total)
 	var cs []CategoryStats
-	db.Raw("SELECT texts.id as id, ru as category, count(*) FROM products " +
-		"JOIN texts ON category_id = texts.id GROUP BY texts.id,ru ORDER BY ru").Scan(&cs)
+	query := "SELECT texts.id as id, ru as category, count(*) FROM products " +
+		"JOIN texts ON category_id = texts.id " +
+		"WHERE products.deleted_at IS NULL "
+	if sid != nil {
+		query += "AND supplier_id = '" + (*sid).String() + "' "
+	}
+	db.Raw(query + "GROUP BY texts.id,ru ORDER BY ru").Scan(&cs)
 
 	return map[string]interface{}{
 		"total":      total,
@@ -45,8 +54,16 @@ func productsStats() map[string]interface{} {
 	}
 }
 
-func GetStats(sType string, start, end time.Time) (interface{}, error) {
+func GetStats(sType string, start, end time.Time, supId string) (interface{}, error) {
 	tp := TimePeriod{start, end}
+	var sid *UUID
+	if supId != "" {
+		s, err := GetUUID(supId)
+		if err != nil {
+			return nil, err
+		}
+		sid = &s
+	}
 	switch sType {
 	case "passengers":
 		return passengersStats(tp), nil
@@ -55,7 +72,7 @@ func GetStats(sType string, start, end time.Time) (interface{}, error) {
 	case "natrains":
 		return trainsNAStats(tp), nil
 	case "orders":
-		return ordersStats(tp), nil
+		return ordersStats(tp, sid), nil
 	}
 	return nil, nil
 }
@@ -89,19 +106,28 @@ type OrdersStatsInfo struct {
 	Suppliers []SupplierOrdersInfo `json:"suppliers"`
 }
 
-func ordersStats(tp TimePeriod) OrdersStatsInfo {
-	var sups []Supplier
-	db.Table("suppliers").Order("description").Find(&sups)
-	supOrdInfos := make([]SupplierOrdersInfo, 0, len(sups))
-	for _, s := range sups {
-		supOrdInfos = append(supOrdInfos, ordersInfo(&s, tp))
+func ordersStats(tp TimePeriod, sid *UUID) OrdersStatsInfo {
+	var supOrdInfos []SupplierOrdersInfo
+	if sid == nil {
+		var sups []Supplier
+		db.Table("suppliers").Order("description").Find(&sups)
+		supOrdInfos = make([]SupplierOrdersInfo, 0, len(sups))
+		for _, s := range sups {
+			supOrdInfos = append(supOrdInfos, ordersInfo(&s, tp))
+		}
+	} else {
+		var sup Supplier
+		supOrdInfos = make([]SupplierOrdersInfo, 0, 1)
+		if db.Where("id = ?", *sid).First(&sup).Error == nil {
+			supOrdInfos = append(supOrdInfos, ordersInfo(&sup, tp))
+		}
 	}
 
 	return OrdersStatsInfo{
 		Summary: StatsInfo{
-			Total:    ordersTotalCount(TimePeriod{}),
+			Total:    ordersTotalCount(TimePeriod{}, sid),
 			Period:   tp,
-			AtPeriod: ordersTotalCount(tp),
+			AtPeriod: ordersTotalCount(tp, sid),
 		},
 		Suppliers: supOrdInfos,
 	}
@@ -145,10 +171,14 @@ func trainsNACount(tp TimePeriod) int {
 	return total
 }
 
-func ordersTotalCount(tp TimePeriod) int {
+func ordersTotalCount(tp TimePeriod, sid *UUID) int {
 	(&tp).FixEnd()
 	var total int
-	db.Model(&Order{}).Where("updated_at BETWEEN ? AND ?", tp.Start, tp.End).Count(&total)
+	q := ""
+	if sid != nil {
+		q = "supplier_id = '" + (*sid).String() + "' AND "
+	}
+	db.Model(&Order{}).Where(q+"updated_at BETWEEN ? AND ?", tp.Start, tp.End).Count(&total)
 	return total
 }
 

@@ -218,7 +218,7 @@
 							  <span class="provider-catalog__name-id" style="display:none !important">{{.Name.ID}}</span>
 								<input type="text" class="input-bottom js-catalog-input" value="{{.Name.RU}}" disabled>
 							</div>
-							<span class="provider-catalog__category"></span>
+              <span class="provider-catalog__category">{{.Category.RU}}</span>
 							<div class="provider-catalog__category-select">
 								<div class="select-wrapp select-filter">
 									<select name="Select" id="" class="custom-select-filter">

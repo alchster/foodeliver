@@ -1,0 +1,19 @@
+<aside class="custom-scroll">
+	<ul class="sidebar">
+  {{$url := .url}}
+  {{range .menu}}
+  	<li class="sidebar__item{{if eq .URL $url}} active{{end}}">
+		  <a href="{{.URL}}" class="sidebar__link">
+			  <span class="sidebar__icon">
+  				<svg class="{{.Class}}">
+  					<use xlink:href="{{.Picture}}"></use>
+  				</svg>
+  			</span>
+  			<span class="sidebar__text">
+  				{{.Text}}
+  			</span>
+  		</a>
+  	</li>
+  {{end}}
+  </ul>
+</aside>

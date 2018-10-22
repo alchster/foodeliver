@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Главная</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div> 
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+				<div class="admin">
+					<h1 class="admin__caption">Администрирование</h1>
+					<div class="admin__holder">
+						<div class="admin__row">
+							<div class="admin__col admin____stations">
+								<div class="head-search head-search--main">
+	<div class="head-search__holder">
+		<span class="head-search__title">Станции </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Название станции">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+{{range .data.stations}}
+<div class="item-station box-item item-station--main">
+	<div class="item-station__inner item-station__inner--left">
+		<span class="item-station__title">станция</span>
+    <span class="item-station__name">{{.Name.RU}}</span>
+    <span class="item-station__id" style="display:none !important;">{{.ID}}</span>
+	</div> 
+	<div class="item-station__inner item-station__inner--right">
+		
+		<div class="item-station__service">
+			<span class="item-station__title">Работа сервиса</span>
+			<div class="item-station__switch">
+				<label class="switch">
+					
+					
+          <input type="checkbox"{{if .Active}} checked{{end}}>
+					
+					<span class="slider round"></span>
+				</label>		
+			</div>
+		</div>
+	</div>
+</div>
+{{end}}
+{{if false}}
+								<div class="admin__btn-wrap">
+									<a href="#" class="btn admin__btn">Еще станции</a>
+								</div>
+{{end}}
+							</div>
+							<div class="admin__col admin____trains">
+								<div class="head-search head-search--main">
+	<div class="head-search__holder">
+		<span class="head-search__title">Поезда </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Название, номер, маршрут поезда">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+{{ range .data.trains }}
+<div class="item-station box-item item-station--payment">
+	<div class="item-station__inner item-station__inner--left">
+    <span class="item-station__title">{{.Number}}{{if ne .Alias ""}}, {{.Alias}}{{end}}</span>
+    <span class="item-station__name">{{.Name.RU}}</span>
+    <span class="item-station__id" style="display:none !important;">{{.ID}}</span>
+	</div> 
+	<div class="item-station__inner item-station__inner--right">
+    <!--	
+			<div class="item-station__payment ">
+				<span class="item-station__title">Вид оплаты</span>
+				<div class="select-wrapp select-checkbox">
+					<select name="Select" class="custom-select-checkbox">
+						<option value="">Наличные</option>
+						<option value="">Картой посреднику</option>
+						<option value="">Картой на ресурсе попутчик</option>
+					</select>
+				</div>
+			</div>
+    -->
+		<div class="item-station__service">
+			<span class="item-station__title">Работа сервиса</span>
+			<div class="item-station__switch">
+				<label class="switch">
+					
+					
+            <input type="checkbox"{{if .Active}} checked{{end}}>
+					
+					<span class="slider round"></span>
+				</label>		
+			</div>
+		</div>
+	</div>
+</div>
+{{end}}
+{{if false}}
+<div class="admin__btn-wrap">
+									<a href="#" class="btn admin__btn">Еще поезда</a>
+								</div>
+{{end}}
+							</div>
+						</div>
+
+
+
+						<div class="admin__row admin____service">
+              <span class="admin____service-id" style="display:none !important;">{{.data.service.ID}}</span>
+              <span class="admin____service-cash" style="display:none !important;">{{.data.service.Cash}}</span>
+              <span class="admin____service-plastic-online" style="display:none !important;">{{.data.service.PlasticOffline}}</span>
+              <span class="admin____service-plastic-offline" style="display:none !important;">{{.data.service.PlasticOnline}}</span>
+
+							<div class="admin__col admin__col--mod" style="margin-top: 0 !important;">
+								<span class="admin__title">Оплата</span>
+								<div class="admin__service box-item">
+									<div class="admin__service-inner admin__service-inner--left">
+										<span class="admin__service-name">Весь сервис</span>
+									</div> 
+									<div class="admin__service-inner admin__service-inner--right">
+										<div class="admin__service-payment">
+											<span class="admin__service-title">Вид оплаты</span>
+											<div class="select-wrapp select-checkbox">
+												<select name="Select" class="custom-select-checkbox admin____service-type">
+													<option value="cash" selected>Наличные</option>
+													<option value="plastic-offline">Картой посреднику</option>
+													<option value="plastic-online">Картой на ресурсе попутчик</option>
+												</select>
+											</div>
+										</div>
+										<div class="admin__service-item admin____service-active">
+											<span class="admin__service-title">Работа сервиса</span>
+											<div class="admin__service-switch">
+												<label class="switch">
+                          <input type="checkbox">
+													<span class="slider round"></span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="head-search head-search--main">
+								</div>
+
+							</div>
+							<div class="admin__col">
+								<span class="admin__title">Настройка сервиса</span>
+								<div class="admin__charge box-item">
+									<div class="admin-charge">
+	<span class="admin-charge__title">Сервисный сбор</span>
+	<div class="admin-charge__item">
+		<div class="admin-charge__inner">
+			<span class="admin-charge__inner-title">
+				процент от суммы заказа
+			</span>
+			<div class="admin-charge__inner-input admin____service-percent">
+        <input type="text" class="js-input-empty" value="{{.data.service.ChargePercent}}%" data-text="%">
+			</div>
+		</div>
+		<span class="admin-charge__txt">или</span>
+		<div class="admin-charge__inner">
+			<span class="admin-charge__inner-title">
+				фиксированная ставка в рублях
+			</span>
+			<div class="admin-charge__inner-input admin____service-fixed">
+        <input type="text" class="js-input-empty" value="{{.data.service.ChargeFixed}}р" data-text="р">
+			</div>
+		</div>
+	</div>
+	<div class="admin-charge__item">
+		<span class="admin-charge__item-txt">
+			Время на оплату заказа пассажиром в минутах
+		</span>
+		<div class="admin-charge__item-setting admin____service-timeout">
+      <input type="text" class="js-input-empty" value="{{.data.service.MinutesForPayment}} минут" data-text="минут">
+		</div>
+	</div>
+<!--
+	<div class="admin-charge__item">
+		<span class="admin-charge__item-txt">
+			Время отправки повторных уведомлений для АРМ Проводник
+		</span>
+		<div class="admin-charge__item-setting">
+			<div class="select-wrapp select-checkbox">
+				<select name="Select" class="custom-select-checkbox">
+					<option value="5">5 минут</option>
+					<option value="10">10 минут</option>
+					<option value="15">15 минут</option>
+				</select>
+			</div>
+		</div>
+	</div>
+-->
+
+</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>

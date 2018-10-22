@@ -91,3 +91,10 @@ func timeList() []string {
 	}
 	return l
 }
+
+func supplierStats(userId db.UUID) map[string]interface{} {
+	data := make(map[string]interface{})
+	data["orderStatuses"], _ = db.OrderStatuses()
+	data["stats"] = db.Stats(&userId)
+	return data
+}

@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Настройки доставки</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div> 
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+
+			<div class="content">
+				<div class="delivery-settings">
+	<h1 class="delivery-settings__caption">Настройки доставки</h1>
+	<span class="delivery-settings__station-title">Станции</span>
+
+{{ $tmList := .data.timeList}}
+{{ range .data.stations }}
+	<div class="box-item delivery-settings__item">
+    <span class="delivery-settings__station-id" style="display:none !important;">{{.StationID}}</span>
+		<div class="delivery-settings__col delivery-settings__col--station">
+			<span class="delivery-settings__title">станция</span>
+			<div class="delivery-settings__station">
+        <span class="delivery-settings__station-text">{{.Name}}</span>
+			</div>
+		</div>
+		<div class="delivery-settings__col delivery-settings__col--terminal">
+			
+<span class="delivery-settings__title">Время работы</span>
+{{$wf := .WorkingFrom}}
+{{$wt := .WorkingTo}}
+<select class="delivery-settings__col delivery-settings__api-time-from" style="width:40%;margin:0;">
+{{range $tmList}}
+  <option value="{{.}}"{{if eq . (str $wf)}} selected{{end}}>{{.}}</option>
+{{end}}
+</select>
+&ndash;
+<select class="delivery-settings__col delivery-settings__api-time-to" style="width:40%;margin:0;">
+{{range $tmList}}
+  <option value="{{.}}"{{if eq . (str $wt)}} selected{{end}}>{{.}}</option>
+{{end}}
+</select>
+
+		</div>
+		<div class="delivery-settings__col delivery-settings__time">
+			<span class="delivery-settings__title">Время доставки</span>
+			<div class="delivery-settings__input-wrapp">
+        <input type="text" value="{{.DeliveryMinutes}} минут" class="delivery-settings__input js-input-empty" data-text="минут">
+			</div>
+		</div>
+		<div class="delivery-settings__col delivery-settings__min-amount">
+			<span class="delivery-settings__title">Минимальная сумма</span>
+			<div class="delivery-settings__input-wrapp">
+        <input type="text" value="{{.MinAmount}} р" class="delivery-settings__input js-input-empty" data-text="р">
+			</div>
+		</div>
+		<div class="delivery-settings__col delivery-settings__col--services">
+			<span class="delivery-settings__title">Работа сервиса</span>
+			<div class="delivery-settings__switch">
+				<label class="switch">
+					<input type="checkbox"{{if .Active}} checked{{end}}>
+					<span class="slider round"></span>
+				</label>
+			</div>
+		</div>
+	</div>
+{{end}}
+{{if false}}
+	<div class="delivery-settings__btn-wrapp">
+		<a href="#" class="btn">Загрузить еще станции</a>
+	</div>
+{{end}}
+</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>

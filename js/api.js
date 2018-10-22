@@ -119,6 +119,9 @@ function statistics() {
       start: $(dates[0]).val(),
       end: $(dates[1]).val()
     };
+    if ($('.header .header__user-type').html() === 'supplier') {
+      data.supplier = $('.header .header__user-id').html();
+    }
     apiCall('GET', '/getstat', data).done(function (resp) {
       if (self.is(ordersStart) || self.is(ordersEnd)) {
         $.each(resp.suppliers, function (_, s) {

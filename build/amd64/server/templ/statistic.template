@@ -1,0 +1,583 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Статистика</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- @if NODE_ENV='production' -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- @endif -->
+</head>
+<body class=" @@class ">
+<script>
+	//for preloader
+	//document.body.classList.add("overflow-hidden");
+	function getScrollbarWidth() {
+	var outer = document.createElement("div");
+	outer.style.visibility = "hidden";
+	outer.style.width = "100px";
+	outer.style.msOverflowStyle = "scrollbar"; // needed for WinJS apps
+
+	document.body.appendChild(outer);
+
+	var widthNoScroll = outer.offsetWidth;
+	// force scrollbars
+	outer.style.overflow = "scroll";
+
+	// add innerdiv
+	var inner = document.createElement("div");
+	inner.style.width = "100%";
+	outer.appendChild(inner);        
+
+	var widthWithScroll = inner.offsetWidth;
+
+	// remove divs
+	outer.parentNode.removeChild(outer);
+
+	return widthNoScroll - widthWithScroll;
+	}
+	var scrollW = getScrollbarWidth();
+	document.body.style.paddingRight = scrollW + 'px';
+	document.body.className = "overflow-hidden";
+</script>
+
+
+<div id="preloader">
+	<div class="preloader-wrapper big active">
+	<div class="spinner-layer">
+	  <div class="circle-clipper left">
+		<div class="circle"></div>
+	  </div><div class="gap-patch">
+		<div class="circle"></div>
+	  </div><div class="circle-clipper right">
+		<div class="circle"></div>
+	  </div>
+	</div>
+  </div>
+</div>
+	<div style="height: 0; width: 0; position: absolute;overflow: hidden;" id="svg-sprite-container">
+ 		
+ 	</div>
+
+{{include "parts/header"}}
+
+	<div class="wrapper">
+
+{{include "parts/menu"}}
+	
+			<div class="content">
+				<h1 class="statistic__caption">Статистика</h1>
+				<div class="head-search head-search--statistic">
+	<div class="head-search__holder">
+		<span class="head-search__title">Поставщики </span>		
+		<div class="head-search__box">
+			<label class="input-icon-label">
+				<span>
+					<svg class="icon-search">
+						<use xlink:href="#search"></use>
+					</svg>
+				</span>
+				<input type="text" name="input-icon" class="input-icon head-search__input" placeholder="Найти поставщика">
+			</label>
+		</div>
+	</div>
+	
+</div>
+
+				<div class="statistic">
+{{range .data.suppliers}}
+		<div class="statistic__provider box-item js-statistic-item">
+		<div class="statistic__row">
+			<div class="statistic__provider-item js-statistic-more">	
+				<div class="statistic__col statistic__col--provider">
+					<span class="statistic__provider-subtitle">Поставщик</span>
+          <span class="statistic__provider-name">{{.Description}}</span>
+				</div>
+				<div class="statistic__col statistic__col--station">
+					<span class="statistic__provider-subtitle">кол-во обслужи–ваемых станций</span>
+					<span class="statistic__provider-txt">{{.StationsCount}}</span>
+				</div>
+				<div class="statistic__col statistic__col--date">
+					<span class="statistic__provider-subtitle">Дата добавления первого товара</span>
+          <span class="statistic__provider-txt">{{datetime .FirstProductDate}}</span>
+				</div>
+				<div class="statistic__col statistic__col--date">
+					<span class="statistic__provider-subtitle">Дата регистрации</span>
+          <span class="statistic__provider-txt">{{datetime .CreatedAt}}</span>
+				</div>
+			</div>
+		</div>
+		<div class="statistic__provider-content js-statistic-content ">
+			<div class="statistic__row">
+				<div class="statistic__col statistic__col--media">
+					<span class="statistic__provider-subtitle">Наименование</span>
+					<span class="statistic__provider-name statistic__provider-txt--content">
+            {{.Description}}
+					</span>
+					<span class="statistic__provider-subtitle">ИНН</span>
+					<span class="statistic__provider-txt statistic__provider-txt--content">
+            {{.ITN}}
+					</span>
+					<span class="statistic__provider-subtitle">Дата регистрации</span>
+					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
+            {{datetime .CreatedAt}}
+					</span>
+				</div>
+				<div class="statistic__col statistic__col--info">
+					<span class="statistic__provider-subtitle">Контактные данные</span>
+					<span class="statistic__provider-txt statistic__provider-txt--mod">
+            {{.Phone}}
+					</span>
+          <a href="mailto:{{.Email}}" class="statistic__provider-link">
+            {{.Email}}
+					</a>
+					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
+            {{.Address}}
+					</span>
+				</div>
+				<div class="statistic__col statistic__col--enter">
+					<span class="statistic__provider-subtitle">Логин</span>
+
+					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="{{.Login}}" disabled>
+{{if false}}
+					<span class="statistic__provider-subtitle">Пароль</span>
+					<div class="statistic__provider-password">
+						<div class="statistic__provider-password-icon">
+           		<svg class="icon-eye">
+           		  <use xlink:href="#eye"></use>
+           		</svg>
+						</div>
+						<div class="statistic__provider-password-txt">
+							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
+						</div>
+					</div>
+{{end}}					
+				</div>
+				<div class="statistic__col statistic__col--status">
+					<span class="statistic__provider-subtitle">Статус поставщика</span>
+					<div class="statistic__provider-status">
+						<div class="statistic__provider-status-head">
+            <span class="statistic__provider-status-icon{{if eq .StatusCode -1}} blocked{{end}}{{if eq .StatusCode 0}} not-active{{end}}{{if eq .StatusCode 1}} active{{end}}"></span>
+							<span class="statistic__provider-status-txt">
+                <span>{{.Status.Status.RU}}</span>
+							</span>
+						</div>
+
+						<!-- tooltipe -->
+						<div class="statistic__provider-tooltip">
+							<span class="statistic__provider-tooltip-link">
+								причина блокировки
+							</span>
+							<div class="statistic__provider-tooltip-info">
+                {{.StatusText}}
+							</div>
+						</div>
+					<!-- tooltipe  -->
+					</div>
+					<span class="statistic__provider-subtitle">
+						Дата последнего изменения
+					</span>
+					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
+            {{if not (isnil .UpdatedAt)}}{{datetime .UpdatedAt}}{{end}}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+{{end}}
+{{if false}}
+	<div class="pagination ">
+	<ul class="pagination__list">
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link active">1</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">2</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">3</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">4</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">5</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">6</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">...</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">16</a>
+		</li>
+	</ul>
+</div>
+{{end}}
+	
+	<div class="statistic__service">
+	<div class="statistic__row">
+		<div class="statistic__col statistic__col--service">
+			<span class="statistic__service-title">Товары</span>
+			<div class="statistic__service-holder box-item statistic__api-products">
+				<div class="statistic__service-item statistic__service-item--large">
+					<span class="statistic__service-subtitle">всего товаров</span>
+          <span class="statistic__service-txt">{{.data.stats.products.total}}</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--large">
+					<span class="statistic__service-subtitle">товаров в категории</span>
+          <div id="category-counter" class="statistic__service-select" data-num="">
+						<div class="select-wrapp select-checkbox">
+							<select name="Select" class="custom-select-checkbox">
+              {{range .data.stats.products.categories}}
+                <option value="{{.Count}}">{{.Category}}</option>
+              {{end}}
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="statistic__col statistic__col--service">
+			<span class="statistic__service-title">
+				Пассажиры, использовавшие сервис
+			</span>
+			<div class="statistic__service-holder box-item" data-type="passengers">
+				<div class="statistic__service-item statistic__service-item--large">
+					<span class="statistic__service-subtitle">всего пассажиров</span>
+          <span class="statistic__service-txt">{{.data.stats.passengers.Total}}</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--small">
+					<span class="statistic__service-subtitle">за период</span>
+					<span class="statistic__service-txt">{{.data.stats.passengers.AtPeriod}}</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--medium">
+					<div class="statistic__service-date">
+						<input type="text" class="datepicker" value="{{date .data.stats.passengers.Period.Start}}">
+					</div>
+					<div class="statistic__service-date">
+						<input type="text" class="datepicker" value="{{date .data.stats.passengers.Period.End}}">
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="statistic__col statistic__col--service">
+			<span class="statistic__service-title">
+				Работоспособность ресурса в поездах
+			</span>
+			<div class="statistic__service-holder box-item" data-type="oktrains">
+				<div class="statistic__service-item statistic__service-item--large">
+					<span class="statistic__service-subtitle">Работает</span>
+          <span class="statistic__service-txt">{{.data.stats.trains.ok.Total}}</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--small">
+					<span class="statistic__service-subtitle">за период</span>
+          <span class="statistic__service-txt">{{.data.stats.trains.ok.AtPeriod}}</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--medium">
+					<div class="statistic__service-date">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.ok.Period.Start}}">
+					</div>
+					<div class="statistic__service-date">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.ok.Period.End}}">
+					</div>
+				</div>
+				<div class="statistic__service-inner" data-type="natrains">
+					<div class="statistic__service-item statistic__service-item--large">
+						<span class="statistic__service-subtitle">Не работает</span>
+            <span class="statistic__service-txt">{{.data.stats.trains.na.Total}}</span>
+					</div>
+					<div class="statistic__service-item statistic__service-item--small">
+						<span class="statistic__service-subtitle">за период</span>
+            <span class="statistic__service-txt">{{.data.stats.trains.na.AtPeriod}}</span>
+					</div>
+					<div class="statistic__service-item statistic__service-item--medium">
+						<div class="statistic__service-date">
+						  <input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.Start}}">
+						</div>
+						<div class="statistic__service-date">
+						  <input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.End}}">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="statistic__col statistic__col--service">
+			<span class="statistic__service-title">
+				Среднее время на сервисе
+			</span>
+			<div class="statistic__service-holder box-item">
+				<div class="statistic__service-item statistic__service-item--large">
+					<span class="statistic__service-subtitle">среднее время</span>
+					<span class="statistic__service-txt">0</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--small">
+					<span class="statistic__service-subtitle">за период</span>
+					<span class="statistic__service-txt">0</span>
+				</div>
+				<div class="statistic__service-item statistic__service-item--medium">
+					<div class="statistic__service-date">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.Start}}">
+					</div>
+					<div class="statistic__service-date">
+						<input type="text" class="datepicker" value="{{date .data.stats.trains.na.Period.End}}">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+</div>
+
+				<div class="order">
+
+	<div class="order__head">
+		<div class="order__head-left">
+			<span class="order__caption">Заказы</span>
+		</div>
+		<div class="order__head-right">
+			<div class="order__period" data-type="orders">
+				<span class="order__period-text">за период:</span>
+				<div class="order__period-calendar">
+          <input id="orders-start" type="text" class="datepicker" value="{{date .data.stats.orders.Summary.Period.Start}}">
+				</div>
+				<div class="order__period-calendar">
+					<input id="orders-end" type="text" class="datepicker" value="{{date .data.stats.orders.Summary.Period.End}}">
+				</div>
+			</div>
+{{if false}}
+			<div class="order__search">
+				<label class="input-icon-label">
+					<span>
+						<svg class="icon-search">
+							<use xlink:href="#search"></use>
+						</svg>
+					</span>
+					<input type="text" name="input-icon" class="input-icon" placeholder="Найти поставщика">
+				</label>
+			</div>
+{{end}}
+		</div>
+	</div>
+{{$ordStatuses := .data.orderStatuses}}
+{{range .data.stats.orders.Suppliers}}
+  <div class="box-item order__card js-statistic-item" data-sup-id="{{.ID}}">
+		<div class="order__card-top js-statistic-more">
+			<div class="order__col order__col--name">
+				<span class="order__title">Поставщик</span>
+        <span class="order__text order__text--name">{{.Name}}</span>
+			</div>
+			<div class="order__col order__col--number">
+				<div class="order__col-item">
+					<span class="order__title">Всего заказов</span>
+					<span class="order__text" data-total-place="true">{{.Summary.Total}}</span>
+				</div>
+				<div class="order__col-item">
+					<span class="order__title">за период</span>
+					<span class="order__text" data-at-period-place="true">{{.Summary.AtPeriod}}</span>
+				</div>
+			</div>
+			<div class="order__col order__col--status">
+				<span class="order__title">Статус заказа</span>
+				<div class="order__select-status">
+					<div class="select-wrapp select-checkbox">
+						<select name="Select" class="custom-select-checkbox">
+              {{$byStatus := .ByStatus}}
+              {{range $ordStatuses}}
+                {{$id := strToId .Status.EN}}
+                {{$osi := byKey $byStatus $id}}
+              <option value="{{$id}}" data-status-total="{{$osi.Stats.Total}}" data-status-at-period="{{$osi.Stats.AtPeriod}}">{{$osi.Text}}</option>
+              {{end}}
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="order__col order__col--number order__col--number-last">
+				<div class="order__col-item">
+					<span class="order__title">Всего заказов</span>
+					<span class="order__text" data-status-total-place="true">0</span>
+				</div>
+				<div class="order__col-item">
+					<span class="order__title">за период</span>
+					<span class="order__text" data-status-at-period-place="true">0</span>
+				</div>
+			</div>
+
+			<div class="order__value-wrapp">
+				<div class="order__value-item">
+					<span class="order__value-caption">сумма проданных заказов</span>
+
+					<div class="order__value-group">
+						<div class="order__value-col">
+							<div class="order__value-inner">
+								<span class="order__title">Всего</span>
+								<div class="order__value-number">
+                  <span class="order__value-number-text" data-sum-total-place="true">{{.SumTotal}} <span class="rub">o</span></span> 
+								</div>
+							</div>
+						</div>
+
+						<div class="order__value-col">
+							<div class="order__value-inner">
+								<span class="order__title">за период</span>
+								<div class="order__value-number">
+                  <span class="order__value-number-text" data-sum-at-period-place="true">{{.SumAtPeriod}} <span class="rub">o</span></span> 
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="order__value-item">
+					<span class="order__value-caption">Сумма агенсткого вознаграждения</span>
+
+					<div class="order__value-group">
+						<div class="order__value-col">
+							<div class="order__value-inner">
+								<span class="order__title">Всего</span>
+								<div class="order__value-number">
+                  <span class="order__value-number-text" data-charge-total-place="true">{{.ChargeTotal}} <span class="rub">o</span></span> 
+								</div>
+							</div>
+						</div>
+
+						<div class="order__value-col">
+							<div class="order__value-inner">
+								<span class="order__title">за период</span>
+								<div class="order__value-number">
+                  <span class="order__value-number-text" data-charge-at-period-place="true">{{.ChargeAtPeriod}} <span class="rub">o</span></span> 
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="statistic__provider-content js-statistic-content">
+			<div class="statistic__row">
+				<div class="statistic__col statistic__col--media">
+					<span class="statistic__provider-subtitle">Наименование</span>
+					<span class="statistic__provider-name statistic__provider-txt--content">
+            {{.Name}}
+					</span>
+					<span class="statistic__provider-subtitle">ИНН</span>
+					<span class="statistic__provider-txt statistic__provider-txt--content">
+            {{.SupplierInfo.ITN}}
+					</span>
+					<span class="statistic__provider-subtitle">Дата регистрации</span>
+					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
+            {{datetime .SupplierInfo.CreatedAt}}
+					</span>
+				</div>
+				<div class="statistic__col statistic__col--info">
+					<span class="statistic__provider-subtitle">Контактные данные</span>
+					<span class="statistic__provider-txt statistic__provider-txt--mod">
+            {{.SupplierInfo.Phone}}
+					</span>
+					<a href="mailto:{{.SupplierInfo.Email}}" class="statistic__provider-link">
+            {{.SupplierInfo.Email}}
+					</a>
+					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-address">
+            {{.SupplierInfo.Address}}
+					</span>
+				</div>
+				<div class="statistic__col statistic__col--enter">
+					<span class="statistic__provider-subtitle">Логин</span>
+
+					<input type="text" class="statistic__provider-txt statistic__provider-txt--content" value="{{.SupplierInfo.Login}}" disabled>
+					<span class="statistic__provider-subtitle">Пароль</span>
+					<div class="statistic__provider-password">
+						<div class="statistic__provider-password-txt">
+							<input type="password" class="statistic__provider-password-input" value="ERfSJ09&J" disabled>
+						</div>
+					</div>
+
+				</div>
+				<div class="statistic__col statistic__col--status">
+					<span class="statistic__provider-subtitle">Статус поставщика</span>
+					<div class="statistic__provider-status">
+						<div class="statistic__provider-status-head">
+							<span class="statistic__provider-status-icon{{if eq .SupplierInfo.Status.Code -1}} blocked{{end}}{{if eq .SupplierInfo.Status.Code 0}} not-active{{end}}{{if eq .SupplierInfo.Status.Code 1}} active{{end}}"></span>
+							<span class="statistic__provider-status-txt">
+                <span>{{.SupplierInfo.Status.Status.RU}}</span>
+							</span>
+						</div>
+
+            {{if eq .SupplierInfo.Status.Code -1}}
+						<!-- tooltipe -->
+						<div class="statistic__provider-tooltip">
+							<span class="statistic__provider-tooltip-link">
+								причина блокировки
+							</span>
+							<div class="statistic__provider-tooltip-info">
+                {{.SupplierInfo.StatusText}}
+							</div>
+						</div>
+						<!-- tooltipe  -->
+            {{end}}
+					</div>
+					<span class="statistic__provider-subtitle">
+						Дата последнего изменения
+					</span>
+					<span class="statistic__provider-txt statistic__provider-txt--content statistic__provider-txt--last">
+            {{if not (isnil .SupplierInfo.UpdatedAt)}}{{datetime .SupplierInfo.UpdatedAt}}{{end}}
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+{{end}}
+
+{{if false}}
+	<div class="pagination ">
+	<ul class="pagination__list">
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link active">1</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">2</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">3</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">4</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">5</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">6</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">...</a>
+		</li>
+		<li class="pagination__item">
+			<a href="#" class="pagination__item-link">16</a>
+		</li>
+	</ul>
+</div>
+{{end}}
+</div>
+			</div>
+
+	</div>
+
+
+<footer class="footer">
+	
+</footer>
+
+    <script src="js/vendor.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/api.js"></script>
+
+</body>
+</html>
+
