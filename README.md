@@ -155,10 +155,10 @@ food=> \d+ trains;
   Столбец   |           Тип            | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
 ------------+--------------------------+--------------------+-------------------+--------------+-----------+---------------------+----------
  id         | uuid                     |                    | not null          |              | plain     |                     | 
- created\_at | timestamp with time zone |                    | not null          | now()        | plain     |                     | 
- updated\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
- deleted\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
- text\_id    | uuid                     |                    |                   |              | plain     |                     | 
+ created_at | timestamp with time zone |                    | not null          | now()        | plain     |                     | 
+ updated_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ deleted_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ text_id    | uuid                     |                    |                   |              | plain     |                     | 
  number     | text                     |                    |                   |              | extended  |                     | 
  alias      | text                     |                    |                   |              | extended  |                     | 
  active     | boolean                  |                    |                   |              | plain     |                     | 
@@ -177,10 +177,10 @@ food=> \d+ stations;
   Столбец   |           Тип            | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
 ------------+--------------------------+--------------------+-------------------+--------------+-----------+---------------------+----------
  id         | uuid                     |                    | not null          |              | plain     |                     | 
- created\_at | timestamp with time zone |                    | not null          | now()        | plain     |                     | 
- updated\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
- deleted\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
- text\_id    | uuid                     |                    |                   |              | plain     |                     | 
+ created_at | timestamp with time zone |                    | not null          | now()        | plain     |                     | 
+ updated_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ deleted_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ text_id    | uuid                     |                    |                   |              | plain     |                     | 
  tz         | text                     |                    |                   |              | extended  |                     | 
  active     | boolean                  |                    |                   |              | plain     |                     | 
 Индексы:
@@ -198,10 +198,10 @@ food=> \d+ stations_list_items;
                                                Таблица "public.stations_list_items"
       Столбец       |  Тип   | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
 --------------------+--------+--------------------+-------------------+--------------+-----------+---------------------+----------
- train\_id           | uuid   |                    | not null          |              | plain     |                     | 
- station\_id         | uuid   |                    | not null          |              | plain     |                     | 
- relative\_arrival   | bigint |                    | not null          |              | plain     |                     | 
- relative\_departure | bigint |                    | not null          |              | plain     |                     | 
+ train_id           | uuid   |                    | not null          |              | plain     |                     | 
+ station_id         | uuid   |                    | not null          |              | plain     |                     | 
+ relative_arrival   | bigint |                    | not null          |              | plain     |                     | 
+ relative_departure | bigint |                    | not null          |              | plain     |                     | 
 ```
 
 
