@@ -124,8 +124,8 @@ server {
 	location / {
 		add_header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE" always;
 		add_header Access-Control-Allow-Headers * always;
-    # для работы браузеров, которые не умеют работать с *
-    add_header Access-Control-Allow-Headers Accept,Content-Type,Origin,X-Requested-With always;
+		# для работы браузеров, которые не умеют работать с *
+		add_header Access-Control-Allow-Headers Accept,Content-Type,Origin,X-Requested-With always;
 		add_header Access-Control-Allow-Origin * always;
 		if ($request_method = OPTIONS) {
 			return 200;
