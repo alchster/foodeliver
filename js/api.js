@@ -1,14 +1,14 @@
 var apiPath = "/api";
 
 $(function () {
-	$('.head-search__box').hide();
+  $('.head-search__box').hide();
 
-	$('.header__logout .header__menu-link').click(function() {
-		window.location = '/logout';
-	});
-	accounts();
-	settings();
-	admin();
+  $('.header__logout .header__menu-link').click(function() {
+    window.location = '/logout';
+  });
+  accounts();
+  settings();
+  admin();
   delivery();
   catalog();
   moder();
@@ -195,56 +195,56 @@ function supList() {
 }
 
 function moder() {
-	$('.moderator-catalog__status-select .custom-select-center').each(function() {
-		var self = $(this),
-		parent = self.closest('.select-center'),
-		color = parent.siblings('.js-color'),
-		cause = parent.siblings('.js-cause-message'),
-		date = parent.siblings('.js-date-not-available');
-		self.selectmenu({
-			appendTo: parent,
-			change: function(event, ui) {
-				var val = ui.item.element.data('color');
-				var status = ui.item.element.data('status');
-				if (status == 'new') {
-					color.css('background-color', '#f5a623');
-					cause.hide();
-					date.hide();
-				} else if (status == 'not-available') {
-					color.css('background-color', '#9b9b9b');
-					cause.hide();
-					date.show();
-					date.addClass('active');
-				} else if (status == 'approved') {
-					color.css('background-color', '#7ed321');
-					cause.hide();
-					date.hide();
-				} else if (status == 'not-approved'){
-					color.css('background-color', '#ff0033');
-					cause.show();
-					date.hide();
-					cause.addClass('active');
-				}
+  $('.moderator-catalog__status-select .custom-select-center').each(function() {
+    var self = $(this),
+    parent = self.closest('.select-center'),
+    color = parent.siblings('.js-color'),
+    cause = parent.siblings('.js-cause-message'),
+    date = parent.siblings('.js-date-not-available');
+    self.selectmenu({
+      appendTo: parent,
+      change: function(event, ui) {
+        var val = ui.item.element.data('color');
+        var status = ui.item.element.data('status');
+        if (status == 'new') {
+          color.css('background-color', '#f5a623');
+          cause.hide();
+          date.hide();
+        } else if (status == 'not-available') {
+          color.css('background-color', '#9b9b9b');
+          cause.hide();
+          date.show();
+          date.addClass('active');
+        } else if (status == 'approved') {
+          color.css('background-color', '#7ed321');
+          cause.hide();
+          date.hide();
+        } else if (status == 'not-approved'){
+          color.css('background-color', '#ff0033');
+          cause.show();
+          date.hide();
+          cause.addClass('active');
+        }
         var id = $(this).closest('.moderator-catalog__item').find('.moderator-catalog__api-product-id').html();
         var data = {
           "status_code": parseInt($(this).val()),
         };
         apiCall('PUT', '/product/'+id, data);
-			},
-			create: function(event, ui) {
-				var status =  $(this).children(':selected').data('status');
-				if (status == 'new') {
-					color.css('background-color', '#f5a623');
-				} else if (status == 'not-available') {
-					color.css('background-color', '#9b9b9b');
-				} else if (status == 'approved') {
-					color.css('background-color', '#7ed321');
-				} else if (status == 'not-approved'){
-					color.css('background-color', '#ff0033');
-				}
-			}
-		});
-	});
+      },
+      create: function(event, ui) {
+        var status =  $(this).children(':selected').data('status');
+        if (status == 'new') {
+          color.css('background-color', '#f5a623');
+        } else if (status == 'not-available') {
+          color.css('background-color', '#9b9b9b');
+        } else if (status == 'approved') {
+          color.css('background-color', '#7ed321');
+        } else if (status == 'not-approved'){
+          color.css('background-color', '#ff0033');
+        }
+      }
+    });
+  });
   $('.js-save .moderator-catalog__btn').click(function () {
     var parent = $(this).closest('.moderator-catalog__item');
     var id = parent.find('.moderator-catalog__api-product-id').html();
@@ -446,20 +446,20 @@ function admin() {
     apiCall('DELETE', '/modsupplier', {moderator: modId, supplier: e.params.data.id});
   });
 
-	$('.admin____stations .item-station__switch input:checkbox').change(function (e) {
-		var id = $(this.closest('.item-station')).find('.item-station__id').html();
-		var chkbox = this;
-		apiCall('PUT', '/station/'+id, {active: this.checked}).fail(function() {
-			chkbox.checked = !chkbox.checked;
-		});
-	});
-	$('.admin____trains .item-station__switch input:checkbox').change(function (e) {
-		var id = $(this.closest('.item-station')).find('.item-station__id').html();
-		var chkbox = this;
-		apiCall('PUT', '/train/'+id, {active: this.checked}).fail(function() {
-			chkbox.checked = !chkbox.checked;
-		});
-	});
+  $('.admin____stations .item-station__switch input:checkbox').change(function (e) {
+    var id = $(this.closest('.item-station')).find('.item-station__id').html();
+    var chkbox = this;
+    apiCall('PUT', '/station/'+id, {active: this.checked}).fail(function() {
+      chkbox.checked = !chkbox.checked;
+    });
+  });
+  $('.admin____trains .item-station__switch input:checkbox').change(function (e) {
+    var id = $(this.closest('.item-station')).find('.item-station__id').html();
+    var chkbox = this;
+    apiCall('PUT', '/train/'+id, {active: this.checked}).fail(function() {
+      chkbox.checked = !chkbox.checked;
+    });
+  });
 
   var serviceId = $('.admin____service .admin____service-id').html();
   var currentOpt = $('.admin____service select.admin____service-type').val();
@@ -524,134 +524,134 @@ function admin() {
 }
 
 function settings() {
-	var oldPassNotMatch = $('.settings__err-old-pass');
-	var newPassNotMatch = $('.settings__err-new-pass');
-	var id = $('.header__user-id').html();
-	var login = $('.header__user-login').html();
-	var type = $('.header__user-type').html();
-	var oldPass = $('input[name=old-pass]');
-	var newPass = $('input[name=new-pass');
-	var newPassRep = $('input[name=new-pass-rep]');
-	var button = $('.settings__change-pass');
+  var oldPassNotMatch = $('.settings__err-old-pass');
+  var newPassNotMatch = $('.settings__err-new-pass');
+  var id = $('.header__user-id').html();
+  var login = $('.header__user-login').html();
+  var type = $('.header__user-type').html();
+  var oldPass = $('input[name=old-pass]');
+  var newPass = $('input[name=new-pass');
+  var newPassRep = $('input[name=new-pass-rep]');
+  var button = $('.settings__change-pass');
 
-	oldPassNotMatch.hide();
-	newPassNotMatch.hide();
+  oldPassNotMatch.hide();
+  newPassNotMatch.hide();
 
-	$(oldPass).change(function() {
-		var password = oldPass.val();
-		apiCall('POST', '/check_password', {id: id, type: type, password: password}).then(function () {
-			oldPassNotMatch.hide();
-		}, function (e) {
-			oldPassNotMatch.show();
-		});
-	});
-	
-	var checkNewPass = function(e) {
-		var np = newPass.val();
-		var npr = newPassRep.val();
-		if (np == '' || npr == '') {
-			newValid = false;
-		} else if (np != npr) {
-			newPassNotMatch.show();
-		} else {
-			newPassNotMatch.hide();
-		}
-	};
+  $(oldPass).change(function() {
+    var password = oldPass.val();
+    apiCall('POST', '/check_password', {id: id, type: type, password: password}).then(function () {
+      oldPassNotMatch.hide();
+    }, function (e) {
+      oldPassNotMatch.show();
+    });
+  });
+  
+  var checkNewPass = function(e) {
+    var np = newPass.val();
+    var npr = newPassRep.val();
+    if (np == '' || npr == '') {
+      newValid = false;
+    } else if (np != npr) {
+      newPassNotMatch.show();
+    } else {
+      newPassNotMatch.hide();
+    }
+  };
 
-	$([newPass, newPassRep]).each(function() {
-		$(this).change(checkNewPass);
-	});
-	
-	$(button).click(function (e) {
-		e.preventDefault();
-		var pass = oldPass.val();
-		var np = newPass.val();
-		var npr = newPassRep.val();
-		if (pass === '' || np === '' || npr === '' || np !== npr ||
-			!oldPassNotMatch.is(':hidden') || !newPassNotMatch.is(':hidden'))
-			return;
-		apiCall('PUT', '/user/'+id, {password: np}).then(function (data) {
-			window.location = window.location;
-		});
-	});
+  $([newPass, newPassRep]).each(function() {
+    $(this).change(checkNewPass);
+  });
+  
+  $(button).click(function (e) {
+    e.preventDefault();
+    var pass = oldPass.val();
+    var np = newPass.val();
+    var npr = newPassRep.val();
+    if (pass === '' || np === '' || npr === '' || np !== npr ||
+      !oldPassNotMatch.is(':hidden') || !newPassNotMatch.is(':hidden'))
+      return;
+    apiCall('PUT', '/user/'+id, {password: np}).then(function (data) {
+      window.location = window.location;
+    });
+  });
 }
 
 function accounts() {
-	$('.moderators__list .switch input:checkbox').change(function(e) {
-		var chkbox = this;
-		var parent = $(this).closest('.js-moderators-item');
-		var id = $(parent).find('.moderators__user-id').html();
-		var url = '/' + $(parent).find('.moderators__user-type').html();
-		var data = url === '/supplier' ? {status_code: this.checked ? 1 : 0} : {enabled: this.checked};
-		apiCall('PUT', url + '/' + id, data).then(function () {
-			if (url === '/supplier') {
-				var status = $(parent).find('.moderators__status');
-				status.removeClass(['active', 'blocked'])
-					.addClass((["blocked", "", "active"])[data.status_code + 1]);
-				status.parent().next().html((["заблокирован", "неактивен", "активен"])[data.status_code + 1]);
-			}
-		}, function() {
-			chkbox.checked = !chkbox.checked;
-		});
-	});
+  $('.moderators__list .switch input:checkbox').change(function(e) {
+    var chkbox = this;
+    var parent = $(this).closest('.js-moderators-item');
+    var id = $(parent).find('.moderators__user-id').html();
+    var url = '/' + $(parent).find('.moderators__user-type').html();
+    var data = url === '/supplier' ? {status_code: this.checked ? 1 : 0} : {enabled: this.checked};
+    apiCall('PUT', url + '/' + id, data).then(function () {
+      if (url === '/supplier') {
+        var status = $(parent).find('.moderators__status');
+        status.removeClass(['active', 'blocked'])
+          .addClass((["blocked", "", "active"])[data.status_code + 1]);
+        status.parent().next().html((["заблокирован", "неактивен", "активен"])[data.status_code + 1]);
+      }
+    }, function() {
+      chkbox.checked = !chkbox.checked;
+    });
+  });
 
-	$('.moderators__list .moderators__form').submit(function(e) {
-		e.preventDefault();
-		var parent = $(this).closest('.js-moderators-item');
-		var id = $(parent).find('.moderators__user-id').html();
-		var url = '/' + $(parent).find('.moderators__user-type').html();
-		var login = $(this).find("input[name=login]").val();
-		var password = $(this).find("input[name=password]").val();
-		apiCall('PUT', url + '/' + id, {login: login, password: password});
-	});
+  $('.moderators__list .moderators__form').submit(function(e) {
+    e.preventDefault();
+    var parent = $(this).closest('.js-moderators-item');
+    var id = $(parent).find('.moderators__user-id').html();
+    var url = '/' + $(parent).find('.moderators__user-type').html();
+    var login = $(this).find("input[name=login]").val();
+    var password = $(this).find("input[name=password]").val();
+    apiCall('PUT', url + '/' + id, {login: login, password: password});
+  });
 
-	$('.moderators__item--add .moderators__btn-create').click(function (e) {
-		e.preventDefault();
-		var parent = $(this).closest('.moderators__item--add');
-		var desc = $(parent).find('input[name=description]').val();
-		var role = $(parent).find('select[name=Select]').val();
-		var login = $(parent).find('input[name=login]').val();
-		var password = $(parent).find('input[name=password]').val();
-		var email = $(parent).find('input[name=email]').val();
-		var url = role === 'supplier' ? '/supplier' : '/user';
-		var admin = role === 'administrator';
-		if (desc === '') return;
-		var data = {
-			description: desc,
-			login: login,
-			password: password,
-			email: email,
-			admin: admin,
-		};
-		apiCall('POST', url, data).then(function(e) {
-			window.location = window.location;
-		});
-	});
+  $('.moderators__item--add .moderators__btn-create').click(function (e) {
+    e.preventDefault();
+    var parent = $(this).closest('.moderators__item--add');
+    var desc = $(parent).find('input[name=description]').val();
+    var role = $(parent).find('select[name=Select]').val();
+    var login = $(parent).find('input[name=login]').val();
+    var password = $(parent).find('input[name=password]').val();
+    var email = $(parent).find('input[name=email]').val();
+    var url = role === 'supplier' ? '/supplier' : '/user';
+    var admin = role === 'administrator';
+    if (desc === '') return;
+    var data = {
+      description: desc,
+      login: login,
+      password: password,
+      email: email,
+      admin: admin,
+    };
+    apiCall('POST', url, data).then(function(e) {
+      window.location = window.location;
+    });
+  });
 
-	$('.moderators__list .js-moderators-del').click(function () {
-		var parent = $(this).closest('.js-moderators-item');
-		var id = $(parent).find('.moderators__user-id').html();
-		var url = '/' + $(parent).find('.moderators__user-type').html();
-		apiCall('DELETE', url + '/' + id);
-	});
+  $('.moderators__list .js-moderators-del').click(function () {
+    var parent = $(this).closest('.js-moderators-item');
+    var id = $(parent).find('.moderators__user-id').html();
+    var url = '/' + $(parent).find('.moderators__user-type').html();
+    apiCall('DELETE', url + '/' + id);
+  });
 }
 
 function apiCall(method, url, data) {
-	method = method.toUpperCase();
-	url = apiPath + url;
-	var ct;
-	if (method !== 'GET') {
-		data = JSON.stringify(data || {});
-		ct = 'application/json; charser=utf-8';
-	}
-	console.log('API call: [' + method + "] " + url + ' data: "' + data + '"');
-	return $.ajax({
-		type: method,
-		url: url,
-		data: data,
-		contentType: ct,
-		statusCode: {
-			401: function() { window.location = "/logout"; },
-		},
-	});
+  method = method.toUpperCase();
+  url = apiPath + url;
+  var ct;
+  if (method !== 'GET') {
+    data = JSON.stringify(data || {});
+    ct = 'application/json; charser=utf-8';
+  }
+  console.log('API call: [' + method + "] " + url + ' data: "' + data + '"');
+  return $.ajax({
+    type: method,
+    url: url,
+    data: data,
+    contentType: ct,
+    statusCode: {
+      401: function() { window.location = "/logout"; },
+    },
+  });
 }

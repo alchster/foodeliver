@@ -2158,7 +2158,12 @@ function test1() {
             $('.tabs__content.active .basket__cost--total').find('span:first').html('Общая сумма заказа: ' + $.basket.cost_total + ' <span class="rubl">i</span>');
             $('.tabs__content.active .basket__cost--total').find('.basket__cost-tax').html('+ ' + $.basket.cost_service + ' <span class="rubl">i</span> (сервисный сбор) ');
         } else {
-            $('.tabs__content.active').append('<div class="no-goods"><a href="/fooddelivery.html">Перейдите в магазин</a>, <span>чтобы выбрать товары.</span></div>');
+            var orders_paid = getUrlParameter("orders_paid");
+            if ( orders_paid === "yes" ) {
+                $('.tabs__content.active').append('<div class="no-goods"><span>Ваш заказ успешно оплачен. Спасибо, что пользуетесь сервисом «‎Попутчик»‎</span></div>');
+            } else {
+                $('.tabs__content.active').append('<div class="no-goods"><a href="/fooddelivery.html">Перейдите в магазин</a>, <span>чтобы выбрать товары.</span></div>');
+            }
             $('.no-goods').show();
         }
     }
@@ -2171,7 +2176,7 @@ function test1() {
             var seat_number     = Number($('select[data-placeholder="Номер вагона"] option:selected').val());
             var payment_method  = $('[name="payment_method"]:checked').val();
             var change_banknote = ( payment_method == 'cash' ) ? Number($('.filter-item__list li input:checked').val()) : 0;
-            
+            if ( !change_banknote || change_banknote == null ) change_banknote = 0;
             $.ajax({
                 url: '//' + $.API_URL + 'create_orders/?hash=' + Math.random(),
                 type: 'POST',
@@ -2187,8 +2192,7 @@ function test1() {
                 })
             }).done(function( response ) {
                 if ( response.result == 'ok' ){
-                    $().loadBasket();
-                    alert('Спасибо за заказ!');
+                    location.href = response.payment_url;
                 }
             });
         }
@@ -2204,9 +2208,6 @@ function test1() {
             hash: Math.random()
         })
         .done(function( response ){
-            
-            console.log( response );
-            
             if ( response.result == 'ok' ) {
                 $('.basket__warning .basket__txt-title').hide();
                 $('.basket__form-submit').show();

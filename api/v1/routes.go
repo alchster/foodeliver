@@ -13,12 +13,12 @@ var baseURL string
 func Setup(router *gin.Engine, baseUrl string, train string, node string, store storage.Storage) error {
 	v1 := router.Group(baseUrl)
 	baseURL = baseUrl
+	setupStorage(router, "/files", store)
 	if train == "" {
 		authMiddleware = newAuthMiddlware("hello")
 		if err := setupTemplates(router, "/"); err != nil {
 			return err
 		}
-		setupStorage(router, "/files", store)
 		v1.Use(authMiddleware.MiddlewareFunc())
 		v1.GET("/me", me)
 		v1.GET("/ping", ping)
