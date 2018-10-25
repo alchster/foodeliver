@@ -136,3 +136,86 @@ server {
 	}
 }
 ```
+
+
+### Обновление информации о поездах и станциях
+
+Для обновления можно использовать любые возможные средства, от ручного внесения через командную строку базы данных, до использования различных утилит и коннекторов. Так же возможно внесение информации через API (необходимо использование JWT). Структуры таблиц представлены ниже.
+
+Для связи поездов со станциями используется таблица many2many связей `stations_list_items`.
+
+Вся неслужебная текстовая информация (например, название поезда или станции) находится в таблице `texts`.
+
+
+##  Таблица `trains`:
+
+```
+food=> \d+ trains;
+                                                          Таблица "public.trains"
+  Столбец   |           Тип            | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
+------------+--------------------------+--------------------+-------------------+--------------+-----------+---------------------+----------
+ id         | uuid                     |                    | not null          |              | plain     |                     | 
+ created\_at | timestamp with time zone |                    | not null          | now()        | plain     |                     | 
+ updated\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ deleted\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ text\_id    | uuid                     |                    |                   |              | plain     |                     | 
+ number     | text                     |                    |                   |              | extended  |                     | 
+ alias      | text                     |                    |                   |              | extended  |                     | 
+ active     | boolean                  |                    |                   |              | plain     |                     | 
+Индексы:
+    "trains_pkey" PRIMARY KEY, btree (id)
+Ограничения внешнего ключа:
+    "trains_text_id_fkey" FOREIGN KEY (text_id) REFERENCES texts(id)
+```
+
+
+##  Таблица `stations`:
+
+```
+food=> \d+ stations;
+                                                         Таблица "public.stations"
+  Столбец   |           Тип            | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
+------------+--------------------------+--------------------+-------------------+--------------+-----------+---------------------+----------
+ id         | uuid                     |                    | not null          |              | plain     |                     | 
+ created\_at | timestamp with time zone |                    | not null          | now()        | plain     |                     | 
+ updated\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ deleted\_at | timestamp with time zone |                    |                   |              | plain     |                     | 
+ text\_id    | uuid                     |                    |                   |              | plain     |                     | 
+ tz         | text                     |                    |                   |              | extended  |                     | 
+ active     | boolean                  |                    |                   |              | plain     |                     | 
+Индексы:
+    "stations_pkey" PRIMARY KEY, btree (id)
+    "udx_login_deleted" UNIQUE, btree (deleted_at)
+Ограничения внешнего ключа:
+    "stations_text_id_fkey" FOREIGN KEY (text_id) REFERENCES texts(id)
+```
+
+
+##  Таблица `stations_list_items`:
+
+```
+food=> \d+ stations_list_items;
+                                               Таблица "public.stations_list_items"
+      Столбец       |  Тип   | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
+--------------------+--------+--------------------+-------------------+--------------+-----------+---------------------+----------
+ train\_id           | uuid   |                    | not null          |              | plain     |                     | 
+ station\_id         | uuid   |                    | not null          |              | plain     |                     | 
+ relative\_arrival   | bigint |                    | not null          |              | plain     |                     | 
+ relative\_departure | bigint |                    | not null          |              | plain     |                     | 
+```
+
+
+##  Таблица `texts`:
+
+```
+food=> \d+ texts;
+                                               Таблица "public.texts"
+ Столбец | Тип  | Правило сортировки | Допустимость NULL | По умолчанию | Хранилище | Цель для статистики | Описание 
+---------+------+--------------------+-------------------+--------------+-----------+---------------------+----------
+ id      | uuid |                    | not null          |              | plain     |                     | 
+ en      | text |                    |                   |              | extended  |                     | 
+ ru      | text |                    |                   |              | extended  |                     | 
+ zh      | text |                    |                   |              | extended  |                     | 
+Индексы:
+    "texts_pkey" PRIMARY KEY, btree (id)
+```
