@@ -185,7 +185,6 @@ food=> \d+ stations;
  active     | boolean                  |                    |                   |              | plain     |                     | 
 Индексы:
     "stations_pkey" PRIMARY KEY, btree (id)
-    "udx_login_deleted" UNIQUE, btree (deleted_at)
 Ограничения внешнего ключа:
     "stations_text_id_fkey" FOREIGN KEY (text_id) REFERENCES texts(id)
 ```
