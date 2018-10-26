@@ -2,7 +2,7 @@ package db
 
 import (
 	"errors"
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 	"strconv"
 	"strings"
 	"time"

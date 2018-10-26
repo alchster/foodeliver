@@ -3,7 +3,7 @@ package storage
 import (
 	"bufio"
 	"errors"
-	"github.com/satori/go.uuid"
+	"github.com/gofrs/uuid"
 	"io"
 	//"ioutil"
 	"log"
