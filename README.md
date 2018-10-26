@@ -102,6 +102,14 @@ server {
 	root <путь к статическим файлам>;
 	# дополнительные опции
 
+	# подменяем урлы для тестовой оплаты.
+	location /api/payment {
+		proxy_pass http://<API URL>/payment;
+	}
+	location /api/pay {
+		proxy_pass http://<API URL>/pay;
+	}
+
   # правила для файлового хранилища
 	location /files {
 		root <путь к хранилищу>;
@@ -305,7 +313,7 @@ echo spent $({ time tar caf $archive static/ templ/ foodeliver >/dev/null; } 2>&
 ```bash
 #!/bin/bash
 
-API_URL=api.alchster.info/api/ # необходимо указать URL для API, например API_URL="api.alchster.info/api/"
+API_URL=<API> # необходимо указать URL для API без указания протокола, например API_URL="api.alchster.info/api/"
 
 [ "$API_URL" == "" ] && echo "API_URL not set" && exit -1
 
@@ -327,3 +335,7 @@ popd >/dev/null 2>&1
 echo -n "--- Removing temporary directory - "
 rm -rf $tmpdir && echo ok
 ```
+
+так же можно добавить в этот скрипт копирование файлового хранилища с изображениями.
+
+После запуска этого скрипта будет создан файл `...-train.tar.xz`. Развернуть в необходимое место его можно командой `tar xJfv <имя файла>`.
