@@ -13,7 +13,6 @@ var baseURL string
 func Setup(router *gin.Engine, baseUrl string, train string, node string, store storage.Storage) error {
 	v1 := router.Group(baseUrl)
 	baseURL = baseUrl
-	setupStorage(router, "/files", store)
 	if train == "" {
 		authMiddleware = newAuthMiddlware("hello")
 		if err := setupTemplates(router, "/"); err != nil {
@@ -69,6 +68,7 @@ func Setup(router *gin.Engine, baseUrl string, train string, node string, store 
 		v1.GET("/payment/:id", payment)
 		v1.POST("/pay", pay)
 	}
+	setupStorage(router, "/files", store)
 	router.NoRoute(func(c *gin.Context) {
 		notFound(nil, c)
 	})

@@ -34,40 +34,42 @@ func setupStorage(router *gin.Engine, url string, store storage.Storage) {
 		c.Writer.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", MAX_AGE))
 		io.Copy(c.Writer, content)
 	})
-	router.POST(url, authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
-		file, e := c.FormFile("file")
-		if e != nil {
-			c.AbortWithStatus(http.StatusExpectationFailed)
-			return
-		}
+	if trainID.IsZero() {
+		router.POST(url, authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
+			file, e := c.FormFile("file")
+			if e != nil {
+				c.AbortWithStatus(http.StatusExpectationFailed)
+				return
+			}
 
-		if file.Size > MAX_UPLOAD_SIZE {
-			badRequest(FileIsTooLarge, c)
-			return
-		}
+			if file.Size > MAX_UPLOAD_SIZE {
+				badRequest(FileIsTooLarge, c)
+				return
+			}
 
-		var name string
-		ext := strings.ToLower(filepath.Ext(file.Filename))
-		if ext != ".png" && ext != ".jpg" && ext != ".jpeg" {
-			badRequest(InvalidExtension, c)
-			return
-		}
+			var name string
+			ext := strings.ToLower(filepath.Ext(file.Filename))
+			if ext != ".png" && ext != ".jpg" && ext != ".jpeg" {
+				badRequest(InvalidExtension, c)
+				return
+			}
 
-		rc, err := file.Open()
-		if err != nil {
-			badRequest(err, c)
-			return
-		}
+			rc, err := file.Open()
+			if err != nil {
+				badRequest(err, c)
+				return
+			}
 
-		name, err = store.Put(rc, ext)
-		if err != nil {
-			unprocessable(err, c)
-			return
-		}
+			name, err = store.Put(rc, ext)
+			if err != nil {
+				unprocessable(err, c)
+				return
+			}
 
-		c.JSON(http.StatusOK, h{
-			"status": "ok",
-			"url":    filepath.Join(url, name),
+			c.JSON(http.StatusOK, h{
+				"status": "ok",
+				"url":    filepath.Join(url, name),
+			})
 		})
-	})
+	}
 }
