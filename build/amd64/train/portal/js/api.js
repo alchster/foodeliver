@@ -1558,7 +1558,7 @@ function test1() {
 
 (function( $ ){
     
-    $.API_URL = 'api.alchster.info/api/';
+    $.API_URL = '%%API_URL%%';
     $.basketLink = '/basket.html';
     
     $.userId = null;
