@@ -64,5 +64,5 @@ func main() {
 		return
 	}
 
-	router.Run(config.ListenOn)
+	log.Fatal(router.Run(config.ListenOn))
 }

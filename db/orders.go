@@ -10,10 +10,10 @@ type Order struct {
 	Entity
 	Number         string          `json:"number" qorm:"not_null;unique_index"`
 	PassengerID    UUID            `json:"passenger_id" sql:"type:uuid REFERENCES passengers(id)"`
-	TrainID        UUID            `json:"train_id" gorm:type:"uuid REFERENCES trains(id)"`
-	Train          Train           `json:"-" gorm:type:"foreignkey:TrainID;association_foreignkey:ID"`
-	StationID      UUID            `json:"-" gorm:type:"uuid REFERENCES stations(id)"`
-	Station        Station         `json:"station" gorm:type:"foreignkey:StationID;association_foreignkey:ID"`
+	TrainID        UUID            `json:"train_id" gorm:"type:uuid REFERENCES trains(id)"`
+	Train          Train           `json:"-" gorm:"type:foreignkey:TrainID;association_foreignkey:ID"`
+	StationID      UUID            `json:"-" gorm:"type:uuid REFERENCES stations(id)"`
+	Station        Station         `json:"station" gorm:"type:foreignkey:StationID;association_foreignkey:ID"`
 	TrainNumber    string          `json:"train_number" gorm:"-"`
 	Arrival        time.Time       `json:"arrival" gorm:"type:timestamptz;not_null"`
 	Departure      time.Time       `json:"departure" gorm:"type:timestamptz;not_null"`
@@ -122,7 +122,7 @@ func UnpaidOrders(passId string) []Order {
 	pid, err := GetUUID(passId)
 	if err != nil {
 		log.Print("UnpaidOrders: Invalid ID")
-		return make([]Order, 0, 0)
+		return make([]Order, 0)
 	}
 	err = db.Where("passenger_id = ? and status_code = ?", pid, ORDER_STATUS_NEW).Find(&orders).Error
 	if err != nil {
@@ -142,6 +142,11 @@ func OrderSetPaid(ordId string) error {
 
 func ClearPassengerTmpOrders(passId string) {
 	if psid, err := GetUUID(passId); err == nil {
-		tmpOrders.DeleteAll(psid)
+		err = tmpOrders.DeleteAll(psid)
+		if err != nil {
+			log.Print("Claring orders failed: ", err.Error())
+		}
+	} else {
+		log.Print("Invalid ID: ", err.Error())
 	}
 }

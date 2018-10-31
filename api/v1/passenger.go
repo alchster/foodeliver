@@ -119,7 +119,11 @@ func suppliersList(c *gin.Context) {
 
 func supplierProducts(c *gin.Context) {
 	var q QueryParams
-	c.Bind(&q)
+	if err := c.Bind(&q); err != nil {
+		badRequest(err, c)
+		return
+	}
+
 	sp, err := db.SupplierProducts(q.SupplierID)
 	if err != nil {
 		badRequest(err, c)

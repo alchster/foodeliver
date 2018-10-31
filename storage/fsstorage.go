@@ -40,7 +40,9 @@ func (s *FSStorage) Put(rc io.ReadCloser, ext string) (string, error) {
 	dir := filepath.Join(s.basePath, filename[:2])
 	log.Print(dir, "\t", filename)
 	if _, err := os.Stat(dir); err != nil {
-		os.Mkdir(dir, 0777)
+		if err = os.Mkdir(dir, 0777); err != nil {
+			return "", err
+		}
 	}
 	out, err := os.Create(filepath.Join(dir, filename))
 	if err != nil {

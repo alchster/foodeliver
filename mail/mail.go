@@ -9,7 +9,7 @@ import (
 	"log"
 	"mime"
 	"net"
-	"net/mail"
+	netmail "net/mail"
 	"net/smtp"
 	"path/filepath"
 	"strings"
@@ -17,7 +17,7 @@ import (
 
 type Mailer struct {
 	server    string
-	from      mail.Address
+	from      netmail.Address
 	host      string
 	debug     bool
 	tlsconfig *tls.Config
@@ -44,7 +44,7 @@ func NewMailer(serv, user, pass, nameFrom, templPath, url string, opts []string,
 	}
 	mailer := Mailer{
 		server:    serv,
-		from:      mail.Address{nameFrom, user},
+		from:      netmail.Address{Name: nameFrom, Address: user},
 		host:      h,
 		debug:     debugMode,
 		templates: templ,
@@ -68,16 +68,16 @@ func NewMailer(serv, user, pass, nameFrom, templPath, url string, opts []string,
 	return &mailer
 }
 
-func AddressString(a mail.Address) string {
+func AddressString(a netmail.Address) string {
 	return fmt.Sprintf("%v <%s>", a.Name, a.Address)
 }
 
-func AddressStringRFC2047(a mail.Address) string {
+func AddressStringRFC2047(a netmail.Address) string {
 	return fmt.Sprintf("%v <%s>", mime.QEncoding.Encode("utf-8", a.Name), a.Address)
 }
 
 func (m *Mailer) Send(name, email, subj string, html []byte) error {
-	to := mail.Address{name, email}
+	to := netmail.Address{Name: name, Address: email}
 	subject := mime.QEncoding.Encode("utf-8", subj)
 	headers := map[string]string{
 		"From":         AddressStringRFC2047(m.from),
@@ -137,13 +137,15 @@ func (m *Mailer) Send(name, email, subj string, html []byte) error {
 		return err
 	}
 
-	log.Printf("Mail to '%s' sent", AddressString(to))
+	log.Printf("Mail to '%s' sent\n", AddressString(to))
 	return nil
 }
 
 func (m *Mailer) MakeHTML(template string, data map[string]interface{}) ([]byte, error) {
 	data["url"] = m.url
 	buf := bytes.NewBuffer([]byte(""))
-	m.templates.ExecuteTemplate(buf, template, data)
+	if err := m.templates.ExecuteTemplate(buf, template, data); err != nil {
+		log.Print("Can't execute teplate: ", err.Error())
+	}
 	return buf.Bytes(), nil
 }

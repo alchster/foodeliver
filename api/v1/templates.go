@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -123,7 +124,9 @@ func loginHandler(c *gin.Context) {
 			Username string `form:"username" json:"username"`
 			Password string `form:"password" json:"password"`
 		})
-		c.Bind(q)
+		if err := c.Bind(q); err != nil {
+			log.Print("Login creds error: ", err.Error())
+		}
 		c.Request.Header.Set("Content-Type", "application/json")
 		body, _ := json.Marshal(q)
 		c.Request.Body = ioutil.NopCloser(bytes.NewReader(body))
@@ -139,7 +142,9 @@ func loginHandler(c *gin.Context) {
 			ref = "/settings"
 		}
 		c.Writer.Header().Set("Location", ref)
-		wh.FakeData.WriteTo(c.Writer)
+		if _, err := wh.FakeData.WriteTo(c.Writer); err != nil {
+			log.Print("Write error: ", err.Error())
+		}
 	}
 }
 

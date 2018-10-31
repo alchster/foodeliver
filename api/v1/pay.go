@@ -18,7 +18,10 @@ func payment(c *gin.Context) {
 }
 
 func pay(c *gin.Context) {
-	c.Request.ParseForm()
+	if err := c.Request.ParseForm(); err != nil {
+		badRequest(err, c)
+		return
+	}
 	if orders, ok := c.Request.PostForm["orders"]; ok {
 		for _, o := range orders {
 			db.OrderSetPaid(o)

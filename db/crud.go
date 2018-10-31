@@ -8,8 +8,6 @@ import (
 	"time"
 )
 
-const tagName = "crud"
-
 var crudEntities = map[string]reflect.Type{
 	"text":             reflect.TypeOf(Text{}),
 	"category":         reflect.TypeOf(Category{}),

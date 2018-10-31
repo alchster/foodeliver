@@ -2,7 +2,7 @@ package db
 
 type Text struct {
 	ID UUID   `json:"-" gorm:"primary_key;type:uuid"`
-	EN String `json:"en",gorm:"not null"`
+	EN String `json:"en"`
 	RU String `json:"ru"`
 	ZH String `json:"zh"`
 }

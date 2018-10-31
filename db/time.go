@@ -53,7 +53,7 @@ func (t Time) Value() (driver.Value, error) {
 	if strings.HasPrefix(tm, "24:00") {
 		tm = "23:59"
 	}
-	return t.String(), nil
+	return tm, nil
 }
 
 func (t Time) String() string {

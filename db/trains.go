@@ -28,9 +28,9 @@ type Train struct {
 }
 
 type StationsListItem struct {
-	TrainID           UUID          `json:"-" sql:"type:uuid REFERENCES trains(id)`
+	TrainID           UUID          `json:"-" sql:"type:uuid REFERENCES trains(id)"`
 	Station           Station       `json:"station" gorm:"foreignkey:StationID;association_foreignkey:ID"`
-	StationID         UUID          `json:"-" sql:"type:uuid REFERENCES stations(id)`
+	StationID         UUID          `json:"-" sql:"type:uuid REFERENCES stations(id)"`
 	RelativeArrival   time.Duration `json:"-"`
 	RelativeDeparture time.Duration `json:"-"`
 	Arrival           time.Time     `json:"-" gorm:"-"`

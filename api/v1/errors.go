@@ -17,19 +17,9 @@ func badRequest(err error, c *gin.Context) {
 		errorJSON(http.StatusBadRequest, err))
 }
 
-func unauthorized(err error, c *gin.Context) {
-	c.AbortWithStatusJSON(http.StatusUnauthorized,
-		errorJSON(http.StatusUnauthorized, err))
-}
-
 func conflict(err error, c *gin.Context) {
 	c.AbortWithStatusJSON(http.StatusConflict,
 		errorJSON(http.StatusConflict, err))
-}
-
-func unsupported(err error, c *gin.Context) {
-	c.AbortWithStatusJSON(http.StatusUnsupportedMediaType,
-		errorJSON(http.StatusUnsupportedMediaType, err))
 }
 
 func unprocessable(err error, c *gin.Context) {

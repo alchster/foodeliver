@@ -331,10 +331,10 @@ func GetSupplierStations(spid UUID) ([]StationDeliveryResp, error) {
 		Joins("LEFT JOIN stations on station_id = stations.id").
 		Joins("LEFT JOIN texts on text_id = texts.id").
 		Order("texts.ru").Where("supplier_id = ?", spid).Rows()
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 	ids := make([]UUID, 0)
 	for rows.Next() {
 		var (

@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -25,7 +26,9 @@ func (t *TemporaryOrders) Init(nodeId string, lastOrderNum int) {
 	var baskProds []BasketProduct
 	db.Order("created_at").Find(&baskProds)
 	for _, bp := range baskProds {
-		t.AddProduct(bp.PassengerID, bp.ProductID, bp.StationID, bp.Count)
+		if err := t.AddProduct(bp.PassengerID, bp.ProductID, bp.StationID, bp.Count); err != nil {
+			log.Print("Product add failed: ", err.Error())
+		}
 	}
 }
 

@@ -6,6 +6,7 @@ import (
 	"github.com/alchster/foodeliver/storage"
 	"github.com/gin-gonic/gin"
 	"io"
+	"log"
 	"mime"
 	"net/http"
 	"path/filepath"
@@ -24,15 +25,17 @@ func setupStorage(router *gin.Engine, url string, store storage.Storage) {
 		file := c.Params.ByName("file")
 		contentType := mime.TypeByExtension(filepath.Ext(file))
 		content, err := store.Get(file)
-		defer content.Close()
 		if err != nil {
 			notFound(err, c)
 			return
 		}
+		defer content.Close()
 		c.Writer.WriteHeader(http.StatusOK)
 		c.Writer.Header().Set("Content-Type", contentType)
 		c.Writer.Header().Set("Cache-Control", fmt.Sprintf("max-age=%d", MAX_AGE))
-		io.Copy(c.Writer, content)
+		if _, err := io.Copy(c.Writer, content); err != nil {
+			log.Print("File getting error: ", err.Error())
+		}
 	})
 	if trainID.IsZero() {
 		router.POST(url, authMiddleware.MiddlewareFunc(), func(c *gin.Context) {

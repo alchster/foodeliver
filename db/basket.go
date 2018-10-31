@@ -33,7 +33,7 @@ type BasketInfo struct {
 type BasketProduct struct {
 	PassengerID UUID      `json:"-" gorm:"primary_key"`
 	ProductID   UUID      `json:"-" gorm:"primary_key"`
-	Product     Product   `json:"product" gorm"-"`
+	Product     Product   `json:"product" gorm:"-"`
 	SupplierID  UUID      `json:"-"`
 	StationID   UUID      `json:"-" gorm:"primary_key"`
 	Count       int       `json:"count"`
@@ -274,16 +274,16 @@ func ValidateOrders(passId string) error {
 	for _, order := range tmpOrders.PassengerOrders(psid) {
 		if order.Total.LessThan(order.minAmount) {
 			//return MinAmountError
-			return errors.New(fmt.Sprintf(`МИНИМАЛЬНАЯ СУММА ЗАКАЗА У ПОСТАВЩИКА &laquo;%s&raquo; `+
+			return fmt.Errorf(`МИНИМАЛЬНАЯ СУММА ЗАКАЗА У ПОСТАВЩИКА &laquo;%s&raquo; `+
 				`%s РУБЛЕЙ, ДОБАВЬТЕ ТОВАРЫ В КОРЗИНУ ДО МИНИМАЛЬНОЙ СУММЫ `+
 				`ИЛИ <a href="#" class="delete-order" order-id="%s">ОТМЕНИТЕ ЗАКАЗ</a>`,
-				order.Supplier.Description, order.minAmount, order.ID))
+				order.Supplier.Description, order.minAmount, order.ID)
 		}
 		if time.Now().Unix() > stationSupplierDeadline(order.StationID, order.Supplier.ID).Unix() {
 			//return TimeoutError
-			return errors.New(fmt.Sprintf(`ЗАКОНЧИЛОСЬ ВРЕМЯ ДОСТАВКИ У ПОСТАВЩИКА &laquo;%s&raquo;.`+
+			return fmt.Errorf(`ЗАКОНЧИЛОСЬ ВРЕМЯ ДОСТАВКИ У ПОСТАВЩИКА &laquo;%s&raquo;.`+
 				` <a href="#" class="delete-order" order-id="%s">ОЧИСТИТЕ ЭТОТ ЗАКАЗ</a> `+
-				`ИЛИ ИЗМЕНИТЕ СТАНЦИЮ ДОСТАВКИ`, order.Supplier.Description, order.ID))
+				`ИЛИ ИЗМЕНИТЕ СТАНЦИЮ ДОСТАВКИ`, order.Supplier.Description, order.ID)
 		}
 	}
 	return nil

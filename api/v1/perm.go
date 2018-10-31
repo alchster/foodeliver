@@ -81,10 +81,10 @@ var rolePages = map[string][]string{
 func indexForRole(role string) string {
 	pagesList, ok := rolePages[role]
 	if !ok {
-		sett, _ := pages["settings"]
+		sett := pages["settings"]
 		return sett.URL
 	}
-	mi, _ := pages[pagesList[0]]
+	mi := pages[pagesList[0]]
 	return mi.URL
 }
 
